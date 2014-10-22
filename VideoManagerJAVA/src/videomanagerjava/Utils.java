@@ -5,6 +5,14 @@
  */
 package videomanagerjava;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javafx.scene.web.WebEngine;
+
 /**
  *
  * @author Romsahel
@@ -44,6 +52,11 @@ public class Utils
     return i;
   }
 
+  public static String formatName(String toFormat)
+  {
+    return formatName(toFormat, null);
+  }
+
   public static String formatName(String toFormat, String folder)
   {
     toFormat = toFormat.substring(0, 1).toUpperCase() + toFormat.substring(1);
@@ -51,14 +64,62 @@ public class Utils
     toFormat = toFormat.replaceAll("[e]([0-9])", "E$1");
     toFormat = toFormat.replaceAll("_", " ");
 
+    if (folder != null)
+      toFormat = toFormat.replace(removeSeason(folder), "");
+
+    return toFormat.trim();
+  }
+
+  public static String removeSeason(String folder)
+  {
     int index = folder.indexOf("Season");
     if (index < 0)
       index = folder.indexOf("S0");
     if (index > 0)
+      return folder.substring(0, index);
+    return folder;
+  }
+
+  public static String download(String urlString)
+  {
+    StringBuilder builder = new StringBuilder();
+    BufferedReader in = null;
+    try
     {
-      String toRemove = folder.substring(0, index);
-      toFormat = toFormat.replace(toRemove, "");
+      URL url = new URL(urlString);
+      in = new BufferedReader(new InputStreamReader(url.openStream()));
+      String line;
+      while ((line = in.readLine()) != null)
+        builder.append(line);
+      in.close();
+    } catch (IOException ex)
+    {
+      Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+    } finally
+    {
+      try
+      {
+        if (in != null)
+          in.close();
+      } catch (IOException ex)
+      {
+        Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+      }
     }
-    return toFormat.trim();
+    return builder.toString();
+  }
+
+  public static Object callJS(WebEngine webEngine, String function, String... args)
+  {
+    String js = function + "('";
+    for (int i = 0; i < args.length; i++)
+      if (i != args.length - 1)
+        js += args[i] + "', '";
+      else
+        js += args[i];
+
+    js += "')";
+    System.out.println(js);
+    return webEngine.executeScript(js);
   }
 }

@@ -54,13 +54,12 @@ header li {
   cursor: pointer;
 }
 
-.sortOption {
+.option {
   color: #2d72d9;
   padding-left: 10px;
-  cursor: pointer;
 }
 
-.select {
+#listsContainer > .select {
   background: rgba(23, 24, 27, 0.9);
 
   list-style: none;
@@ -78,6 +77,10 @@ header li {
   box-shadow: 4px 10px 10px rgba(0,0,0,0.5);
 }
 
+nav > .select {
+  cursor: pointer;
+}
+
 .select li {
   padding-left: 10px;
   transition: color 0.35s ease;
@@ -89,6 +92,10 @@ header li {
   color: white;
   background: #112c54;
   border-left: solid 3px #2d72d9;
+}
+
+#selectLocation {
+  float: right;
 }
 
 .caret {
@@ -147,8 +154,12 @@ header li {
 
 .media h4 {
   color: white;
+  height: 15px;
   margin: 0;
   margin-top: 10px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .media h5 {

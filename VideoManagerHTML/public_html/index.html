@@ -14,18 +14,28 @@
           <li class="category" onclick=""><a>Movies</a></li>
           <li class="category" onclick=""><a>TV Series</a></li>
           <li></li>
-          <li>
-            <a onclick="selectSort(this, '#sortList')">Sort by </a>
-            <a onclick="selectSort(this, '#sortList')" class="sortOption" id="sortOption">Rating</a>
-            <span onclick="selectSort(this, '#sortList')" class="caret"></span>
+          <li class="select" onclick="selectSort(this, '#sortList')">
+            <a>Sort by </a>
+            <a class="option" id="sortOption">Rating</a>
+            <span class="caret"></span>
+          </li>
+          <li class="select" id="selectLocation" onclick="selectSort(this, '#locationsList')">
+            <a>Sort by </a>
+            <a class="option" id="locationOption">All</a>
+            <span class="caret"></span>
           </li>
         </ul>
       </nav>
     </header>
-    <ul class="select" id="sortList">
-      <li onclick="optionClick(this, '#sortOption')">Rating</li>
-      <li onclick="optionClick(this, '#sortOption')">Date</li>
-    </ul>
+    <div id="listsContainer">
+      <ul class="select" id="sortList">
+        <li onclick="optionClick(this, '#sortOption')">Rating</li>
+        <li onclick="optionClick(this, '#sortOption')">Date</li>
+      </ul>
+      <ul class="select" id="locationsList">
+        <li onclick="optionClick(this, '#locationOption')">All</li>
+      </ul>
+    </div>
     <div id="main">
       <div class="media" id="model">
         <div class="poster" style="background-image: url(media/01.jpg);">
@@ -36,7 +46,7 @@
             </div>
           </div>
         </div>
-        <h4>Once Upon A Time</h4>
+        <h4>Once Upon A Time In a Fairy Castle</h4>
         <h5>2014</h5>
       </div>
 

@@ -5,6 +5,9 @@
  */
 package videomanagerjava;
 
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.value.ObservableValue;
@@ -14,6 +17,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.events.Event;
@@ -58,7 +64,33 @@ public class VideoManagerJAVA extends Application
                 {
                   Media media = FileWalker.getInstance().walk(Settings.getInstance().getLocations().get("Torrents"));
                   for (Media o : media.getMedias())
-                    webEngine.executeScript("addMedia('" + o.getName() + "')");
+                  {
+                    final String name = o.getName();
+                    final String formattedName = Utils.removeSeason(name);
+                    String url = "http://api.trakt.tv/search/movies.json/5921de65414d60b220c6296761061a3b?query="
+                                 + formattedName.replace(" ", "+")
+                                 + "&limit=1";
+                    if (!formattedName.equals(name))
+                      url = url.replace("movies.json", "shows.json");
+
+                    JSONParser parser = new JSONParser();
+                    String img = "";
+                    try
+                    {
+                      final String json = Utils.download(url);
+                      JSONObject obj = (JSONObject) parser.parse(json.substring(1, json.length() - 1));
+                      img = (String) ((JSONObject) obj.get("images")).get("poster");
+                    } catch (ParseException ex)
+                    {
+                      Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+
+                    Utils.callJS(webEngine, "addMedia", name, img);
+                    break;
+                  }
+                  for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
+                    Utils.callJS(webEngine, "addLocation", next.getKey());
+
                   EventListener listener = new EventListener()
                   {
                     public void handleEvent(Event ev)
