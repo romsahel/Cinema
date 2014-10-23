@@ -44,12 +44,10 @@ public class FileWalker
           media.getMedias().add(walk);
       }
       else if ((file = isVideo(fileToString, file, Utils.EXTENSIONS)) != null)
-        media.getFiles().add(Utils.formatName(file, folder));
+        media.getFiles().add(Utils.removeSeason(Utils.formatName(file), folder));
     }
     if (media.getFiles().size() > 0 || media.getMedias().size() > 0)
-    {
       return media;
-    }
     else
       return null;
   }

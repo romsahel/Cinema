@@ -5,12 +5,6 @@
  */
 package videomanagerjava;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javafx.scene.web.WebEngine;
 
 /**
@@ -23,7 +17,7 @@ public class Utils
   public static final String[] DUMP_KEYWORDS =
   {
     "[", "1080p", "720p", "x264", "HDTV", "FASTSUB", "VOSTFR", "MULTI",
-    "FINAL", "REPACK", "FRENCH", "COMPLETE", "PROPER"
+    "FINAL", "REPACK", "FRENCH", "COMPLETE", "PROPER", "EXTENDED", "UNRATED"
   };
   public static final String[] EXTENSIONS =
   {
@@ -52,61 +46,43 @@ public class Utils
     return i;
   }
 
+  /**
+   * Formats the name for in more legible version:
+   * <ul>
+   * <li>Capitalizes the first letter</li>
+   * <li>Capitalizes the 's' and the 'e' of 's01e01'</li>
+   * <li>Replaces '_' by spaces</li>
+   * <li>Removes the date that might be between parenthese</li>
+   * </ul>
+   * <p>
+   * @param toFormat the string to format
+   * <p>
+   * @return
+   */
   public static String formatName(String toFormat)
-  {
-    return formatName(toFormat, null);
-  }
-
-  public static String formatName(String toFormat, String folder)
   {
     toFormat = toFormat.substring(0, 1).toUpperCase() + toFormat.substring(1);
     toFormat = toFormat.replaceAll("[s]([0-9])", "S$1");
     toFormat = toFormat.replaceAll("[e]([0-9])", "E$1");
     toFormat = toFormat.replaceAll("_", " ");
-
-    if (folder != null)
-      toFormat = toFormat.replace(removeSeason(folder), "");
+    toFormat = toFormat.replaceAll("[(][0-9]{4}[)]", "");
 
     return toFormat.trim();
   }
 
-  public static String removeSeason(String folder)
+  public static String removeSeason(String toFormat)
+  {
+    return removeSeason(toFormat, toFormat);
+  }
+
+  public static String removeSeason(String toFormat, String folder)
   {
     int index = folder.indexOf("Season");
     if (index < 0)
       index = folder.indexOf("S0");
     if (index > 0)
-      return folder.substring(0, index);
-    return folder;
-  }
-
-  public static String download(String urlString)
-  {
-    StringBuilder builder = new StringBuilder();
-    BufferedReader in = null;
-    try
-    {
-      URL url = new URL(urlString);
-      in = new BufferedReader(new InputStreamReader(url.openStream()));
-      String line;
-      while ((line = in.readLine()) != null)
-        builder.append(line);
-      in.close();
-    } catch (IOException ex)
-    {
-      Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
-    } finally
-    {
-      try
-      {
-        if (in != null)
-          in.close();
-      } catch (IOException ex)
-      {
-        Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
-      }
-    }
-    return builder.toString();
+      return toFormat.replace(folder.substring(index), "");
+    return toFormat;
   }
 
   public static Object callJS(WebEngine webEngine, String function, String... args)

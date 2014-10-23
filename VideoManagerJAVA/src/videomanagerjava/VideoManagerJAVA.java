@@ -65,8 +65,9 @@ public class VideoManagerJAVA extends Application
                   Media media = FileWalker.getInstance().walk(Settings.getInstance().getLocations().get("Torrents"));
                   for (Media o : media.getMedias())
                   {
-                    final String name = o.getName();
+                    final String name = Utils.formatName(o.getName());
                     final String formattedName = Utils.removeSeason(name);
+
                     String url = "http://api.trakt.tv/search/movies.json/5921de65414d60b220c6296761061a3b?query="
                                  + formattedName.replace(" ", "+")
                                  + "&limit=1";
@@ -75,18 +76,22 @@ public class VideoManagerJAVA extends Application
 
                     JSONParser parser = new JSONParser();
                     String img = "";
+
                     try
                     {
-                      final String json = Utils.download(url);
+                      final String json = Downloader.downloadString(url);
                       JSONObject obj = (JSONObject) parser.parse(json.substring(1, json.length() - 1));
                       img = (String) ((JSONObject) obj.get("images")).get("poster");
                     } catch (ParseException ex)
                     {
+                      System.out.println(url);
                       Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
+                      break;
                     }
 
-                    Utils.callJS(webEngine, "addMedia", name, img);
-                    break;
+                    Utils.callJS(webEngine, "addMedia", name, "media/posters/" + Downloader.downloadImage(img));
+                    System.out.println(img);
+                    return;
                   }
                   for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
                     Utils.callJS(webEngine, "addLocation", next.getKey());
