@@ -80,7 +80,7 @@ public class Downloader
       byte[] response = out.toByteArray();
       FileOutputStream fos = new FileOutputStream(filename);
       fos.write(response);
-      return filename;
+	  return hash;
     } catch (IOException ex)
     {
       Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);

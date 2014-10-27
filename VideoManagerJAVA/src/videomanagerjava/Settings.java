@@ -8,7 +8,7 @@ package videomanagerjava;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Hashtable;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.logging.Level;
@@ -25,11 +25,11 @@ import org.json.simple.parser.ParseException;
 public class Settings
 {
 
-  private final Hashtable<String, String> locations;
+  private final HashMap<String, String> locations;
 
   private Settings()
   {
-    locations = new Hashtable<>();
+    locations = new HashMap<>();
   }
 
   public void writeSettings()
@@ -93,7 +93,7 @@ public class Settings
   /**
    * @return the locations
    */
-  public Hashtable<String, String> getLocations()
+  public HashMap<String, String> getLocations()
   {
     return locations;
   }

@@ -31,7 +31,11 @@ public class FileWalker
       fileSeparator = "/";
 
     final String folder = path.substring(path.lastIndexOf('\\') + 1);
-    Media media = new Media(getCleanName(folder, fileSeparator));
+	final long hashCode = path.hashCode();
+	final Media get = Database.getInstance().getDatabase().get(hashCode);
+	if (get != null)
+	  return get;
+	Media media = new Media(getCleanName(folder, fileSeparator), hashCode);
     for (File f : list)
     {
       final String fileToString = f.getAbsoluteFile().toString();
