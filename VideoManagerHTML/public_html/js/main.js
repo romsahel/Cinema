@@ -40,3 +40,8 @@ function addLocation(name)
   newLoc.innerText = name;
   list.appendChild(newLoc);
 }
+
+function showDetail(elt)
+{
+
+}
