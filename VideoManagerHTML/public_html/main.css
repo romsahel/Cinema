@@ -10,6 +10,24 @@ html
 body {
   margin: 0px;
 }
+
+/* Let's get this party started */
+::-webkit-scrollbar {
+  width: 7px;
+  background: rgba(100, 100, 100, 0.35);
+  border-radius: 18px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: rgba(195,196,197,0.5);
+  border-radius: 18px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(195,196,197, 0.85);
+}
+
 header
 {
   box-shadow: 4px 4px 15px #000;
@@ -207,13 +225,21 @@ nav > .select {
   background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
 }
 
-#detail img, #detail div {
+#banner {
+  height: 380px;
+  margin-bottom: 25px;
+}
+
+#banner img, #banner div {
+  float: left;
   display: inline-block;
   vertical-align: top;
   margin-left: 10px;
 }
 
-#detail img {
+#banner img {
+  margin-top: 20px;
+  width: 239px;
   box-shadow: 0px 0px 5px 5px rgba(0,0,0, 0.25);
   border-style: solid;
   border-width: 2px;
@@ -221,29 +247,84 @@ nav > .select {
   border-color: transparent;
 }
 
-#detail h1, #detail p {
+#banner div {
+  width: 65%;
+  height: 100%;
+}
+
+#banner #description {
+  padding-right: 20px;
+  height: 70%;
+  overflow-y: scroll;
+}
+
+#banner h1, #banner p {
   color: white;
 }
 
-#detail ul {
+#banner ul {
   padding-left: 0px;
   margin-bottom: 25px;
 }
-#detail li {
+#banner li {
   display: inline;
 }
 
-#detail li span {
+#banner li span {
   margin-right: 3px;
 }
 
-#detail li:after {
+#banner li:after {
   font-size: 75%;
   content:'\25CF';
   margin-left: 15px;
   margin-right: 15px;
 }
 
-#detail li:last-child:after {
+#banner li:last-child:after {
   display: none;
+}
+
+#files div {
+  display: inline;
+  float: left;
+  margin-right: 25px;
+  margin-left: 10px;
+}
+
+#files ul {
+  list-style: none;
+  padding: 0px;
+}
+
+#files li  {
+  min-width: 100px;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  cursor: pointer;
+}
+
+#files li:nth-child(odd) {
+  background: #1f2025;
+}
+
+#files li:hover {
+  background: #26272d;
+}
+
+#files #seasons, #files #episodes span {
+  color: white;
+  font-size: 115%;
+}
+
+#files #episodes span {
+  padding: 9px 18px 9px 5px;
+  border-right: 1px solid #17181b;
+  margin-right: 25px;
+}
+
+#files #episodes {
+  width: 100%;
 }
