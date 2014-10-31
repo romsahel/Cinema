@@ -306,9 +306,8 @@ nav > .select {
 #files li  {
   padding-left: 15px;
   padding-right: 15px;
-  padding-top: 10px;
-  padding-bottom: 10px;
   cursor: pointer;
+  line-height: 250%;
 }
 
 #files li:nth-child(odd) {
@@ -323,16 +322,57 @@ nav > .select {
   color: white;
   font-size: 115%;
   width: 10%;
+  margin: initial;
 }
 
 #episodes {
   width: 80%;
+  margin: initial;
 }
 
-#episodes span {
+#episodes li > span {
   padding: 9px 18px 9px 5px;
   border-right: 1px solid #17181b;
   margin-right: 25px;
   color: white;
   font-size: 115%;
+}
+
+#episodes strong {
+  font-weight: lighter;
+}
+
+#episodes li > div {
+  float: right;
+
+  background: #112c54;
+
+  border-radius: 3px;
+  padding: 0px 18px 0px 18px;
+  margin: 2.5px;
+  height: 28px;
+}
+
+#episodes li > div strong {
+  padding: 9px 15px 9px 0px;
+  border-right: 1px solid #17181b;
+  margin-right: 18px;
+}
+
+#episodes li > div span {
+  background-image: url('media/vlc_icon.png');
+  background-repeat: no-repeat;
+
+  background-size: contain;
+}
+
+.play-icons {
+  display: inline-block;
+
+  width: 20px;
+  height: 20px;
+
+  vertical-align: text-bottom;
+  position: relative;
+  top: 1px;
 }
