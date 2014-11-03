@@ -1,10 +1,12 @@
-$(document).ready(function () {
+$(document).ready(function ()
+{
+  showDetail();
 });
 
 $('html').click(function () {
   var elements = $("#listsContainer > .select");
   for (var i = 0; i < elements.length; i++) {
-    elements.fadeOut("fast");
+	elements.fadeOut("fast");
   }
 });
 
@@ -41,7 +43,10 @@ function addLocation(name)
   list.appendChild(newLoc);
 }
 
-function showDetail(elt)
+function showDetail()
 {
-
+  $("#episodes li").click(function ()
+  {
+	$("#watch-buttons").fadeIn(200);
+  });
 }
