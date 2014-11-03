@@ -53,8 +53,8 @@ public class Database
   {
 	JSONObject elt = new JSONObject();
 	elt.put("id", media.getId());
-	elt.put("name", media.getName());
-	elt.put("img", media.getImg());
+	for (Map.Entry<String, String> entrySet : media.getInfo().entrySet())
+	  elt.put(entrySet.getKey(), entrySet.getValue());
 
 	final JSONArray files = new JSONArray();
 	files.addAll(media.getFiles());

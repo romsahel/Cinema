@@ -7,6 +7,7 @@ package videomanagerjava;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javafx.application.Platform;
 import javafx.scene.web.WebEngine;
 
 /**
@@ -96,17 +97,24 @@ public class Utils
 	return null;
   }
 
-  public static Object callJS(WebEngine webEngine, String function, String... args)
+  public static void callJS(WebEngine webEngine, String function, String... args)
   {
-	String js = function + "('";
-	for (int i = 0; i < args.length; i++)
-	  if (i != args.length - 1)
-		js += args[i] + "', '";
-	  else
-		js += args[i];
+	Platform.runLater(new Runnable()
+	{
+	  @Override
+	  public void run()
+	  {
+		String js = function + "('";
+		for (int i = 0; i < args.length; i++)
+		  if (i != args.length - 1)
+			js += args[i] + "', '";
+		  else
+			js += args[i];
 
-	js += "')";
-	System.out.println(js);
-	return webEngine.executeScript(js);
+		js += "')";
+		System.out.println(js);
+		webEngine.executeScript(js);
+	  }
+	});
   }
 }

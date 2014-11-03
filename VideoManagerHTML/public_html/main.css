@@ -161,7 +161,7 @@ nav > .select {
 }
 
 #detail {
-  /* display: none !important; */
+   display: none !important; 
 }
 
 .media {

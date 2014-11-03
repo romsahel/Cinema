@@ -31,47 +31,50 @@ public class VideoManagerJAVA extends Application
   @Override
   public void start(Stage primaryStage)
   {
-    final AnchorPane anchorPane = new AnchorPane();
-    primaryStage.initStyle(StageStyle.DECORATED);
-    WebView webBrowser = new WebView();
+	final AnchorPane anchorPane = new AnchorPane();
+	primaryStage.initStyle(StageStyle.DECORATED);
+	WebView webBrowser = new WebView();
 
-    //Set Layout Constraint
-    AnchorPane.setTopAnchor(webBrowser, 0.0);
-    AnchorPane.setBottomAnchor(webBrowser, 0.0);
-    AnchorPane.setLeftAnchor(webBrowser, 0.0);
-    AnchorPane.setRightAnchor(webBrowser, 0.0);
+	//Set Layout Constraint
+	AnchorPane.setTopAnchor(webBrowser, 0.0);
+	AnchorPane.setBottomAnchor(webBrowser, 0.0);
+	AnchorPane.setLeftAnchor(webBrowser, 0.0);
+	AnchorPane.setRightAnchor(webBrowser, 0.0);
 
-    //Add WebView to AnchorPane
-    anchorPane.getChildren().add(webBrowser);
+	//Add WebView to AnchorPane
+	anchorPane.getChildren().add(webBrowser);
 
-    //Create Scene
-    final Scene scene = new Scene(anchorPane);
+	//Create Scene
+	final Scene scene = new Scene(anchorPane);
 
-    // Obtain the webEngine to navigate
-    final WebEngine webEngine = webBrowser.getEngine();
-    webEngine.load("file://" + new File("public_html/index.html").getAbsolutePath());
-    webEngine.getLoadWorker().stateProperty().addListener(
-            new javafx.beans.value.ChangeListener<State>()
-            {
-              @Override
-              public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue)
-              {
-                if (newValue != State.SUCCEEDED)
-                  return;
-                pageLoaded(webEngine);
-              }
-            }
-    );
+	// Obtain the webEngine to navigate
+	final WebEngine webEngine = webBrowser.getEngine();
+	webEngine.load("file:///" + new File("public_html/index.html").getAbsolutePath().replace('\\', '/'));
+	webEngine.getLoadWorker().stateProperty().addListener(
+			new javafx.beans.value.ChangeListener<State>()
+			{
+			  @Override
+			  public void changed(ObservableValue<? extends State> observable, State oldValue, State newValue)
+			  {
+				if (newValue != State.SUCCEEDED)
+				  return;
+				(new Thread(() ->
+				{
+				  pageLoaded(webEngine);
+				})).start();
+			  }
+			}
+	);
 
-    Settings.getInstance().readSettings();
-    Database.getInstance().readDatabase();
-    media = FileWalker.getInstance().walk(Settings.getInstance().getLocations().get("Vidéos"));
-    getImages();
+	Settings.getInstance().readSettings();
+	Database.getInstance().readDatabase();
+	media = FileWalker.getInstance().walk(Settings.getInstance().getLocations().get("Vidéos"));
+	getImages();
 
-    primaryStage.setTitle("Video Manager");
-    primaryStage.setScene(scene);
+	primaryStage.setTitle("Video Manager");
+	primaryStage.setScene(scene);
 
-    primaryStage.show();
+	primaryStage.show();
   }
 
   /**
@@ -79,41 +82,41 @@ public class VideoManagerJAVA extends Application
    */
   public static void main(String[] args)
   {
-    launch(args);
+	launch(args);
   }
 
   private void pageLoaded(WebEngine webEngine)
   {
-    while (!executor.isTerminated());
+	while (!executor.isTerminated());
 
-    for (Media o : media.getMedias())
-    {
-      Database.getInstance().getDatabase().put(o.getId(), o);
-      Utils.callJS(webEngine, "addMedia", o.getName(), "media/posters/" + o.getImg());
-    }
+	for (Media o : media.getMedias())
+	{
+	  Database.getInstance().getDatabase().put(o.getId(), o);
+	  Utils.callJS(webEngine, "addMedia", o.getName(), "media/posters/" + o.getInfo().get("img"));
+	}
 
-    for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
-      Utils.callJS(webEngine, "addLocation", next.getKey());
+	for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
+	  Utils.callJS(webEngine, "addLocation", next.getKey());
 
-    Database.getInstance().writeDatabase();
+	Database.getInstance().writeDatabase();
   }
 
   private void getImages()
   {
-    executor = java.util.concurrent.Executors.newFixedThreadPool(4);
-    for (Media o : media.getMedias())
-    {
-      Thread t = new Thread()
-      {
-        @Override
-        public void run()
-        {
-          if (o.getImg() == null)
-            o.downloadImg();
-        }
-      };
-      executor.execute(t);
-    }
-    executor.shutdown();
+	executor = java.util.concurrent.Executors.newFixedThreadPool(4);
+	for (Media o : media.getMedias())
+	{
+	  Thread t = new Thread()
+	  {
+		@Override
+		public void run()
+		{
+		  if (o.getInfo().get("img") == null)
+			o.downloadInfos();
+		}
+	  };
+	  executor.execute(t);
+	}
+	executor.shutdown();
   }
 }

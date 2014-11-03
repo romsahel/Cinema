@@ -6,6 +6,7 @@
 package videomanagerjava;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
@@ -21,11 +22,10 @@ public class Media
 {
 
   private final String name;
-  private String img;
-  private String year;
   private final ArrayList<Media> medias;
   private final ArrayList<String> files;
   private final long id;
+  private final HashMap<String, String> info;
 
   public Media(String name, long id)
   {
@@ -34,18 +34,19 @@ public class Media
 
   public Media(String name, long id, String img)
   {
-	this.year = Utils.getYear(name);
+	info = new HashMap<>();
+	info.put("year", Utils.getYear(name));
 	this.name = Utils.formatName(name);
 	this.id = id;
-	this.img = img;
+	info.put("img", img);
 	this.medias = new ArrayList<>();
 	this.files = new ArrayList<>();
   }
 
-  public void downloadImg()
+  public void downloadInfos()
   {
 	final String formattedName = Utils.removeSeason(name);
-	final int limit = year == null ? 1 : 3;
+	final int limit = getInfo().get("year") == null ? 1 : 3;
 	String url = "http://api.trakt.tv/search/movies.json/5921de65414d60b220c6296761061a3b?query="
 				 + formattedName.replace(" ", "+")
 				 + "&limit=" + limit;
@@ -62,18 +63,29 @@ public class Media
 	  for (Object obj : array)
 	  {
 		JSONObject jobj = (JSONObject) obj;
-		if (year == null || jobj.get("year").toString().equals(year))
+		final String newYear = jobj.get("year").toString();
+		if (getInfo().get("year") == null || newYear.equals(getInfo().get("year")))
 		{
+		  getInfo().put("year", newYear);
+		  getInfo().put("overview", jobj.get("overview").toString());
+		  getInfo().put("genres", jobj.get("genres").toString().replace("[", "").replace("\"", "").replace("]", "").replace(",", " "));
+		  getInfo().put("imdb", jobj.get("imdb_id").toString());
+		  getInfo().put("duration", jobj.get("runtime").toString());
+
 		  String imgURL = (String) ((JSONObject) jobj.get("images")).get("poster");
 		  imgURL = imgURL.replace(".jpg", "-300.jpg");
-		  setImg(Downloader.downloadImage(imgURL));
+
+		  getInfo().put("img", Downloader.downloadImage(imgURL));
+
 		  break;
 		}
 	  }
 	} catch (ParseException ex)
 	{
 	  System.out.println(url);
-	  Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
+	  Logger
+			  .getLogger(VideoManagerJAVA.class
+					  .getName()).log(Level.SEVERE, null, ex);
 	}
   }
 
@@ -102,22 +114,6 @@ public class Media
   }
 
   /**
-   * @return the img
-   */
-  public String getImg()
-  {
-	return img;
-  }
-
-  /**
-   * @param img the img to set
-   */
-  public void setImg(String img)
-  {
-	this.img = img;
-  }
-
-  /**
    * @return the id
    */
   public long getId()
@@ -125,4 +121,11 @@ public class Media
 	return id;
   }
 
+  /**
+   * @return the info
+   */
+  public HashMap<String, String> getInfo()
+  {
+	return info;
+  }
 }

@@ -1,6 +1,7 @@
+var medias = { }
 $(document).ready(function ()
 {
-  showDetail();
+//  showDetail();
 });
 
 $('html').click(function () {
@@ -25,14 +26,14 @@ function selectSort(elt, list)
 
 function addMedia(name, img)
 {
-  var main = document.getElementById("main");
+  var main = document.getElementById("media-list");
   var media = document.getElementById("model").cloneNode(true);
 
-  media.id = name;
   media.getElementsByTagName("h4")[0].innerText = name;
   media.children[0].style.backgroundImage = "url('" + img + "')";
 
   main.appendChild(media);
+  medias[name] = media;
 }
 
 function addLocation(name)
