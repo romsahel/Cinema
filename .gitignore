@@ -1,4 +1,7 @@
 *.class
+/VideoManagerJAVA/public_html
+/VideoManagerJAVA/db.json
+/VideoManagerJAVA/config.json
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -12,3 +15,5 @@
 hs_err_pid*
 /test/nbproject/private/
 /test/build/
+/VideoManagerJAVA/build/
+/VideoManagerJAVA/dist/

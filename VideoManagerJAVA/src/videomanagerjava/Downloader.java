@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 public class Downloader
 {
 
-  public static final String POSTER_PATH = "C:/Users/Romsahel/Documents/NetBeansProjects/VideoManagerHTML/public_html/media/posters/";
+  public static final String POSTER_PATH = "public_html/media/posters/";
 
   public static String downloadString(String urlString)
   {

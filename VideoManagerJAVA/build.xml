@@ -3,9 +3,9 @@
     <import file="nbproject/build-impl.xml"/>
     <!--
 
-    There exist several targets which are by default empty and which can be 
-    used for execution of your tasks. These targets are usually executed 
-    before and after some main targets. Those of them relevant for JavaFX project are: 
+    There exist several targets which are by default empty and which can be
+    used for execution of your tasks. These targets are usually executed
+    before and after some main targets. Those of them relevant for JavaFX project are:
 
       -pre-init:                 called before initialization of project properties
       -post-init:                called after initialization of project properties
@@ -50,4 +50,8 @@
     nbproject/build-impl.xml and nbproject/jfx-impl.xml.
 
     -->
+    <target name="-pre-init">
+      <echo message="Embed a line break:${line.separator}"/>
+      <copydir src="../VideoManagerHTML/public_html" dest="./public_html"/>
+    </target>
 </project>

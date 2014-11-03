@@ -27,7 +27,7 @@ public class FileWalker
       return null;
 
     String fileSeparator = "\\";
-    if (System.getProperty("os.name").equals("Linux"))
+    if (!System.getProperty("os.name").equals("Windows"))
       fileSeparator = "/";
 
     final String folder = path.substring(path.lastIndexOf('\\') + 1);
