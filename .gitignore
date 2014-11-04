@@ -2,7 +2,7 @@
 /VideoManagerJAVA/public_html
 /VideoManagerJAVA/db.json
 /VideoManagerJAVA/config.json
-
+private.xml
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 
