@@ -269,12 +269,12 @@ nav > .select {
 
 
 #banner-left {
-  /* float:left; */
+  float:left;
   max-width: 239px;
 }
 
 #banner-left img {
-  /* max-width: 239px; */
+  max-width: 239px;
   box-shadow: 0px 0px 5px 5px rgba(0,0,0, 0.25);
   border-style: solid;
   border-width: 2px;
@@ -283,7 +283,7 @@ nav > .select {
 }
 
 #banner-right {
-  /* margin-left: 239px; */
+  margin-left: 239px;
   padding-left: 25px;
   height: inherit;
 }

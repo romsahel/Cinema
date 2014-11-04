@@ -53,8 +53,10 @@ public class Database
   {
 	JSONObject elt = new JSONObject();
 	elt.put("id", media.getId());
+	final JSONObject info = new JSONObject();
 	for (Map.Entry<String, String> entrySet : media.getInfo().entrySet())
-	  elt.put(entrySet.getKey(), entrySet.getValue());
+	  info.put(entrySet.getKey(), entrySet.getValue());
+	elt.put("info", info);
 
 	final JSONArray files = new JSONArray();
 	files.addAll(media.getFiles());
@@ -82,7 +84,14 @@ public class Database
 	  {
 		JSONObject elt = (JSONObject) iterator.next();
 		final long id = (long) elt.get("id");
-		database.put(id, new Media((String) elt.get("name"), id, (String) elt.get("img")));
+		final Media media = new Media(id);
+		final JSONObject info = (JSONObject) elt.get("info");
+		for (Iterator it = info.keySet().iterator(); it.hasNext();)
+		{
+		  String key = (String) it.next();
+		  media.getInfo().put(key, (String) info.get(key));
+		}
+		database.put(id, media);
 	  }
 	} catch (IOException | ParseException ex)
 	{

@@ -21,11 +21,15 @@ import org.json.simple.parser.ParseException;
 public class Media
 {
 
-  private final String name;
   private final ArrayList<Media> medias;
   private final ArrayList<String> files;
   private final long id;
   private final HashMap<String, String> info;
+
+  public Media(long id)
+  {
+	this(null, id, null);
+  }
 
   public Media(String name, long id)
   {
@@ -35,22 +39,26 @@ public class Media
   public Media(String name, long id, String img)
   {
 	info = new HashMap<>();
-	info.put("year", Utils.getYear(name));
-	this.name = Utils.formatName(name);
-	this.id = id;
-	info.put("img", img);
 	this.medias = new ArrayList<>();
 	this.files = new ArrayList<>();
+
+	this.id = id;
+	if (name != null)
+	{
+	  info.put("year", Utils.getYear(name));
+	  info.put("name", Utils.formatName(name));
+	}
+	info.put("img", img);
   }
 
   public void downloadInfos()
   {
-	final String formattedName = Utils.removeSeason(name);
+	final String formattedName = Utils.removeSeason(info.get("name"));
 	final int limit = getInfo().get("year") == null ? 1 : 3;
 	String url = "http://api.trakt.tv/search/movies.json/5921de65414d60b220c6296761061a3b?query="
 				 + formattedName.replace(" ", "+")
 				 + "&limit=" + limit;
-	if (!formattedName.equals(name))
+	if (!formattedName.equals(info.get("name")))
 	  url = url.replace("movies.json", "shows.json");
 
 	System.out.println(url);
@@ -87,14 +95,6 @@ public class Media
 			  .getLogger(VideoManagerJAVA.class
 					  .getName()).log(Level.SEVERE, null, ex);
 	}
-  }
-
-  /**
-   * @return the name
-   */
-  public String getName()
-  {
-	return name;
   }
 
   /**

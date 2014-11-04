@@ -56,13 +56,13 @@ function addMedia(name, img)
   media.getElementsByTagName("h4")[0].innerText = name;
   media.children[0].style.backgroundImage = "url('" + img + "')";
 
-  main.appendChild(media);
+  mediaList.appendChild(media);
   medias[name] = media;
 }
 
 function addLocation(name)
 {
-  var newLoc = list.children[0].cloneNode(true);
+  var newLoc = locationsList.children[0].cloneNode(true);
   newLoc.innerText = name;
   locationsList.appendChild(newLoc);
 }
