@@ -9,7 +9,12 @@ function updateSplitPane()
 {
   var width = mediaList.offsetWidth;
   split.style.left = width;
-  detail.style.left = width + 15;
+  var detailWidth = $(window).width() - width - 42;
+  detail.style.width = detailWidth;
+  if (Number(detailWidth) < 874)
+  {
+    console.log("coucou");
+  }
 }
 
 function onPageLoaded()
@@ -20,7 +25,7 @@ function onPageLoaded()
   locationsList = document.getElementById("locationsList");
   split = document.getElementById("split");
 
-  updateSplitPane()
+  updateSplitPane();
   document.onmouseup = up;
 }
 
@@ -79,7 +84,7 @@ function down()
 
 function moveSplitbar(e)
 {
-  mediaList.style.width = e.pageX + "px";
+  mediaList.style.width = e.pageX;
   updateSplitPane();
 
   return cancelEvent(e);
