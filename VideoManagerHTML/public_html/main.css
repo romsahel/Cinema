@@ -152,7 +152,7 @@ nav > .select {
   padding-left: 25px;
   position: fixed;
   right: 0px;
-  /* display: none !important; */
+  display: none;
 }
 
 #split {
@@ -299,7 +299,7 @@ nav > .select {
   height: 30%;
 }
 
-#banner-description {
+#detail-description {
   overflow-y: scroll;
   height: 70%;
   padding-right: 15px;
