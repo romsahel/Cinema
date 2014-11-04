@@ -65,5 +65,6 @@ function down()
 function getMouseXY(e)
 {
   document.getElementById("media-list").style.width = e.pageX + "px";
+  document.getElementById("split").style.left = e.pageX + "px";
   return false;
 }

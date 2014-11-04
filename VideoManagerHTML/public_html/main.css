@@ -33,6 +33,10 @@ header
   box-shadow: 4px 4px 15px #000;
   padding-top: 10px;
   padding-bottom: 15px;
+  position: fixed;
+  background: #17181b;
+  z-index: 1030;
+  width: 100%;
 }
 
 header a, header .select, .caret
@@ -127,10 +131,10 @@ nav > .select {
 }
 
 #main {
-  margin: 0 15px 0px 15px;
+  padding: 15px;
+  padding-top: 60px;
   clear: both;
   display: table;
-  height: 100%;
 }
 
 #main > div {
@@ -139,8 +143,6 @@ nav > .select {
 }
 
 #detail, #media-list {
-  padding-top: 15px;
-  padding-bottom: 15px;
 }
 
 #detail {
@@ -154,6 +156,11 @@ nav > .select {
   box-shadow: 4px 4px 15px #000;
   position: relative;
   cursor: col-resize;
+  z-index: 1030;
+  position: fixed;
+  left: 388px;
+  height: 100vh;
+  top: 40px;
 }
 
 .media {
