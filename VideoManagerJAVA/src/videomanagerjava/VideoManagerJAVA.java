@@ -93,12 +93,12 @@ public class VideoManagerJAVA extends Application
 	for (Media o : media.getMedias())
 	{
 	  Database.getInstance().getDatabase().put(o.getId(), o);
-	  String array = "{";
+	  StringBuilder sb = new StringBuilder();
 	  for (Map.Entry<String, String> entrySet : o.getInfo().entrySet())
-		array += String.format("'%s': '%s',", entrySet.getKey(), entrySet.getValue());
-	  array += "}";
-	  System.out.println(array);
-	  Utils.callJS(webEngine, "addMedia", o.getInfo().get("name"), "media/posters/" + o.getInfo().get("img"));
+		sb.append(String.format("'%s': '%s',", entrySet.getKey(), entrySet.getValue().replace("'", "\\'")));
+	  String array = "{" + sb.toString() + "}";
+
+	  Utils.callJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
 	}
 
 	for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())

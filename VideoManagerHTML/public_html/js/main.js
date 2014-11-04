@@ -1,4 +1,5 @@
 var medias = {};
+medias["0000"] =  {'duration': '30','overview': 'A lot of girls move to New York City to "make it". Max and Caroline are just trying to make their rent. In this fun, outrageous comedy series, two girls from very different backgrounds – Max, poor from birth, and Caroline, born wealthy but down on her luck – wind up as waitresses in the same colorful Brooklyn diner and strike up an unlikely friendship that could lead to a successful business venture. All they need to do is come up with $250,000 in start-up expenses. "2 Broke Girls" infuses the classic comedy with something new, current and young, proving life can be fun – even if you’re broke.','img': '-27230530','imdb': 'tt1845307','year': '2011','genres': 'Comedy','name': '2 Broke Girls S01',};
 var mediaList;
 var detail;
 var model;
@@ -49,15 +50,16 @@ function selectSort(elt, list)
   event.stopPropagation();
 }
 
-function addMedia(name, img)
+function addMedia(id, array)
 {
   var media = model.cloneNode(true);
 
-  media.getElementsByTagName("h4")[0].innerText = name;
-  media.children[0].style.backgroundImage = "url('" + img + "')";
+  media.id = id;
+  media.getElementsByTagName("h4")[0].innerText = array.name;
+  media.children[0].style.backgroundImage = "url('media/posters/" + array.img + "')";
 
   mediaList.appendChild(media);
-  medias[name] = media;
+  medias[id] = array;
 }
 
 function addLocation(name)

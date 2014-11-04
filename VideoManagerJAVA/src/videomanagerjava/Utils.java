@@ -104,17 +104,22 @@ public class Utils
 	  @Override
 	  public void run()
 	  {
-		String js = function + "('";
+		String js = function + "(";
 		for (int i = 0; i < args.length; i++)
-		  if (i != args.length - 1)
-			js += args[i] + "', '";
+		{
+		  if (args[i].charAt(0) == '\\')
+			js += args[i].substring(1);
 		  else
-			js += args[i];
+			js += "'" + args[i] + "'";
+		  if (i != args.length - 1)
+			js += ", ";
+		}
 
-		js += "')";
+		js += ")";
 		System.out.println(js);
 		webEngine.executeScript(js);
 	  }
-	});
+	}
+	);
   }
 }
