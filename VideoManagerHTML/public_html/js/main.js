@@ -1,8 +1,28 @@
-var medias = {}
-$(document).ready(function ()
+var medias = {};
+var mediaList;
+var detail;
+var model;
+var locationsList;
+var split;
+
+function updateSplitPane()
 {
-//  showDetail();
-});
+  var width = mediaList.offsetWidth;
+  split.style.left = width;
+  detail.style.left = width + 15;
+}
+
+function onPageLoaded()
+{
+  mediaList = document.getElementById("media-list");
+  detail = document.getElementById("detail");
+  model = document.getElementById("model");
+  locationsList = document.getElementById("locationsList");
+  split = document.getElementById("split");
+
+  updateSplitPane()
+  document.onmouseup = up;
+}
 
 $('html').click(function () {
   var elements = $("#listsContainer > .select");
@@ -26,8 +46,7 @@ function selectSort(elt, list)
 
 function addMedia(name, img)
 {
-  var main = document.getElementById("media-list");
-  var media = document.getElementById("model").cloneNode(true);
+  var media = model.cloneNode(true);
 
   media.getElementsByTagName("h4")[0].innerText = name;
   media.children[0].style.backgroundImage = "url('" + img + "')";
@@ -38,33 +57,47 @@ function addMedia(name, img)
 
 function addLocation(name)
 {
-  var list = document.getElementById("locationsList");
   var newLoc = list.children[0].cloneNode(true);
   newLoc.innerText = name;
-  list.appendChild(newLoc);
+  locationsList.appendChild(newLoc);
 }
 
 function showDetail()
 {
-  $("#episodes li").click(function ()
-  {
-    $("#watch-buttons").fadeIn(200);
-  });
+  $("#episodes li").click($("#watch-buttons").fadeIn);
 }
 
-document.onmouseup = up;
 function up()
 {
   document.onmousemove = null;
 }
+
 function down()
 {
-  document.onmousemove = getMouseXY;
+  document.onmousemove = moveSplitbar;
 }
 
-function getMouseXY(e)
+function moveSplitbar(e)
 {
-  document.getElementById("media-list").style.width = e.pageX + "px";
-  document.getElementById("split").style.left = e.pageX + "px";
+  mediaList.style.width = e.pageX + "px";
+  updateSplitPane();
+
+  return cancelEvent(e);
+}
+
+//  prevent the mousedown event to trigger any other event
+function cancelEvent(e)
+{
+  if (e.stopPropagation)
+    e.stopPropagation();
+  if (e.preventDefault)
+    e.preventDefault();
+  e.cancelBubble = true;
+  e.returnValue = false;
   return false;
+}
+
+function onResize()
+{
+  split.style.left = mediaList.offsetWidth;
 }

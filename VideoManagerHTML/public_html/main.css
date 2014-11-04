@@ -142,11 +142,15 @@ nav > .select {
   vertical-align: top;
 }
 
-#detail, #media-list {
+#media-list {
+  width: 50%;
+  padding-right: 15px;
 }
 
 #detail {
-  padding-left: 15px;
+  padding-left: 25px;
+  position: fixed;
+  left: 263px;
   /* display: none !important; */
 }
 
@@ -265,11 +269,11 @@ nav > .select {
 
 #banner-left {
   float:left;
-  width: 239px;
+  max-width: 239px;
 }
 
 #banner-left img {
-  width: 239px;
+  max-width: 239px;
   box-shadow: 0px 0px 5px 5px rgba(0,0,0, 0.25);
   border-style: solid;
   border-width: 2px;
