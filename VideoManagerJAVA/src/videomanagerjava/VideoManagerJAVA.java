@@ -103,7 +103,10 @@ public class VideoManagerJAVA extends Application
 
   private void getImages()
   {
-	executor = java.util.concurrent.Executors.newFixedThreadPool(4);
+    executor = java.util.concurrent.Executors.newFixedThreadPool(4);
+    if (media == null)
+      return;
+
 	for (Media o : media.getMedias())
 	{
 	  Thread t = new Thread()

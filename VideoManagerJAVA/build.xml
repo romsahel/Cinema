@@ -51,7 +51,8 @@
 
     -->
     <target name="-pre-init">
-      <echo message="Embed a line break:${line.separator}"/>
-      <copydir src="../VideoManagerHTML/public_html" dest="./public_html"/>
+      <copy todir="./public_html">
+        <fileset dir="../VideoManagerHTML/public_html"/>
+      </copy>
     </target>
 </project>

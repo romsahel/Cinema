@@ -28,19 +28,6 @@ body {
   background: rgba(195,196,197, 0.85);
 }
 
-::-webkit-resizer {
-  border: 2px solid yellow;
-  background: blue;
-  box-shadow: 0 0 2px 5px red;
-  outline: 2px dashed green;
-
-  /*size does not work*/
-  display:block;
-  padding-top: 1500px;
-  width: 150px !important;
-  height: 9100px !important;
-}
-
 header
 {
   box-shadow: 4px 4px 15px #000;
@@ -140,9 +127,10 @@ nav > .select {
 }
 
 #main {
-  margin: 15px;
+  margin: 0 15px 0px 15px;
   clear: both;
   display: table;
+  height: 100%;
 }
 
 #main > div {
@@ -150,18 +138,22 @@ nav > .select {
   vertical-align: top;
 }
 
-#media-list {
-  resize: horizontal;
-  overflow: auto;
-}
-
-#media-list * {
-  resize: initial;
-  overflow: hidden;
+#detail, #media-list {
+  padding-top: 15px;
+  padding-bottom: 15px;
 }
 
 #detail {
-   display: none !important; 
+  padding-left: 15px;
+  /* display: none !important; */
+}
+
+#split {
+  background: #17181b;
+  width: 10px;
+  box-shadow: 4px 4px 15px #000;
+  position: relative;
+  cursor: col-resize;
 }
 
 .media {

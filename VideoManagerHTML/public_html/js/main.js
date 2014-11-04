@@ -1,4 +1,4 @@
-var medias = { }
+var medias = {}
 $(document).ready(function ()
 {
 //  showDetail();
@@ -7,7 +7,7 @@ $(document).ready(function ()
 $('html').click(function () {
   var elements = $("#listsContainer > .select");
   for (var i = 0; i < elements.length; i++) {
-	elements.fadeOut("fast");
+    elements.fadeOut("fast");
   }
 });
 
@@ -48,6 +48,22 @@ function showDetail()
 {
   $("#episodes li").click(function ()
   {
-	$("#watch-buttons").fadeIn(200);
+    $("#watch-buttons").fadeIn(200);
   });
+}
+
+document.onmouseup = up;
+function up()
+{
+  document.onmousemove = null;
+}
+function down()
+{
+  document.onmousemove = getMouseXY;
+}
+
+function getMouseXY(e)
+{
+  document.getElementById("media-list").style.width = e.pageX + "px";
+  return false;
 }
