@@ -20,11 +20,18 @@
             <a class="option" id="sortOption">Rating</a>
             <span class="caret"></span>
           </li>
+          <li class="select" onclick="selectSort(this, '#genreList')">
+            <a>Genres </a>
+            <a class="option" id="genreOption">All</a>
+            <span class="caret"></span>
+          </li>
+          <li id="location-adder">+</li>
           <li class="select" id="selectLocation" onclick="selectSort(this, '#locationsList')">
-            <a>Sort by </a>
+            <a>Source </a>
             <a class="option" id="locationOption">All</a>
             <span class="caret"></span>
           </li>
+          <li id="search-bar"><input type="text" name="firstname"></li>
         </ul>
       </nav>
     </header>
@@ -32,6 +39,9 @@
       <ul class="select" id="sortList">
         <li onclick="optionClick(this, '#sortOption')">Rating</li>
         <li onclick="optionClick(this, '#sortOption')">Date</li>
+      </ul>
+      <ul class="select" id="genreList">
+        <li onclick="optionClick(this, '#genreOption')">All</li>
       </ul>
       <ul class="select" id="locationsList">
         <li onclick="optionClick(this, '#locationOption')">All</li>
@@ -54,52 +64,52 @@
         </div>
       </div>
       <div id="detail">
-		<div id="banner">
-		  <div id="banner-left">
-			<img id="detail-poster" src="media/posters/01.jpg" alt="poster"/>
-		  </div>
-		  <div id="banner-right">
-			<div id="banner-info">
-			  <h1 id="detail-title">Once Upon A Time In a Fairy Castle</h1>
-			  <ul>
-				<li id="detail-year">2014</li>
-				<li id="detail-duration">99 min</li>
-				<li id="detail-genres">Action</li>
-				<li id="detail-imdb">IMDB</li>
-				<li class="stars"><span class="full_star"></span><span class="full_star"></span><span class="half_star"></span><span class="empty_star"></span><span class="empty_star"></span></li>
-			  </ul>
-			</div>
-			<article id="detail-description">
-			  <p>Nine noble families fight for control of the mythical land of Westeros. Political and sexual intrigue is pervasive. Robert Baratheon, King of Westeros, asks his old friend Eddard, Lord Stark, to serve as Hand of the King, or highest official. Secretly warned that the previous Hand was assassinated, Eddard accepts in order to investigate further. Meanwhile the Queen's family, the Lannisters, may be hatching a plot to take power. Across the sea, the last members of the previous and deposed ruling family, the Targaryens, are also scheming to regain the throne. The friction between the houses Stark, Lannister, Baratheon and Targaryen and with the remaining great houses Greyjoy, Tully, Arryn,Tyrell and Martell leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war and political confusion, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond.</p>
-			  <p>Nine noble families fight for control of the mythical land of Westeros. Political and sexual intrigue is pervasive. Robert Baratheon, King of Westeros, asks his old friend Eddard, Lord Stark, to serve as Hand of the King, or highest official. Secretly warned that the previous Hand was assassinated, Eddard accepts in order to investigate further. Meanwhile the Queen's family, the Lannisters, may be hatching a plot to take power. Across the sea, the last members of the previous and deposed ruling family, the Targaryens, are also scheming to regain the throne. The friction between the houses Stark, Lannister, Baratheon and Targaryen and with the remaining great houses Greyjoy, Tully, Arryn,Tyrell and Martell leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war and political confusion, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond.</p>
-			</article>
-		  </div>
-		</div>
-		<div style="clear:both;"></div>
-		<div id="files">
-		  <ul id="seasons">
-			<li>Season 1</li>
-			<li>Season 2</li>
-			<li>Season 3</li>
-			<li>Season 4</li>
-			<li>Season 5</li>
-		  </ul>
-		  <ul id="episodes">
-			<li><span>1</span><strong>Episode 1</strong></li>
-			<li><span>2</span><strong>Episode 2</strong></li>
-			<li><span>3</span><strong>Episode 3</strong></li>
-			<li><span>4</span><strong>Episode 4</strong></li>
-		  </ul>
-		  <div id="watch-buttons" onclick="console.log('vlc clicked');">
-			<div id="local-button" onclick="console.log('local clicked');
-				event.stopPropagation();">
-			  <img class="play-icons" src="media/play_icon.png" width="20" height="20"/>
-			  <strong>Watch</strong>
-			</div>
-			<div id="vlc-button" class="play-icons"></div>
-		  </div>
-		</div>
-	  </div>
-	</div>
+        <div id="banner">
+          <div id="banner-left">
+            <img id="detail-poster" src="media/posters/01.jpg" alt="poster"/>
+          </div>
+          <div id="banner-right">
+            <div id="banner-info">
+              <h1 id="detail-title">Once Upon A Time In a Fairy Castle</h1>
+              <ul>
+                <li id="detail-year">2014</li>
+                <li id="detail-duration">99 min</li>
+                <li id="detail-genres">Action</li>
+                <li id="detail-imdb">IMDB</li>
+                <li class="stars"><span class="full_star"></span><span class="full_star"></span><span class="half_star"></span><span class="empty_star"></span><span class="empty_star"></span></li>
+              </ul>
+            </div>
+            <article id="detail-description">
+              <p>Nine noble families fight for control of the mythical land of Westeros. Political and sexual intrigue is pervasive. Robert Baratheon, King of Westeros, asks his old friend Eddard, Lord Stark, to serve as Hand of the King, or highest official. Secretly warned that the previous Hand was assassinated, Eddard accepts in order to investigate further. Meanwhile the Queen's family, the Lannisters, may be hatching a plot to take power. Across the sea, the last members of the previous and deposed ruling family, the Targaryens, are also scheming to regain the throne. The friction between the houses Stark, Lannister, Baratheon and Targaryen and with the remaining great houses Greyjoy, Tully, Arryn,Tyrell and Martell leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war and political confusion, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond.</p>
+              <p>Nine noble families fight for control of the mythical land of Westeros. Political and sexual intrigue is pervasive. Robert Baratheon, King of Westeros, asks his old friend Eddard, Lord Stark, to serve as Hand of the King, or highest official. Secretly warned that the previous Hand was assassinated, Eddard accepts in order to investigate further. Meanwhile the Queen's family, the Lannisters, may be hatching a plot to take power. Across the sea, the last members of the previous and deposed ruling family, the Targaryens, are also scheming to regain the throne. The friction between the houses Stark, Lannister, Baratheon and Targaryen and with the remaining great houses Greyjoy, Tully, Arryn,Tyrell and Martell leads to full-scale war. All while a very ancient evil awakens in the farthest north. Amidst the war and political confusion, a neglected military order of misfits, the Night's Watch, is all that stands between the realms of men and icy horrors beyond.</p>
+            </article>
+          </div>
+        </div>
+        <div style="clear:both;"></div>
+        <div id="files">
+          <ul id="seasons">
+            <li>Season 1</li>
+            <li>Season 2</li>
+            <li>Season 3</li>
+            <li>Season 4</li>
+            <li>Season 5</li>
+          </ul>
+          <ul id="episodes">
+            <li><span>1</span><strong>Episode 1</strong></li>
+            <li><span>2</span><strong>Episode 2</strong></li>
+            <li><span>3</span><strong>Episode 3</strong></li>
+            <li><span>4</span><strong>Episode 4</strong></li>
+          </ul>
+          <div id="watch-buttons" onclick="console.log('vlc clicked');">
+            <div id="local-button" onclick="console.log('local clicked');
+                event.stopPropagation();">
+              <img class="play-icons" src="media/play_icon.png" width="20" height="20"/>
+              <strong>Watch</strong>
+            </div>
+            <div id="vlc-button" class="play-icons"></div>
+          </div>
+        </div>
+      </div>
+    </div>
   </body>
 </html>

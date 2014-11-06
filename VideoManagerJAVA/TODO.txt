@@ -1,0 +1,4 @@
+====
+Genre must be in an array so that in details panel, the first is displayed and the others can be browsed through (by hovering or clicking)
+User must be able to edit details in order to change description, title, etc.
+Fix small page bugss

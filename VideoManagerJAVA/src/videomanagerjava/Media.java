@@ -94,7 +94,11 @@ public class Media
 	  Logger
 			  .getLogger(VideoManagerJAVA.class
 					  .getName()).log(Level.SEVERE, null, ex);
-	}
+    } finally
+    {
+      if (getInfo().get("img") == null)
+        getInfo().put("img", "unknown.jpg");
+    }
   }
 
   /**

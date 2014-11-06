@@ -35,7 +35,7 @@ header
   padding-bottom: 15px;
   position: fixed;
   background: #17181b;
-  z-index: 1030;
+  z-index: 1;
   width: 100%;
 }
 
@@ -63,7 +63,7 @@ header ul
 
 header li {
   padding-left: 18px;
-  padding-bottom: 13px;
+  /* padding-bottom: 13px; */
   padding-right: 15px;
   list-style: none;
   display: inline;
@@ -88,7 +88,7 @@ header li {
   cursor: pointer;
   display: none;
 
-  position: absolute;
+  position: fixed;
   width: 100px;
   padding: 0;
   margin: 0;
@@ -97,6 +97,7 @@ header li {
   line-height: 1.8em;
 
   box-shadow: 4px 10px 10px rgba(0,0,0,0.5);
+  z-index: 2;
 }
 
 nav > .select {
@@ -114,8 +115,28 @@ nav > .select {
   border-left: solid 3px #2d72d9;
 }
 
-#selectLocation {
+#selectLocation, #location-adder, #search-bar {
   float: right;
+}
+
+#location-adder {
+  color: #2d72d9;
+  transition: color 0.35s, background 0.5s, border-left 0.1s;
+  font-weight: bolder;
+  font-size: larger;
+  line-height: 1em;
+  cursor: pointer;
+  padding-left: 5px;
+}
+
+#location-adder:hover {
+  color: white;
+}
+
+#search-bar input {
+  background: #C3C5C7;
+  border: none;
+  width: 100%;
 }
 
 .caret {
@@ -161,7 +182,7 @@ nav > .select {
   box-shadow: 4px 4px 15px #000;
   position: relative;
   cursor: col-resize;
-  z-index: 1030;
+  /* z-index: 1030; */
   position: fixed;
   left: 388px;
   height: 100vh;
@@ -176,6 +197,7 @@ nav > .select {
 
 .poster {
   cursor: pointer;
+  background-position: center;
   background-size: 134px 196px;
   height: 196px;
 
