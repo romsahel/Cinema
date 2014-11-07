@@ -25,13 +25,15 @@
             <a class="option" id="genreOption">All</a>
             <span class="caret"></span>
           </li>
+        </ul>
+        <ul>
+          <li id="search-bar"><input type="text" oninput="updateSearch(this.value);"></li>
           <li id="location-adder">+</li>
           <li class="select" id="selectLocation" onclick="selectSort(this, '#locationsList')">
             <a>Source </a>
             <a class="option" id="locationOption">All</a>
             <span class="caret"></span>
           </li>
-          <li id="search-bar"><input type="text" name="firstname"></li>
         </ul>
       </nav>
     </header>

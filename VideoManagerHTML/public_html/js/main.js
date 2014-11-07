@@ -5,6 +5,7 @@ var model;
 var locationsList;
 var split;
 var detailsToUpdate;
+var searchBar;
 
 function updateSplitPane()
 {
@@ -25,6 +26,7 @@ function onPageLoaded()
   model = document.getElementById("model");
   locationsList = document.getElementById("locationsList");
   split = document.getElementById("split");
+  searchBar = $('input[type="text"]');
   detailsToUpdate = {
     "name": $("#detail-title"),
     "year": $("#detail-year"),
@@ -47,11 +49,33 @@ $('html').click(function () {
   }
 });
 
-$(document).keypress(function(e){
-  console.log(e);
-  console.log(e.which);
-  console.log(e.ctrlKey);
+$(document).keypress(function (e) {
+  searchBar.focus();
 });
+
+$(document).keyup(function (e) {
+  if (e.keyCode === 13)
+  {
+  }     // enter
+  if (e.keyCode === 27)
+  {
+    if (searchBar.is(":focus"))
+      searchBar.blur();
+    else
+      searchBar.val("");
+  }   // esc
+});
+
+function updateSearch(search) {
+  for (var key in medias) {
+    var div = $('#' + key);
+    var elt = medias[key];
+    if ((elt.name).indexOf(search) === -1)
+      div.fadeOut('fast');
+    else
+      div.fadeIn('fast');
+  }
+}
 
 function optionClick(elt, option)
 {
@@ -87,9 +111,9 @@ function addLocation(name)
 
 function changeText(element, text)
 {
-    element.fadeOut(200, function() {
-        $(this).text(text).fadeIn(200);
-    });
+  element.fadeOut(200, function () {
+    $(this).text(text).fadeIn(200);
+  });
 }
 
 function showDetail(elt)
