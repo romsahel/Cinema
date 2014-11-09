@@ -8,8 +8,8 @@
     <script src="js/libs/jquery/jquery.js"></script>
     <script src="js/main.js"></script>
   </head>
-  <body onload="onPageLoaded()" onresize="onResize()">
-    <header>
+  <body onload="onPageLoaded();" onresize="onResize()">
+	<header>
 	  <ul>
 		<li class="category" onclick=""><a>Movies</a></li>
 		<li class="category" onclick=""><a>TV Series</a></li>
@@ -26,7 +26,8 @@
 		</li>
 	  </ul>
 	  <ul>
-		<li id="search-bar"><input type="text" oninput="updateSearch(this.value);" onfocus="handleSearchFocus(true)" onblur="handleSearchFocus(false)"></li>
+		<li id="search-bar"><input type="text" oninput="updateSearch(this.value);"
+								   onfocus="handleSearchFocus(true)" onblur="handleSearchFocus(false)"></li>
 		<li id="location-adder">+</li>
 		<li class="select" id="selectLocation" onclick="selectSort(this, '#locationsList')">
 		  <a>Source </a>

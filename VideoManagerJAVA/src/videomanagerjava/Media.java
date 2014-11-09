@@ -22,7 +22,7 @@ public class Media
 {
 
   private final ArrayList<Media> medias;
-  private final ArrayList<String> files;
+  private final HashMap<String, String> files;
   private final long id;
   private final HashMap<String, String> info;
 
@@ -40,7 +40,7 @@ public class Media
   {
 	info = new HashMap<>();
 	this.medias = new ArrayList<>();
-	this.files = new ArrayList<>();
+	this.files = new HashMap<>();
 
 	this.id = id;
 	if (name != null)
@@ -112,7 +112,7 @@ public class Media
   /**
    * @return the files
    */
-  public ArrayList<String> getFiles()
+  public HashMap<String, String> getFiles()
   {
 	return files;
   }

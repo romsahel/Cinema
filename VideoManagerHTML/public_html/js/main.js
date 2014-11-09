@@ -9,14 +9,6 @@ var searchBarParent;
 var searchBar;
 var resizingTimeout;
 
-function updateSplitPane()
-{
-  var width = mediaList.offsetWidth;
-  split.css({left: width});
-  var detailWidth = $(window).width() - width - 42;
-  detail.style.width = detailWidth;
-}
-
 function onPageLoaded()
 {
   mediaList = document.getElementById("media-list");
@@ -37,7 +29,9 @@ function onPageLoaded()
   if (navigator.vendor === "Google Inc.")
 	debug();
 
+  mediaList.style.width = $(window).width() / 2;
   updateSplitPane();
+
   document.onmouseup = up;
 }
 
@@ -163,6 +157,14 @@ function up()
 function down()
 {
   document.onmousemove = moveSplitbar;
+}
+
+function updateSplitPane()
+{
+  var width = mediaList.offsetWidth;
+  split.css({left: width});
+  var detailWidth = $(window).width() - width - 42;
+  detail.style.width = detailWidth;
 }
 
 function moveSplitbar(e)

@@ -202,7 +202,6 @@ header > .select {
   cursor: col-resize;
   z-index: 1;
   position: fixed;
-  left: 388px;
   height: 100vh;
   top: 43px;
 }

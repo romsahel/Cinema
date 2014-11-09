@@ -8,6 +8,7 @@ package videomanagerjava;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -58,14 +59,23 @@ public class Database
 	  info.put(entrySet.getKey(), entrySet.getValue());
 	elt.put("info", info);
 
-	final JSONArray files = new JSONArray();
-	files.addAll(media.getFiles());
-	elt.put("files", files);
+	final HashMap<String, String> files = media.getFiles();
+	if (files.size() > 0)
+	{
+	  final JSONObject obj = new JSONObject();
+	  for (Map.Entry<String, String> entrySet : files.entrySet())
+		obj.put(entrySet.getKey(), entrySet.getValue());
+	  elt.put("files", obj);
+	}
 
-	JSONArray medias = new JSONArray();
-	for (Media m : media.getMedias())
-	  medias.add(writeMedia(m));
-	elt.put("medias", medias);
+	final ArrayList<Media> medias = media.getMedias();
+	if (medias.size() > 0)
+	{
+	  final JSONArray obj = new JSONArray();
+	  for (Media m : medias)
+		obj.add(writeMedia(m));
+	  elt.put("medias", obj);
+	}
 
 	return elt;
   }
@@ -83,15 +93,8 @@ public class Database
 	  for (Iterator iterator = db.iterator(); iterator.hasNext();)
 	  {
 		JSONObject elt = (JSONObject) iterator.next();
-		final long id = (long) elt.get("id");
-		final Media media = new Media(id);
-		final JSONObject info = (JSONObject) elt.get("info");
-		for (Iterator it = info.keySet().iterator(); it.hasNext();)
-		{
-		  String key = (String) it.next();
-		  media.getInfo().put(key, (String) info.get(key));
-		}
-		database.put(id, media);
+		final Media media = readMedia(elt);
+		database.put(media.getId(), media);
 	  }
 	} catch (IOException | ParseException ex)
 	{
@@ -100,6 +103,34 @@ public class Database
 
 	for (Map.Entry<Long, Media> next : getDatabase().entrySet())
 	  System.out.println(next.getKey() + ": " + next.getValue());
+  }
+
+  private Media readMedia(JSONObject elt)
+  {
+	final long id = (long) elt.get("id");
+	final Media media = new Media(id);
+
+	JSONObject obj = (JSONObject) elt.get("info");
+	for (Iterator it = obj.keySet().iterator(); it.hasNext();)
+	{
+	  String key = (String) it.next();
+	  media.getInfo().put(key, (String) obj.get(key));
+	}
+
+	JSONArray array = (JSONArray) elt.get("medias");
+	if (array != null)
+	  for (Object o : array)
+		media.getMedias().add(readMedia((JSONObject) o));
+
+	obj = (JSONObject) elt.get("files");
+	if (obj != null)
+	  for (Iterator it = obj.keySet().iterator(); it.hasNext();)
+	  {
+		String key = (String) it.next();
+		media.getFiles().put(key, (String) obj.get(key));
+	  }
+
+	return media;
   }
 
   // <editor-fold defaultstate="collapsed" desc="Singleton">

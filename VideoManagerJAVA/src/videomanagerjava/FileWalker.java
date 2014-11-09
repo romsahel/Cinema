@@ -27,7 +27,7 @@ public class FileWalker
       return null;
 
     String fileSeparator = "\\";
-    if (!System.getProperty("os.name").equals("Windows"))
+	if (!System.getProperty("os.name").contains("Windows"))
       fileSeparator = "/";
 
     final String folder = path.substring(path.lastIndexOf('\\') + 1);
@@ -39,16 +39,16 @@ public class FileWalker
     for (File f : list)
     {
       final String fileToString = f.getAbsoluteFile().toString();
-      String file = getCleanName(fileToString, fileSeparator);
-
       if (f.isDirectory())
       {
         final Media walk = walk(f.getAbsolutePath());
         if (walk != null)
-          media.getMedias().add(walk);
+		  media.getMedias().add(walk);
       }
-      else if ((file = isVideo(fileToString, file, Utils.EXTENSIONS)) != null)
-        media.getFiles().add(Utils.removeSeason(Utils.formatName(file), folder));
+	  else if (isVideo(fileToString, Utils.EXTENSIONS))
+	  {
+		media.getFiles().put(getSuffix(fileToString, fileSeparator), fileToString);
+	  }
     }
     if (media.getFiles().size() > 0 || media.getMedias().size() > 0)
       return media;
@@ -76,13 +76,12 @@ public class FileWalker
       return src.substring(i + 1);
   }
 
-  private String isVideo(String path, String filename, String... extensions)
+  private boolean isVideo(String path, String... extensions)
   {
     for (String ext : extensions)
-      if (path.endsWith(ext))
-        return filename.replace(ext.substring(1), "");
-
-    return null;
+	  if (path.endsWith(ext))
+		return true;
+	return false;
   }
 
   // <editor-fold defaultstate="collapsed" desc="Singleton">

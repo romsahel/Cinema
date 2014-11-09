@@ -58,7 +58,7 @@ public class VideoManagerJAVA extends Application
 			  {
 				if (newValue != State.SUCCEEDED)
 				  return;
-//                webEngine.executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
+//				webEngine.executeScript("if (!document.getElementById('FirebugLite')){E = document['createElement' + 'NS'] && document.documentElement.namespaceURI;E = E ? document['createElement' + 'NS'](E, 'script') : document['createElement']('script');E['setAttribute']('id', 'FirebugLite');E['setAttribute']('src', 'https://getfirebug.com/' + 'firebug-lite.js' + '#startOpened');E['setAttribute']('FirebugLite', '4');(document['getElementsByTagName']('head')[0] || document['getElementsByTagName']('body')[0]).appendChild(E);E = new Image;E['setAttribute']('src', 'https://getfirebug.com/' + '#startOpened');}");
 				(new Thread(() ->
 						 {
 						   pageLoaded(webEngine);
@@ -96,9 +96,23 @@ public class VideoManagerJAVA extends Application
 	  StringBuilder sb = new StringBuilder();
 	  for (Map.Entry<String, String> entrySet : o.getInfo().entrySet())
 		sb.append(String.format("'%s': '%s',", entrySet.getKey(), entrySet.getValue().replace("'", "\\'")));
+
 	  String array = "{" + sb.toString() + "}";
 
 	  Utils.callJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
+
+	  System.out.println("========");
+	  System.out.println(o.getMedias().size());
+	  System.out.println(o.getFiles().size());
+	  for (Media m : o.getMedias())
+	  {
+		System.out.println(m.getInfo().get("name"));
+		for (Map.Entry<String, String> entrySet : m.getFiles().entrySet())
+		  System.out.println(String.format("'%s': '%s',", entrySet.getKey(), entrySet.getValue()));
+	  }
+	  System.out.println("========");
+
+	  break;
 	}
 
 	for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
