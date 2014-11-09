@@ -5,18 +5,16 @@ var model;
 var locationsList;
 var split;
 var detailsToUpdate;
+var searchBarParent;
 var searchBar;
+var resizingTimeout;
 
 function updateSplitPane()
 {
   var width = mediaList.offsetWidth;
-  split.style.left = width;
+  split.css({left: width});
   var detailWidth = $(window).width() - width - 42;
   detail.style.width = detailWidth;
-  if (Number(detailWidth) < 874)
-  {
-    console.log("coucou");
-  }
 }
 
 function onPageLoaded()
@@ -25,18 +23,19 @@ function onPageLoaded()
   detail = document.getElementById("detail");
   model = document.getElementById("model");
   locationsList = document.getElementById("locationsList");
-  split = document.getElementById("split");
+  split = $("#split");
+  searchBarParent = $('#search-bar');
   searchBar = $('input[type="text"]');
   detailsToUpdate = {
-    "name": $("#detail-title"),
-    "year": $("#detail-year"),
-    "duration": $("#detail-duration"),
-    "genres": $("#detail-genres"),
-    "overview": $("#detail-description")
+	"name": $("#detail-title"),
+	"year": $("#detail-year"),
+	"duration": $("#detail-duration"),
+	"genres": $("#detail-genres"),
+	"overview": $("#detail-description")
   };
 
   if (navigator.vendor === "Google Inc.")
-    debug();
+	debug();
 
   updateSplitPane();
   document.onmouseup = up;
@@ -45,35 +44,64 @@ function onPageLoaded()
 $('html').click(function () {
   var elements = $("#listsContainer > .select");
   for (var i = 0; i < elements.length; i++) {
-    elements.fadeOut("fast");
+	elements.fadeOut("fast");
   }
 });
 
 $(document).keypress(function (e) {
-  searchBar.focus();
+  var keycode = e.keyCode;
+
+  if (!searchBar.is(":focus"))
+  {
+	var valid = (keycode > 47 && keycode < 58) || // number keys
+			(keycode === 32) || // spacebar & return key(s) (if you want to allow carriage returns)
+			(keycode > 64 && keycode < 91) || // letter keys
+			(keycode > 95 && keycode < 112) || // numpad keys
+			(keycode > 185 && keycode < 193) || // ;=,-./` (in order)
+			(keycode > 218 && keycode < 223);   // [\]' (in order)
+	if (valid)
+	  searchBar.focus();
+  }
 });
 
 $(document).keyup(function (e) {
   if (e.keyCode === 13)
   {
+	if (searchBar.is(":focus"))
+	  searchBar.blur();
   }     // enter
   if (e.keyCode === 27)
   {
-    if (searchBar.is(":focus"))
-      searchBar.blur();
-    else
-      searchBar.val("");
+	if (searchBar.is(":focus"))
+	  searchBar.blur();
+	else
+	{
+	  searchBar.val("");
+	  updateSearch("");
+	}
   }   // esc
 });
 
-function updateSearch(search) {
+function handleSearchFocus(onFocus)
+{
+  if (onFocus)
+  {
+	searchBarParent.data('width', searchBarParent.width());
+	searchBarParent.animate({width: split.position().left - ($(window).width() - (searchBarParent.offset().left + searchBarParent.width()))}, 200);
+  }
+  else
+	searchBarParent.animate({width: searchBarParent.data('width')}, 200);
+}
+
+function updateSearch(search)
+{
   for (var key in medias) {
-    var div = $('#' + key);
-    var elt = medias[key];
-    if ((elt.name).indexOf(search) === -1)
-      div.fadeOut('fast');
-    else
-      div.fadeIn('fast');
+	var div = $('#' + key);
+	var elt = medias[key];
+	if ((elt.name).indexOf(search) === -1)
+	  div.fadeOut('fast');
+	else
+	  div.fadeIn('fast');
   }
 }
 
@@ -112,16 +140,15 @@ function addLocation(name)
 function changeText(element, text)
 {
   element.fadeOut(200, function () {
-    $(this).text(text).fadeIn(200);
+	$(this).text(text).fadeIn(200);
   });
 }
 
 function showDetail(elt)
 {
   var current = medias[elt.id];
-  for (var key in detailsToUpdate) {
-    changeText(detailsToUpdate[key], current[key]);
-  }
+  for (var key in detailsToUpdate)
+	changeText(detailsToUpdate[key], current[key]);
 
   $('#detail-poster').attr('src', 'media/posters/' + current.img);
 
@@ -150,9 +177,9 @@ function moveSplitbar(e)
 function cancelEvent(e)
 {
   if (e.stopPropagation)
-    e.stopPropagation();
+	e.stopPropagation();
   if (e.preventDefault)
-    e.preventDefault();
+	e.preventDefault();
   e.cancelBubble = true;
   e.returnValue = false;
   return false;
@@ -160,7 +187,15 @@ function cancelEvent(e)
 
 function onResize()
 {
-  split.style.left = mediaList.offsetWidth;
+  updateSplitPane();
+  clearTimeout(resizingTimeout);
+  resizingTimeout = setTimeout(onResizeEnd, 100);
+
+  function onResizeEnd()
+  {
+	if (searchBar.is(":focus"))
+	  searchBarParent.animate({width: split.position().left - ($(window).width() - (searchBarParent.offset().left + searchBarParent.width()))}, 50);
+  }
 }
 
 // <editor-fold defaultstate="collapsed" desc="debug function">

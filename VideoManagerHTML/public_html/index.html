@@ -10,32 +10,30 @@
   </head>
   <body onload="onPageLoaded()" onresize="onResize()">
     <header>
-      <nav>
-        <ul>
-          <li class="category" onclick=""><a>Movies</a></li>
-          <li class="category" onclick=""><a>TV Series</a></li>
-          <li></li>
-          <li class="select" onclick="selectSort(this, '#sortList')">
-            <a>Sort by </a>
-            <a class="option" id="sortOption">Rating</a>
-            <span class="caret"></span>
-          </li>
-          <li class="select" onclick="selectSort(this, '#genreList')">
-            <a>Genres </a>
-            <a class="option" id="genreOption">All</a>
-            <span class="caret"></span>
-          </li>
-        </ul>
-        <ul>
-          <li id="search-bar"><input type="text" oninput="updateSearch(this.value);"></li>
-          <li id="location-adder">+</li>
-          <li class="select" id="selectLocation" onclick="selectSort(this, '#locationsList')">
-            <a>Source </a>
-            <a class="option" id="locationOption">All</a>
-            <span class="caret"></span>
-          </li>
-        </ul>
-      </nav>
+	  <ul>
+		<li class="category" onclick=""><a>Movies</a></li>
+		<li class="category" onclick=""><a>TV Series</a></li>
+		<li></li>
+		<li class="select" onclick="selectSort(this, '#sortList')">
+		  <a>Sort by </a>
+		  <a class="option" id="sortOption">Rating</a>
+		  <span class="caret"></span>
+		</li>
+		<li class="select" onclick="selectSort(this, '#genreList')">
+		  <a>Genres </a>
+		  <a class="option" id="genreOption">All</a>
+		  <span class="caret"></span>
+		</li>
+	  </ul>
+	  <ul>
+		<li id="search-bar"><input type="text" oninput="updateSearch(this.value);" onfocus="handleSearchFocus(true)" onblur="handleSearchFocus(false)"></li>
+		<li id="location-adder">+</li>
+		<li class="select" id="selectLocation" onclick="selectSort(this, '#locationsList')">
+		  <a>Source </a>
+		  <a class="option" id="locationOption">All</a>
+		  <span class="caret"></span>
+		</li>
+	  </ul>
     </header>
     <div id="listsContainer">
       <ul class="select" id="sortList">
@@ -104,7 +102,7 @@
           </ul>
           <div id="watch-buttons" onclick="console.log('vlc clicked');">
             <div id="local-button" onclick="console.log('local clicked');
-                event.stopPropagation();">
+				event.stopPropagation();">
               <img class="play-icons" src="media/play_icon.png" width="20" height="20"/>
               <strong>Watch</strong>
             </div>

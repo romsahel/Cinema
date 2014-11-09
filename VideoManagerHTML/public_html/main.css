@@ -9,6 +9,7 @@ html
 }
 body {
   margin: 0px;
+  overflow-y: scroll;
 }
 
 /* Let's get this party started */
@@ -31,12 +32,11 @@ body {
 header
 {
   box-shadow: 4px 4px 15px #000;
-  padding-top: 10px;
-  padding-bottom: 15px;
   position: fixed;
   background: #17181b;
   z-index: 1;
   width: 100%;
+  max-height: 43px;
 }
 
 header a, header .select, .caret
@@ -73,10 +73,12 @@ header ul:last-of-type li:not(#search-bar) {
 
 header li {
   padding-left: 18px;
-  /* padding-bottom: 13px; */
   padding-right: 15px;
   list-style: none;
   display: inline-block;
+
+  padding-top: 10px;
+  padding-bottom: 15px;
 }
 
 
@@ -110,7 +112,7 @@ header li {
   z-index: 2;
 }
 
-nav > .select {
+header > .select {
   cursor: pointer;
 }
 
@@ -140,18 +142,19 @@ nav > .select {
 }
 
 #search-bar input {
+  font-weight: bolder;
   background: #C3C5C7;
   border: none;
   width: 100%;
 
   box-shadow: none;
   transition: box-shadow 0.35s, width 0.35s;
+  height: 100%;
 }
 
 #search-bar input:focus {
   outline: none;
   box-shadow: 0px 0px 8px 1px rgba(45, 114, 217, 1);
-  width: 230%;
 }
 
 .caret {
@@ -201,7 +204,7 @@ nav > .select {
   position: fixed;
   left: 388px;
   height: 100vh;
-  top: 40px;
+  top: 43px;
 }
 
 .media {
@@ -322,6 +325,7 @@ nav > .select {
 #banner-right {
   margin-left: 239px;
   padding-left: 25px;
+  padding-right: 25px;
   height: inherit;
 }
 
