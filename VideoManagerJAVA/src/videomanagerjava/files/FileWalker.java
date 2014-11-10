@@ -7,6 +7,7 @@ package videomanagerjava.files;
 
 import java.io.File;
 import java.util.ArrayList;
+import videomanagerjava.Episode;
 import videomanagerjava.Media;
 import videomanagerjava.Utils;
 
@@ -16,15 +17,8 @@ import videomanagerjava.Utils;
  */
 public class FileWalker
 {
-
-	private final String fileSeparator;
-
 	private FileWalker()
 	{
-		if (!System.getProperty("os.name").contains("Windows"))
-			fileSeparator = "/";
-		else
-			fileSeparator = "\\";
 	}
 
 	public ArrayList<Media> walk(String path)
@@ -53,18 +47,25 @@ public class FileWalker
 		if (get != null)
 			return get;
 //		We create the media with a proper name and its id
-		Media media = new Media(getCleanName(getSuffix(path, fileSeparator)), hashCode);
+		Media media = new Media(getCleanName(Utils.getSuffix(path, Utils.getSeparator())), hashCode);
 
 		if (f.isDirectory())
 			walkMedia(f, media);
 		else if (isVideo(path, Utils.EXTENSIONS))
-			media.getFiles().put(getSuffix(path, fileSeparator), path);
-
+		{
+			addEpisode(path, media);
+		}
 //		if media files have been found, we return the media. Otherwise, we destroy it
 		if (media.getFiles().size() > 0 || media.getSeasons().size() > 0)
 			return media;
 		else
 			return null;
+	}
+
+	private void addEpisode(final String path, Media media)
+	{
+		final Episode episode = new Episode(path);
+		media.getFiles().put(episode.getName(), episode);
 	}
 
 	private void walkMedia(File f, Media media)
@@ -82,7 +83,7 @@ public class FileWalker
 					media.getSeasons().put(walk.getInfo().get("name"), walk.getFiles());
 			}
 			else if (isVideo(path, Utils.EXTENSIONS))
-				media.getFiles().put(getSuffix(path, fileSeparator), path);
+				addEpisode(path, media);
 		}
 	}
 
@@ -108,20 +109,10 @@ public class FileWalker
 	{
 		if (string == null)
 			return null;
-		String file = getSuffix(string, fileSeparator);
+		String file = Utils.getSuffix(string, Utils.getSeparator());
 		file = Utils.getPrefix(file, Utils.DUMP_KEYWORDS);
 		file = file.replace('.', ' ').trim();
 		return file;
-	}
-
-	private String getSuffix(String src, String... delimiter)
-	{
-		int i = Utils.findIndex(src, delimiter);
-
-		if (i == -1)
-			return src;
-		else
-			return src.substring(i + 1);
 	}
 
 	private boolean isVideo(String path, String... extensions)

@@ -27,6 +27,8 @@ public class Utils
 		".avi", ".mkv", ".mp4"
 	};
 
+	private static String fileSeparator = null;
+
 	public static String getPrefix(String src, String... delimiter)
 	{
 		int i = findIndex(src, delimiter);
@@ -35,6 +37,16 @@ public class Utils
 			return src;
 		else
 			return src.substring(0, i);
+	}
+
+	public static String getSuffix(String src, String... delimiter)
+	{
+		int i = Utils.findIndex(src, delimiter);
+
+		if (i == -1)
+			return src;
+		else
+			return src.substring(i + 1);
 	}
 
 	public static int findIndex(String src, String... delimiter)
@@ -116,5 +128,19 @@ public class Utils
 			System.out.println(js);
 			webEngine.executeScript(js);
 		});
+	}
+
+	/**
+	 * @return the fileSeparator
+	 */
+	public static String getSeparator()
+	{
+		if (fileSeparator == null)
+			if (!System.getProperty("os.name").contains("Windows"))
+				fileSeparator = "/";
+			else
+				fileSeparator = "\\";
+
+		return fileSeparator;
 	}
 }

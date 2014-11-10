@@ -11,12 +11,14 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import videomanagerjava.Episode;
 import videomanagerjava.Media;
 
 /**
@@ -88,7 +90,7 @@ public class Database
 		} catch (IOException | ParseException ex)
 		{
 			System.err.println("Could not read database");
-//			Logger.getLogger(Database.class.getName()).log(Level.INFO, null, ex);
+			Logger.getLogger(Database.class.getName()).log(Level.INFO, null, ex);
 		}
 
 		for (Map.Entry<Long, Media> next : getDatabase().entrySet())
@@ -100,22 +102,44 @@ public class Database
 		final long id = (long) elt.get("id");
 		final Media media = new Media(id);
 
-		readMap("info", elt, media.getInfo());
-		readMap("seasons", elt, media.getSeasons());
-		readMap("files", elt, media.getFiles());
+		readMap((JSONObject) elt.get("info"), media.getInfo());
+		readMap((JSONObject) elt.get("seasons"), media.getSeasons());
+		readEpisodes((JSONObject) elt.get("files"), media.getFiles());
 
 		return media;
 	}
 
-	private void readMap(String name, JSONObject elt, final Map map)
+	private void readMap(JSONObject obj, final Map map)
 	{
-		System.out.println(name);
-		JSONObject obj = (JSONObject) elt.get(name);
 		if (obj != null)
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
 			{
-				String key = (String) it.next();
-				map.put(key, obj.get(key));
+				final String key = (String) it.next();
+				final Object value = obj.get(key);
+				if (value.getClass() == String.class)
+					map.put(key, value);
+				else
+				{
+					TreeMap<String, Episode> newMap = new TreeMap<>();
+					readEpisodes((JSONObject) value, newMap);
+					map.put(key, newMap);
+				}
+			}
+	}
+
+	private void readEpisodes(JSONObject obj, final Map map)
+	{
+		if (obj != null)
+			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
+			{
+				final String key = (String) it.next();
+				final JSONObject value = (JSONObject) obj.get(key);
+				Episode episode = new Episode((String) value.get("name"),
+											  (String) value.get("path"),
+											  (Boolean) value.get("seen"));
+
+				map.put((String) value.get("name"), episode);
+
 			}
 	}
 

@@ -51,7 +51,7 @@ function onPageLoaded()
 		$(this).addClass("selected");
 
 		var text = $(this).text();
-		currentEpisode = {key: text, value: currentSeason.elt[text]};
+		currentEpisode = {key: text, value: currentSeason.value[text]};
 
 		$("#watch-buttons").css({top: $(this).index() * $(this).height()});
 		$("#watch-buttons").fadeIn('fast');
@@ -63,7 +63,9 @@ function onPageLoaded()
 
 function onSeasonsClick(elt)
 {
-	currentSeason = {index: elt.index(), elt: currentMedia.seasons[elt.text()]};
+	var text = elt.text();
+	currentSeason = {key: text, value: currentMedia.seasons[text]};
+
 	elt.parent().children().removeClass("selected");
 	elt.addClass("selected");
 	episodes.children().removeClass("selected");
@@ -87,10 +89,8 @@ function playMedia(local)
 	{
 		console.local("play local");
 	}
-	console.log(currentMedia.id);
-	console.log(currentSeason.index);
-	console.log(currentEpisode);
-	app.playMedia(currentMedia.id, currentSeason.index, currentEpisode.key);
+
+	app.playMedia(currentMedia.id, currentSeason.key, currentEpisode.key);
 }
 
 function updateSearch(search)
@@ -200,10 +200,9 @@ function moveSplitbar(e)
 // <editor-fold defaultstate="collapsed" desc="debug function">
 function debug()
 {
-	currentMedia = {'id': 'model', "info": {"name": "Once upon a time"}, 'seasons': {'Season 1': {'Episode 01': '1', 'Episode 02': '2', 'Episode 03': '3'}, 'Season 2': {'Episode 03': '', 'Episode 04': '', 'Episode 05': ''}, 'Season 3': {'Episode 10': '', 'Episode 20': '', 'Episode 30': ''}, }}
+	currentMedia = {'id': 'model', "info": {"name": "Once upon a time"}, 'seasons': {'Season 1': {'Episode 01': '1', 'Episode 02': '2', 'Episode 03': '3'}, 'Season 2': {'Episode 03': '', 'Episode 04': '', 'Episode 05': ''}, 'Season 3': {'Episode 10': '', 'Episode 20': '', 'Episode 30': ''}, }};
 	medias['model'] = currentMedia;
 
-	addMedia('160315098', {"id": "160315098", "info": {"duration": "60", "overview": "The service offered by The Lightman Group is truly unique. Simply stated, they can tell if you're lying. It's not the words you speak that give you away, it's what your body and face have to say. Dr. Cal Lightman and his team are experts at reading micro-expressions, the fleeting tics that express, non-verbally, what we are really feeling. With their finely honed interviewing and investigating skills, they have an uncanny ability to dig up the truth.", "img": "1612484692", "imdb": "tt1235099", "year": "2009", "genres": "Drama Crime", "name": "Lie To Me Season 1, 2 & 3"}, "seasons": {"Season 1": {"Episode 01.avi": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 1\\Episode 01.avi"}, "Season 2": {"Episode 01.avi": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 2\\Episode 01.avi"}, "Season 3": {"Episode 01.avi": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 3\\Episode 01.avi"}}})
+	addMedia('160315098', {"id": "160315098", "info": {"duration": "60", "overview": "The service offered by The Lightman Group is truly unique. Simply stated, they can tell if you're lying. It's not the words you speak that give you away, it's what your body and face have to say. Dr. Cal Lightman and his team are experts at reading micro-expressions, the fleeting tics that express, non-verbally, what we are really feeling. With their finely honed interviewing and investigating skills, they have an uncanny ability to dig up the truth.", "img": "1612484692", "imdb": "tt1235099", "year": "2009", "genres": "Drama Crime", "name": "Lie To Me Season 1, 2 & 3"}, "seasons": {"Season 1": {"Episode 01.avi": {"name": "Episode 01.avi", "path": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 1\\Episode 01.avi", "seen": false}}, "Season 2": {"Episode 01.avi": {"name": "Episode 01.avi", "path": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 2\\Episode 01.avi", "seen": false}}, "Season 3": {"Episode 01.avi": {"name": "Episode 01.avi", "path": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 3\\Episode 01.avi", "seen": false}, "Episode 03.avi": {"name": "Episode 03.avi", "path": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 3\\Episode 03.avi", "seen": false}}}});
 }
-;
 // </editor-fold>

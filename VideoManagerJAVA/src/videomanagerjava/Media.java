@@ -22,8 +22,8 @@ import videomanagerjava.files.Downloader;
 public class Media
 {
 
-	private final TreeMap<String, TreeMap<String, String>> seasons;
-	private final TreeMap<String, String> files;
+	private final TreeMap<String, TreeMap<String, Episode>> seasons;
+	private final TreeMap<String, Episode> files;
 	private final long id;
 	private final HashMap<String, String> info;
 
@@ -105,7 +105,7 @@ public class Media
 	/**
 	 * @return the seasons
 	 */
-	public TreeMap<String, TreeMap<String, String>> getSeasons()
+	public TreeMap<String, TreeMap<String, Episode>> getSeasons()
 	{
 		return seasons;
 	}
@@ -113,7 +113,7 @@ public class Media
 	/**
 	 * @return the files
 	 */
-	public TreeMap<String, String> getFiles()
+	public TreeMap<String, Episode> getFiles()
 	{
 		return files;
 	}
