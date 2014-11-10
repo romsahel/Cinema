@@ -349,9 +349,10 @@ header > .select {
 }
 
 #detail-description {
-	overflow-y: scroll;
+	overflow-y: auto;
 	height: 70%;
 	padding-right: 15px;
+	transition: height 0.35s;
 }
 
 #banner h1, #banner p {
@@ -391,6 +392,7 @@ header > .select {
 	margin: 1px;
 	cursor: pointer;
 	transition: background 0.1s, color 0.35s;
+	max-height: 2em;  overflow: hidden;  text-overflow: ellipsis;  white-space: nowrap;
 }
 
 #files li:nth-child(even) {
@@ -420,7 +422,7 @@ header > .select {
 	display: none;
 }
 
-#seasons, #episodes, #watch-buttons {
+#seasons, #episodes {
 	float: left;
 }
 
@@ -429,13 +431,14 @@ header > .select {
 }
 
 #episodes {
-	width: 60%;
+	 width: 70%;
+	 height: 40%;  overflow-y: auto;  padding-right: 5%;
 }
 
 #episodes li span {
 	font-weight: 700;
 	display: inline-block;
-	width: 18px;
+	width: 14px;
 	text-align: right;
 	margin-right: 15px;
 	color: white;
@@ -451,15 +454,12 @@ header > .select {
 
 #watch-buttons {
 	display: none;
-	position: relative;
-	top: 0px;
 	color: white;
 	background: rgb(31, 32, 37);
+	transition: background 0.1s, color 0.35s;
 
-	transition: top 0.35s, background 0.1s, color 0.35s;
+	margin-top: 15px;
 
-	width: 10%;
-	-webkit-margin-before: 1em;
 
 	text-align: center;
 }
