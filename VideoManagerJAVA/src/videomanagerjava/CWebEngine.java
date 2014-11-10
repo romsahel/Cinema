@@ -5,6 +5,9 @@
  */
 package videomanagerjava;
 
+import videomanagerjava.files.FileWalker;
+import videomanagerjava.files.Settings;
+import videomanagerjava.files.Database;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;

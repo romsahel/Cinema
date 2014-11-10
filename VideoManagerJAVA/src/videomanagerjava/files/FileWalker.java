@@ -3,10 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package videomanagerjava;
+package videomanagerjava.files;
 
+import videomanagerjava.files.Database;
 import java.io.File;
 import java.util.ArrayList;
+import videomanagerjava.Media;
+import videomanagerjava.Utils;
 
 /**
  *
@@ -30,9 +33,10 @@ public class FileWalker
 		File[] files = listFiles(new File(path));
 		ArrayList<Media> result = new ArrayList<>();
 
+		//	We walk through all the files in the root folder
 		for (File file : files)
 		{
-			final Media subWalk = subWalk(file);
+			final Media subWalk = walkRoot(file);
 			if (subWalk != null)
 				result.add(subWalk);
 		}
@@ -40,40 +44,47 @@ public class FileWalker
 		return result;
 	}
 
-	private Media subWalk(File f)
+	private Media walkRoot(File f)
 	{
-		final String path = f.getAbsoluteFile().toString();
-		final String folder = path.substring(path.lastIndexOf('\\') + 1);
+		final String path = f.getAbsolutePath();
 		final long hashCode = path.hashCode();
+//		We start by looking if this folder has already been walked
 		final Media get = Database.getInstance().getDatabase().get(hashCode);
+//		If it has, we return the corresponding media in DB
 		if (get != null)
 			return get;
+//		We create the media with a proper name and its id
+		Media media = new Media(getCleanName(getSuffix(path, fileSeparator)), hashCode);
 
-		Media media = new Media(getCleanName(folder), hashCode);
 		if (f.isDirectory())
-		{
-			File[] files = listFiles(f);
-			for (File file : files)
-			{
-				String fullpath = file.getAbsolutePath();
-				if (file.isDirectory())
-				{
-					final Media walk = subWalk(file);
-					if (walk != null)
-						media.getSeasons().put(walk.getInfo().get("name"), walk.getFiles());
-				}
-				else if (isVideo(fullpath, Utils.EXTENSIONS))
-					media.getFiles().put(getSuffix(fullpath, fileSeparator), fullpath);
-			}
-
-		}
+			walkMedia(f, media);
 		else if (isVideo(path, Utils.EXTENSIONS))
 			media.getFiles().put(getSuffix(path, fileSeparator), path);
 
+//		if media files have been found, we return the media. Otherwise, we destroy it
 		if (media.getFiles().size() > 0 || media.getSeasons().size() > 0)
 			return media;
 		else
 			return null;
+	}
+
+	private void walkMedia(File f, Media media)
+	{
+		File[] files = listFiles(f);
+//		We loop through every file of the directory
+		for (File file : files)
+		{
+			String path = file.getAbsolutePath();
+			if (file.isDirectory())
+			{
+//				If it is a directory, we loop walk through it, and we add every found file as a 'season'
+				final Media walk = walkRoot(file);
+				if (walk != null)
+					media.getSeasons().put(walk.getInfo().get("name"), walk.getFiles());
+			}
+			else if (isVideo(path, Utils.EXTENSIONS))
+				media.getFiles().put(getSuffix(path, fileSeparator), path);
+		}
 	}
 
 	private File[] listFiles(File folder)

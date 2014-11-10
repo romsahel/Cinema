@@ -5,6 +5,8 @@
  */
 package videomanagerjava;
 
+import videomanagerjava.files.Settings;
+import videomanagerjava.files.Database;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;

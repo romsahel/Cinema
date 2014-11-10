@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package videomanagerjava;
+package videomanagerjava.files;
 
 import java.io.FileReader;
 import java.io.FileWriter;
