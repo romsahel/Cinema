@@ -5,7 +5,6 @@
  */
 package videomanagerjava.files;
 
-import videomanagerjava.files.Database;
 import java.io.File;
 import java.util.ArrayList;
 import videomanagerjava.Media;

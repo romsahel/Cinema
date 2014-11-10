@@ -168,8 +168,8 @@ function addMedia(id, array)
 	var media = model.cloneNode(true);
 
 	media.id = id;
-	media.getElementsByTagName("h4")[0].innerText = array.name;
-	media.children[0].style.backgroundImage = "url('media/posters/" + array.img + "')";
+	media.getElementsByTagName("h4")[0].innerText = array.info.name;
+	media.children[0].style.backgroundImage = "url('media/posters/" + array.info.img + "')";
 
 	mediaList.appendChild(media);
 	medias[id] = array;
@@ -194,7 +194,7 @@ function showDetail(elt)
 	currentMedia = medias[elt.id];
 
 	for (var key in detailsToUpdate)
-		changeText(detailsToUpdate[key], currentMedia[key]);
+		changeText(detailsToUpdate[key], currentMedia.info[key]);
 
 
 	seasons.hide();
@@ -220,7 +220,7 @@ function showDetail(elt)
 	episodes.fadeIn('fast');
 	onSeasonsClick($(seasons.children()[0]));
 
-	$('#detail-poster').attr('src', 'media/posters/' + currentMedia.img);
+	$('#detail-poster').attr('src', 'media/posters/' + currentMedia.info.img);
 
 	$("#detail").show();
 }

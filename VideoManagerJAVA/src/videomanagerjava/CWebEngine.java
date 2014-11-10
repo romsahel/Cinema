@@ -5,12 +5,8 @@
  */
 package videomanagerjava;
 
-import videomanagerjava.files.FileWalker;
-import videomanagerjava.files.Settings;
-import videomanagerjava.files.Database;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import javafx.beans.value.ObservableValue;
@@ -18,6 +14,10 @@ import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
+import org.json.simple.JSONValue;
+import videomanagerjava.files.Database;
+import videomanagerjava.files.FileWalker;
+import videomanagerjava.files.Settings;
 
 /**
  *
@@ -54,22 +54,13 @@ public class CWebEngine
 			StringBuilder sb = new StringBuilder();
 
 			//	create an array with all the needed data: first general info
-			sb.append(String.format("'%s': '%s',", "id", o.getId()));
-			for (Map.Entry<String, String> entrySet : o.getInfo().entrySet())
-				sb.append(String.format("'%s': '%s',", entrySet.getKey(), entrySet.getValue().replace("'", "\\'")));
+			sb.append(String.format("\"%s\": \"%s\",", "id", o.getId()));
+			sb.append("\"info\": ").append(JSONValue.toJSONString(o.getInfo()));
 
 			//	appends the season episodes
-			sb.append("'seasons': {");
+			sb.append(", \"seasons\": ").append(JSONValue.toJSONString(o.getSeasons()));
 
-			for (Map.Entry<String, HashMap<String, String>> season : o.getSeasons().entrySet())
-			{
-				sb.append(String.format("'%s': {", season.getKey()));
-				for (Map.Entry<String, String> entrySet : season.getValue().entrySet())
-					sb.append(String.format("'%s': '%s',", entrySet.getKey(), entrySet.getValue().replace("'", "\\'").replace("\\", "\\\\")));
-				sb.append(" }, ");
-			}
-			sb.append("}");
-
+//			.replace("'", "\\'").replace("\\", "\\\\"))
 			String array = "{" + sb.toString() + "}";
 			Utils.callJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
 

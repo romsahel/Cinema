@@ -5,14 +5,15 @@
  */
 package videomanagerjava;
 
-import videomanagerjava.files.Downloader;
 import java.util.HashMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import videomanagerjava.files.Downloader;
 
 /**
  *
@@ -21,8 +22,8 @@ import org.json.simple.parser.ParseException;
 public class Media
 {
 
-	private final HashMap<String, HashMap<String, String>> seasons;
-	private final HashMap<String, String> files;
+	private final TreeMap<String, TreeMap<String, String>> seasons;
+	private final TreeMap<String, String> files;
 	private final long id;
 	private final HashMap<String, String> info;
 
@@ -39,8 +40,8 @@ public class Media
 	public Media(String name, long id, String img)
 	{
 		info = new HashMap<>();
-		this.seasons = new HashMap<>();
-		this.files = new HashMap<>();
+		this.seasons = new TreeMap<>();
+		this.files = new TreeMap<>();
 
 		this.id = id;
 		if (name != null)
@@ -104,7 +105,7 @@ public class Media
 	/**
 	 * @return the seasons
 	 */
-	public HashMap<String, HashMap<String, String>> getSeasons()
+	public TreeMap<String, TreeMap<String, String>> getSeasons()
 	{
 		return seasons;
 	}
@@ -112,7 +113,7 @@ public class Media
 	/**
 	 * @return the files
 	 */
-	public HashMap<String, String> getFiles()
+	public TreeMap<String, String> getFiles()
 	{
 		return files;
 	}
