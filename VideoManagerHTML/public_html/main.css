@@ -383,13 +383,14 @@ header > .select {
 
 #files ul {
 	list-style: none;
+	-webkit-user-select: none;
 }
 
-#files li {
+#files li, #watch-buttons {
 	padding: 9px 15px 9px 15px;
 	margin: 1px;
 	cursor: pointer;
-	transition: background 0.25s;
+	transition: background 0.1s, color 0.35s;
 }
 
 #files li:nth-child(even) {
@@ -400,15 +401,26 @@ header > .select {
 	background: #1f2025;
 }
 
-#files li:hover {
+#files li:hover, #watch-buttons:hover {
 	background: #26272d;
+	color: white;
+}
+
+#files li:active, #watch-buttons:active {
+	transition: background 0.75s, color 0.35s;
+	background: #9cb0ce;
 }
 
 #files ul .selected {
+	transition: background 0.6s, color 0.35s;
 	background: #1a2535;
+	color: white;
+}
+#files ul:not(.selected) {
+	display: none;
 }
 
-#seasons, #episodes {
+#seasons, #episodes, #watch-buttons {
 	float: left;
 }
 
@@ -421,11 +433,12 @@ header > .select {
 }
 
 #episodes li span {
-	font-weight: 800;
+	font-weight: 700;
 	display: inline-block;
 	width: 18px;
 	text-align: right;
 	margin-right: 15px;
+	color: white;
 }
 
 #episodes li div {
@@ -434,4 +447,19 @@ header > .select {
 	padding-left: 15px;
 	padding-bottom: 10px;
 	padding-top: 11px;
+}
+
+#watch-buttons {
+	display: none;
+	position: relative;
+	top: 0px;
+	color: white;
+	background: rgb(31, 32, 37);
+
+	transition: top 0.35s, background 0.1s, color 0.35s;
+
+	width: 10%;
+	-webkit-margin-before: 1em;
+
+	text-align: center;
 }

@@ -53,26 +53,38 @@ function onPageLoaded()
 		var text = $(this).text();
 		currentEpisode = {key: text, value: currentSeason.value[text]};
 
-		$("#watch-buttons").css({top: $(this).index() * $(this).height()});
+		console.log($(this).index() * this.offsetHeight);
+		$("#watch-buttons").css({top: $(this).index() * this.offsetHeight + $(this).index()});
 		$("#watch-buttons").fadeIn('fast');
 	});
 
 	mediaList.children[1].click();
 }
 
+function onSeasonClickFunction(elt)
+{
+
+}
+
 function onSeasonsClick(elt)
 {
-	var text = elt.text();
-	currentSeason = {key: text, value: currentMedia.seasons[text]};
+	if (elt.hasClass("selected"))
+		return;
 
-	elt.parent().children().removeClass("selected");
-	elt.addClass("selected");
-	episodes.children().removeClass("selected");
-	var selected = $(episodes.children()[elt.index()]);
-	selected.children().removeClass("selected");
-	selected.addClass("selected");
+	episodes.fadeTo(100, 0, function () {
+		var text = elt.text();
+		currentSeason = {key: text, value: currentMedia.seasons[text]};
 
-//	$("#watch-buttons").fadeOut('fast');
+		elt.parent().children().removeClass("selected");
+		elt.addClass("selected");
+		episodes.children().removeClass("selected");
+		var selected = $(episodes.children()[elt.index()]);
+		selected.children().removeClass("selected");
+		selected.addClass("selected");
+
+		$("#watch-buttons").fadeOut('fast');
+		episodes.fadeTo("fast", 1);
+	});
 }
 
 $('html').click(function () {
@@ -162,7 +174,7 @@ function showDetail(elt)
 	{
 		seasonsToAppend = seasonsToAppend + "<li>" + sKey + "</li>";
 		episodesToAppend = episodesToAppend + "<ul>";
-		var i = 7;
+		var i = 1;
 		for (var eKey in currSeasons[sKey])
 		{
 			episodesToAppend = episodesToAppend + "<li>" + "<span>" + i + "</span><div>" + eKey + "</div></li>";
