@@ -57,8 +57,7 @@ function onPageLoaded()
 		$("#watch-buttons").fadeIn('fast');
 	});
 
-	showDetail(currentMedia);
-
+	mediaList.children[1].click();
 }
 
 function onSeasonsClick(elt)
@@ -73,7 +72,7 @@ function onSeasonsClick(elt)
 	selected.children().removeClass("selected");
 	selected.addClass("selected");
 
-	$("#watch-buttons").fadeOut('fast');
+//	$("#watch-buttons").fadeOut('fast');
 }
 
 $('html').click(function () {
@@ -163,8 +162,12 @@ function showDetail(elt)
 	{
 		seasonsToAppend = seasonsToAppend + "<li>" + sKey + "</li>";
 		episodesToAppend = episodesToAppend + "<ul>";
+		var i = 7;
 		for (var eKey in currSeasons[sKey])
-			episodesToAppend = episodesToAppend + "<li>" + eKey + "</li>";
+		{
+			episodesToAppend = episodesToAppend + "<li>" + "<span>" + i + "</span><div>" + eKey + "</div></li>";
+			i = i + 1;
+		}
 		episodesToAppend = episodesToAppend + "</ul>";
 	}
 

@@ -34,6 +34,9 @@ public class Media
 		this(null, id, null);
 	}
 
+	/*
+	 * Constructor that should only be called by the FileWalker since it creates a "Default" season
+	 */
 	public Media(String name, long id)
 	{
 		this(name, id, null);
