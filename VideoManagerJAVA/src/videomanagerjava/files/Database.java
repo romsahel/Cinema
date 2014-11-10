@@ -59,7 +59,6 @@ public class Database
 		elt.put("id", media.getId());
 
 		writeMap("info", media.getInfo(), elt);
-		writeMap("files", media.getFiles(), elt);
 		writeMap("seasons", media.getSeasons(), elt);
 
 		return elt;
@@ -104,7 +103,6 @@ public class Database
 
 		readMap((JSONObject) elt.get("info"), media.getInfo());
 		readMap((JSONObject) elt.get("seasons"), media.getSeasons());
-		readEpisodes((JSONObject) elt.get("files"), media.getFiles());
 
 		return media;
 	}

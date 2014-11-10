@@ -192,6 +192,7 @@ header > .select {
 	position: fixed;
 	right: 0px;
 	display: none;
+	height: 100vh;
 }
 
 #split {
@@ -372,13 +373,16 @@ header > .select {
 	display: none;
 }
 
-#files ul {
+#seasons, #episodes {
 	display: inline;
 	float: left;
-	margin-right: 25px;
-	margin-left: 10px;
+}
+
+#files ul {
 	list-style: none;
 	padding: 0px;
+	margin-right: 25px;
+	margin-left: 10px;
 }
 
 #files ul li  {
@@ -388,6 +392,7 @@ header > .select {
 	cursor: pointer;
 	line-height: 300%;
 	max-width: 850px;
+	min-width: 80px;
 	border-radius: 3px;
 	transition: margin-left 0.5s, background 0.5s;
 }
@@ -428,27 +433,11 @@ header > .select {
 }
 
 #episodes > ul:not(.selected) {
-	opacity: 0;
 	display: none;
 }
 
 #episodes > .selected {
-    -webkit-animation: fadein 1s linear;
-    animation: fadein 1s linear;
-	opacity: 1;
 	display: initial;
-}
-
-/* Chrome, Safari, Opera */
-@-webkit-keyframes fadein {
-    0%		{ opacity: 0; }
-    100%	{ opacity: 1; }
-}
-
-/* Standard syntax */
-@keyframes fadein {
-    0%		{ opacity: 0; }
-    100%	{ opacity: 1; }
 }
 
 #episodes li > span {

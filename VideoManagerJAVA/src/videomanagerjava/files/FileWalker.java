@@ -17,6 +17,7 @@ import videomanagerjava.Utils;
  */
 public class FileWalker
 {
+
 	private FileWalker()
 	{
 	}
@@ -52,11 +53,12 @@ public class FileWalker
 		if (f.isDirectory())
 			walkMedia(f, media);
 		else if (isVideo(path, Utils.EXTENSIONS))
-		{
 			addEpisode(path, media);
-		}
+
+		media.removeEmptySeasons();
+		
 //		if media files have been found, we return the media. Otherwise, we destroy it
-		if (media.getFiles().size() > 0 || media.getSeasons().size() > 0)
+		if (media.getSeasons().size() > 0)
 			return media;
 		else
 			return null;
@@ -65,7 +67,7 @@ public class FileWalker
 	private void addEpisode(final String path, Media media)
 	{
 		final Episode episode = new Episode(path);
-		media.getFiles().put(episode.getName(), episode);
+		media.getDefaultSeason().put(episode.getName(), episode);
 	}
 
 	private void walkMedia(File f, Media media)
@@ -80,7 +82,7 @@ public class FileWalker
 //				If it is a directory, we loop walk through it, and we add every found file as a 'season'
 				final Media walk = walkRoot(file);
 				if (walk != null)
-					media.getSeasons().put(walk.getInfo().get("name"), walk.getFiles());
+					media.getSeasons().put(walk.getInfo().get("name"), walk.getDefaultSeason());
 			}
 			else if (isVideo(path, Utils.EXTENSIONS))
 				addEpisode(path, media);

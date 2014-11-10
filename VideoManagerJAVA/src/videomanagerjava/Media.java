@@ -6,6 +6,8 @@
 package videomanagerjava;
 
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -22,8 +24,8 @@ import videomanagerjava.files.Downloader;
 public class Media
 {
 
+	private final static String DEFAULT_KEY = "Files";
 	private final TreeMap<String, TreeMap<String, Episode>> seasons;
-	private final TreeMap<String, Episode> files;
 	private final long id;
 	private final HashMap<String, String> info;
 
@@ -35,13 +37,13 @@ public class Media
 	public Media(String name, long id)
 	{
 		this(name, id, null);
+		seasons.put(DEFAULT_KEY, new TreeMap<>());
 	}
 
 	public Media(String name, long id, String img)
 	{
 		info = new HashMap<>();
 		this.seasons = new TreeMap<>();
-		this.files = new TreeMap<>();
 
 		this.id = id;
 		if (name != null)
@@ -74,27 +76,30 @@ public class Media
 				JSONObject jobj = (JSONObject) obj;
 				final String newYear = jobj.get("year").toString();
 				if (getInfo().get("year") == null || newYear.equals(getInfo().get("year")))
-				{
-					getInfo().put("year", newYear);
-					getInfo().put("overview", jobj.get("overview").toString());
-					getInfo().put("genres", jobj.get("genres").toString().replace("[", "").replace("\"", "").replace("]", "").replace(",", " "));
-					getInfo().put("imdb", jobj.get("imdb_id").toString());
-					getInfo().put("duration", jobj.get("runtime").toString());
+					try
+					{
+						getInfo().put("year", newYear);
+						getInfo().put("overview", jobj.get("overview").toString());
+						getInfo().put("genres", jobj.get("genres").toString().replace("[", "").replace("\"", "").replace("]", "").replace(",", " "));
+						getInfo().put("imdb", jobj.get("imdb_id").toString());
+						getInfo().put("duration", jobj.get("runtime").toString());
 
-					String imgURL = (String) ((JSONObject) jobj.get("images")).get("poster");
-					imgURL = imgURL.replace(".jpg", "-300.jpg");
+						String imgURL = (String) ((JSONObject) jobj.get("images")).get("poster");
+						imgURL = imgURL.replace(".jpg", "-300.jpg");
 
-					getInfo().put("img", Downloader.downloadImage(imgURL));
-
-					break;
-				}
+						getInfo().put("img", Downloader.downloadImage(imgURL));
+						break;
+					} catch (Exception e)
+					{
+						System.err.println("====");
+						System.err.println(url);
+					}
 			}
 		} catch (ParseException ex)
 		{
-			System.out.println(url);
-			Logger
-					.getLogger(VideoManagerJAVA.class
-							.getName()).log(Level.SEVERE, null, ex);
+			System.err.println("====");
+			System.err.println(url);
+			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
 		} finally
 		{
 			if (getInfo().get("img") == null)
@@ -110,12 +115,19 @@ public class Media
 		return seasons;
 	}
 
-	/**
-	 * @return the files
-	 */
-	public TreeMap<String, Episode> getFiles()
+	public TreeMap<String, Episode> getDefaultSeason()
 	{
-		return files;
+		return seasons.get(DEFAULT_KEY);
+	}
+
+	public void removeEmptySeasons()
+	{
+		for (Iterator<Map.Entry<String, TreeMap<String, Episode>>> it = seasons.entrySet().iterator(); it.hasNext();)
+		{
+			Map.Entry<String, TreeMap<String, Episode>> entry = it.next();
+			if (entry.getValue() == null || entry.getValue().size() <= 0)
+				it.remove();
+		}
 	}
 
 	/**

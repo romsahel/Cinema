@@ -26,7 +26,7 @@ import videomanagerjava.files.Settings;
 public class CWebEngine
 {
 
-	private final ArrayList<Media> medias;
+	private final ArrayList<Media> medias = new ArrayList<>();
 	private ExecutorService executor;
 
 	public CWebEngine(WebView webBrowser)
@@ -37,7 +37,11 @@ public class CWebEngine
 
 		((JSObject) webEngine.executeScript("window")).setMember("app", new DatabaseJS());
 
-		medias = FileWalker.getInstance().walk(Settings.getInstance().getLocations().get("Vidéos"));
+		for (Map.Entry<String, String> entrySet : Settings.getInstance().getLocations().entrySet())
+		{
+			String value = entrySet.getValue();
+			medias.addAll(FileWalker.getInstance().walk(value));
+		}
 		getImages();
 
 	}
@@ -60,11 +64,8 @@ public class CWebEngine
 			//	appends the season episodes
 			sb.append(", \"seasons\": ").append(JSONValue.toJSONString(o.getSeasons()));
 
-//			.replace("'", "\\'").replace("\\", "\\\\"))
 			String array = "{" + sb.toString() + "}";
 			Utils.callJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
-
-			break;
 		}
 
 		for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
