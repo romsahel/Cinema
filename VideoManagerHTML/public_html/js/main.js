@@ -61,11 +61,6 @@ function onPageLoaded()
 	mediaList.children[1].click();
 }
 
-function onSeasonClickFunction(elt)
-{
-
-}
-
 function onSeasonsClick(elt)
 {
 	if (elt.hasClass("selected"))
@@ -148,51 +143,42 @@ function addLocation(name)
 	locationsList.appendChild(newLoc);
 }
 
-function changeText(element, text)
-{
-	element.fadeOut(200, function () {
-		$(this).text(text).fadeIn(200);
-	});
-}
-
 function showDetail(elt)
 {
-	currentMedia = medias[elt.id];
+	$("#detail").fadeTo(100, 0, function () {
+		currentMedia = medias[elt.id];
 
-	for (var key in detailsToUpdate)
-		changeText(detailsToUpdate[key], currentMedia.info[key]);
+		seasons.empty();
+		episodes.empty();
 
-	seasons.hide();
-	episodes.hide();
-	seasons.empty();
-	episodes.empty();
+		for (var key in detailsToUpdate)
+			$(detailsToUpdate[key]).text(currentMedia.info[key])
 
-	var currSeasons = currentMedia.seasons;
-	var seasonsToAppend = "";
-	var episodesToAppend = "";
-	for (var sKey in currSeasons)
-	{
-		seasonsToAppend = seasonsToAppend + "<li>" + sKey + "</li>";
-		episodesToAppend = episodesToAppend + "<ul>";
-		var i = 1;
-		for (var eKey in currSeasons[sKey])
+		var currSeasons = currentMedia.seasons;
+		var seasonsToAppend = "";
+		var episodesToAppend = "";
+		for (var sKey in currSeasons)
 		{
-			episodesToAppend = episodesToAppend + "<li>" + "<span>" + i + "</span><div>" + eKey + "</div></li>";
-			i = i + 1;
+			seasonsToAppend = seasonsToAppend + "<li>" + sKey + "</li>";
+			episodesToAppend = episodesToAppend + "<ul>";
+			var i = 1;
+			for (var eKey in currSeasons[sKey])
+			{
+				episodesToAppend = episodesToAppend + "<li>" + "<span>" + i + "</span><div>" + eKey + "</div></li>";
+				i = i + 1;
+			}
+			episodesToAppend = episodesToAppend + "</ul>";
 		}
-		episodesToAppend = episodesToAppend + "</ul>";
-	}
 
-	seasons.append(seasonsToAppend);
-	episodes.append(episodesToAppend);
+		seasons.append(seasonsToAppend);
+		episodes.append(episodesToAppend);
 
-	seasons.fadeIn('fast');
-	episodes.fadeIn('fast');
-	onSeasonsClick($(seasons.children()[0]));
+		$("#detail").show();
+		$("#detail").fadeTo(100, 1);
+		onSeasonsClick($(seasons.children()[0]));
 
-	$('#detail-poster').attr('src', 'media/posters/' + currentMedia.info.img);
-
-	$("#detail").show();
+		$('#detail-poster').attr('src', 'media/posters/' + currentMedia.info.img);
+	});
 }
 
 function updateSplitPane()
