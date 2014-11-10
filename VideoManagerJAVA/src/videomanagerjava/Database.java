@@ -8,7 +8,6 @@ package videomanagerjava;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -26,131 +25,117 @@ import org.json.simple.parser.ParseException;
 public class Database
 {
 
-  private final HashMap<Long, Media> database;
+	private final HashMap<Long, Media> database;
 
-  private Database()
-  {
-	database = new HashMap<>();
-  }
-
-  public void writeDatabase()
-  {
-	JSONArray db = new JSONArray();
-
-	for (Map.Entry<Long, Media> media : getDatabase().entrySet())
-	  db.add(writeMedia(media.getValue()));
-
-	try (FileWriter file = new FileWriter("db.json"))
+	private Database()
 	{
-	  file.write(db.toJSONString());
-	  file.flush();
-	} catch (IOException ex)
-	{
-	  Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
-	}
-  }
-
-  private JSONObject writeMedia(Media media)
-  {
-	JSONObject elt = new JSONObject();
-	elt.put("id", media.getId());
-	final JSONObject info = new JSONObject();
-	for (Map.Entry<String, String> entrySet : media.getInfo().entrySet())
-	  info.put(entrySet.getKey(), entrySet.getValue());
-	elt.put("info", info);
-
-	final HashMap<String, String> files = media.getFiles();
-	if (files.size() > 0)
-	{
-	  final JSONObject obj = new JSONObject();
-	  for (Map.Entry<String, String> entrySet : files.entrySet())
-		obj.put(entrySet.getKey(), entrySet.getValue());
-	  elt.put("files", obj);
+		database = new HashMap<>();
 	}
 
-	final ArrayList<Media> medias = media.getMedias();
-	if (medias.size() > 0)
+	public void writeDatabase()
 	{
-	  final JSONArray obj = new JSONArray();
-	  for (Media m : medias)
-		obj.add(writeMedia(m));
-	  elt.put("medias", obj);
+		JSONArray db = new JSONArray();
+
+		for (Map.Entry<Long, Media> media : getDatabase().entrySet())
+			db.add(writeMedia(media.getValue()));
+
+		try (FileWriter file = new FileWriter("db.json"))
+		{
+			file.write(db.toJSONString());
+			file.flush();
+		} catch (IOException ex)
+		{
+			Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 
-	return elt;
-  }
-
-  public void readDatabase()
-  {
-	try
+	private JSONObject writeMedia(Media media)
 	{
-	  JSONParser parser = new JSONParser();
+		JSONObject elt = new JSONObject();
 
-	  Object obj = parser.parse(new FileReader("db.json"));
+		elt.put("id", media.getId());
 
-	  JSONArray db = (JSONArray) obj;
+		writeMap("info", media.getInfo(), elt);
+		writeMap("files", media.getFiles(), elt);
+		writeMap("seasons", media.getSeasons(), elt);
 
-	  for (Iterator iterator = db.iterator(); iterator.hasNext();)
-	  {
-		JSONObject elt = (JSONObject) iterator.next();
-		final Media media = readMedia(elt);
-		database.put(media.getId(), media);
-	  }
-	} catch (IOException | ParseException ex)
-	{
-	  Logger.getLogger(Database.class.getName()).log(Level.INFO, null, ex);
+		return elt;
 	}
 
-	for (Map.Entry<Long, Media> next : getDatabase().entrySet())
-	  System.out.println(next.getKey() + ": " + next.getValue());
-  }
-
-  private Media readMedia(JSONObject elt)
-  {
-	final long id = (long) elt.get("id");
-	final Media media = new Media(id);
-
-	JSONObject obj = (JSONObject) elt.get("info");
-	for (Iterator it = obj.keySet().iterator(); it.hasNext();)
+	private void writeMap(String name, Map map, JSONObject elt)
 	{
-	  String key = (String) it.next();
-	  media.getInfo().put(key, (String) obj.get(key));
+		if (map.size() > 0)
+			elt.put(name, new JSONObject(map));
 	}
 
-	JSONArray array = (JSONArray) elt.get("medias");
-	if (array != null)
-	  for (Object o : array)
-		media.getMedias().add(readMedia((JSONObject) o));
+	public void readDatabase()
+	{
+		try
+		{
+			JSONParser parser = new JSONParser();
 
-	obj = (JSONObject) elt.get("files");
-	if (obj != null)
-	  for (Iterator it = obj.keySet().iterator(); it.hasNext();)
-	  {
-		String key = (String) it.next();
-		media.getFiles().put(key, (String) obj.get(key));
-	  }
+			Object obj = parser.parse(new FileReader("db.json"));
 
-	return media;
-  }
+			JSONArray db = (JSONArray) obj;
 
-  // <editor-fold defaultstate="collapsed" desc="Singleton">
-  public static Database getInstance()
-  {
-	return DatabaseHolder.INSTANCE;
-  }
+			for (Iterator iterator = db.iterator(); iterator.hasNext();)
+			{
+				JSONObject elt = (JSONObject) iterator.next();
+				final Media media = readMedia(elt);
+				database.put(media.getId(), media);
+			}
+		} catch (IOException | ParseException ex)
+		{
+			System.err.println("Could not read database");
+//			Logger.getLogger(Database.class.getName()).log(Level.INFO, null, ex);
+		}
 
-  /**
-   * @return the medias
-   */
-  public HashMap<Long, Media> getDatabase()
-  {
-	return database;
-  }
+		for (Map.Entry<Long, Media> next : getDatabase().entrySet())
+			System.out.println(next.getKey() + ": " + next.getValue());
+	}
 
-  private static class DatabaseHolder
-  {
+	private Media readMedia(JSONObject elt)
+	{
+		final long id = (long) elt.get("id");
+		final Media media = new Media(id);
 
-	private static final Database INSTANCE = new Database();
-  }
+		readMap("info", elt, media.getInfo());
+		readMap("seasons", elt, media.getSeasons());
+		readMap("files", elt, media.getFiles());
+
+		return media;
+	}
+
+	private void readMap(String name, JSONObject elt, final Map map)
+	{
+		System.out.println(name);
+		JSONObject obj = (JSONObject) elt.get(name);
+		if (obj != null)
+			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
+			{
+				String key = (String) it.next();
+				map.put(key, obj.get(key));
+			}
+	}
+
+	// <editor-fold defaultstate="collapsed" desc="Singleton">
+	public static Database getInstance()
+	{
+		return DatabaseHolder.INSTANCE;
+	}
+
+	/**
+	 * @return the medias
+	 */
+	public HashMap<Long, Media> getDatabase()
+	{
+		return database;
+	}
+
+	private static class DatabaseHolder
+	{
+
+		private static final Database INSTANCE = new Database();
+	}
   // </editor-fold>
 }

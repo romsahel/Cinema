@@ -6,6 +6,7 @@
 package videomanagerjava;
 
 import java.io.File;
+import java.util.ArrayList;
 
 /**
  *
@@ -14,86 +15,123 @@ import java.io.File;
 public class FileWalker
 {
 
-  private FileWalker()
-  {
-  }
+	private final String fileSeparator;
 
-  public Media walk(String path)
-  {
-    File rootFolder = new File(path);
-    File[] list = rootFolder.listFiles();
+	private FileWalker()
+	{
+		if (!System.getProperty("os.name").contains("Windows"))
+			fileSeparator = "/";
+		else
+			fileSeparator = "\\";
+	}
 
-    if (list == null)
-      return null;
+	public ArrayList<Media> walk(String path)
+	{
+		File[] files = listFiles(new File(path));
+		ArrayList<Media> result = new ArrayList<>();
 
-    String fileSeparator = "\\";
-	if (!System.getProperty("os.name").contains("Windows"))
-      fileSeparator = "/";
+		for (File file : files)
+		{
+			final Media subWalk = subWalk(file);
+			if (subWalk != null)
+				result.add(subWalk);
+		}
 
-    final String folder = path.substring(path.lastIndexOf('\\') + 1);
-	final long hashCode = path.hashCode();
-	final Media get = Database.getInstance().getDatabase().get(hashCode);
-	if (get != null)
-	  return get;
-	Media media = new Media(getCleanName(folder, fileSeparator), hashCode);
-    for (File f : list)
-    {
-      final String fileToString = f.getAbsoluteFile().toString();
-      if (f.isDirectory())
-      {
-        final Media walk = walk(f.getAbsolutePath());
-        if (walk != null)
-		  media.getMedias().add(walk);
-      }
-	  else if (isVideo(fileToString, Utils.EXTENSIONS))
-	  {
-		media.getFiles().put(getSuffix(fileToString, fileSeparator), fileToString);
-	  }
-    }
-    if (media.getFiles().size() > 0 || media.getMedias().size() > 0)
-      return media;
-    else
-      return null;
-  }
+		return result;
+	}
 
-  private String getCleanName(final String fileToString, String fileSeparator)
-  {
-    if (fileToString == null)
-      return null;
-    String file = getSuffix(fileToString, fileSeparator);
-    file = Utils.getPrefix(file, Utils.DUMP_KEYWORDS);
-    file = file.replace('.', ' ').trim();
-    return file;
-  }
+	private Media subWalk(File f)
+	{
+		final String path = f.getAbsoluteFile().toString();
+		final String folder = path.substring(path.lastIndexOf('\\') + 1);
+		final long hashCode = path.hashCode();
+		final Media get = Database.getInstance().getDatabase().get(hashCode);
+		if (get != null)
+			return get;
 
-  private String getSuffix(String src, String... delimiter)
-  {
-    int i = Utils.findIndex(src, delimiter);
+		Media media = new Media(getCleanName(folder), hashCode);
+		if (f.isDirectory())
+		{
+			File[] files = listFiles(f);
+			for (File file : files)
+			{
+				String fullpath = file.getAbsolutePath();
+				if (file.isDirectory())
+				{
+					final Media walk = subWalk(file);
+					if (walk != null)
+						media.getSeasons().put(walk.getInfo().get("name"), walk.getFiles());
+				}
+				else if (isVideo(fullpath, Utils.EXTENSIONS))
+					media.getFiles().put(getSuffix(fullpath, fileSeparator), fullpath);
+			}
 
-    if (i == -1)
-      return src;
-    else
-      return src.substring(i + 1);
-  }
+		}
+		else if (isVideo(path, Utils.EXTENSIONS))
+			media.getFiles().put(getSuffix(path, fileSeparator), path);
 
-  private boolean isVideo(String path, String... extensions)
-  {
-    for (String ext : extensions)
-	  if (path.endsWith(ext))
-		return true;
-	return false;
-  }
+		if (media.getFiles().size() > 0 || media.getSeasons().size() > 0)
+			return media;
+		else
+			return null;
+	}
 
-  // <editor-fold defaultstate="collapsed" desc="Singleton">
-  public static FileWalker getInstance()
-  {
-    return FileWalkerHolder.INSTANCE;
-  }
+	private File[] listFiles(File folder)
+	{
+		File[] list = folder.listFiles();
 
-  private static class FileWalkerHolder
-  {
+		if (list == null)
+			return null;
+		else
+			return list;
+	}
 
-    private static final FileWalker INSTANCE = new FileWalker();
-  }
+	/**
+	 * Formats a full absolute path into a name by keeping only what follows the last separator
+	 * and by removing everything after specified keywords (Utils.DUMP_KEYWORDS)
+	 * <p>
+	 * @param string the string to format
+	 * <p>
+	 * @return
+	 */
+	private String getCleanName(final String string)
+	{
+		if (string == null)
+			return null;
+		String file = getSuffix(string, fileSeparator);
+		file = Utils.getPrefix(file, Utils.DUMP_KEYWORDS);
+		file = file.replace('.', ' ').trim();
+		return file;
+	}
+
+	private String getSuffix(String src, String... delimiter)
+	{
+		int i = Utils.findIndex(src, delimiter);
+
+		if (i == -1)
+			return src;
+		else
+			return src.substring(i + 1);
+	}
+
+	private boolean isVideo(String path, String... extensions)
+	{
+		for (String ext : extensions)
+			if (path.endsWith(ext))
+				return true;
+		return false;
+	}
+
+	// <editor-fold defaultstate="collapsed" desc="Singleton">
+	public static FileWalker getInstance()
+	{
+		return FileWalkerHolder.INSTANCE;
+	}
+
+	private static class FileWalkerHolder
+	{
+
+		private static final FileWalker INSTANCE = new FileWalker();
+	}
   // </editor-fold>
 }
