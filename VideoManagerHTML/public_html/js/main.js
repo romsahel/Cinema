@@ -51,7 +51,7 @@ function onPageLoaded()
 		$(this).addClass("selected");
 
 		var text = $(this).text();
-		currentEpisode = { key: text, value: currentSeason.elt[text] };
+		currentEpisode = {key: text, value: currentSeason.elt[text]};
 
 		$("#watch-buttons").css({top: $(this).index() * $(this).height()});
 		$("#watch-buttons").fadeIn('fast');
@@ -63,7 +63,7 @@ function onPageLoaded()
 
 function onSeasonsClick(elt)
 {
-	currentSeason = { index: elt.index(), elt: currentMedia.seasons[elt.text()] };
+	currentSeason = {index: elt.index(), elt: currentMedia.seasons[elt.text()]};
 	elt.parent().children().removeClass("selected");
 	elt.addClass("selected");
 	episodes.children().removeClass("selected");
@@ -93,57 +93,13 @@ function playMedia(local)
 	app.playMedia(currentMedia.id, currentSeason.index, currentEpisode.key);
 }
 
-$(document).keypress(function (e) {
-	var keycode = e.keyCode;
-
-	if (!searchBar.is(":focus"))
-	{
-		var valid = (keycode > 47 && keycode < 58) || // number keys
-				(keycode === 32) || // spacebar & return key(s) (if you want to allow carriage returns)
-				(keycode > 64 && keycode < 91) || // letter keys
-				(keycode > 95 && keycode < 112) || // numpad keys
-				(keycode > 185 && keycode < 193) || // ;=,-./` (in order)
-				(keycode > 218 && keycode < 223);   // [\]' (in order)
-		if (valid)
-			searchBar.focus();
-	}
-});
-
-$(document).keyup(function (e) {
-	if (e.keyCode === 13)
-	{
-		if (searchBar.is(":focus"))
-			searchBar.blur();
-	}     // enter
-	if (e.keyCode === 27)
-	{
-		if (searchBar.is(":focus"))
-			searchBar.blur();
-		else if (searchBar.val() !== "")
-		{
-			searchBar.val("");
-			updateSearch("");
-		}
-	}   // esc
-});
-
-function handleSearchFocus(onFocus)
-{
-	if (onFocus)
-	{
-		searchBarParent.data('width', searchBarParent.width());
-		searchBarParent.animate({width: split.position().left - ($(window).width() - (searchBarParent.offset().left + searchBarParent.width()))}, 200);
-	}
-	else
-		searchBarParent.animate({width: searchBarParent.data('width')}, 200);
-}
-
 function updateSearch(search)
 {
+	console.log("coucou");
 	for (var key in medias) {
 		var div = $('#' + key);
 		var elt = medias[key];
-		if ((elt.name).indexOf(search) === -1)
+		if ((elt.info.name.toLowerCase()).indexOf(search) === -1)
 			div.fadeOut('fast');
 		else
 			div.fadeIn('fast');
@@ -196,11 +152,11 @@ function showDetail(elt)
 	for (var key in detailsToUpdate)
 		changeText(detailsToUpdate[key], currentMedia.info[key]);
 
-
 	seasons.hide();
 	episodes.hide();
 	seasons.empty();
 	episodes.empty();
+
 	var currSeasons = currentMedia.seasons;
 	var seasonsToAppend = "";
 	var episodesToAppend = "";
@@ -225,16 +181,6 @@ function showDetail(elt)
 	$("#detail").show();
 }
 
-function up()
-{
-	document.onmousemove = null;
-}
-
-function down()
-{
-	document.onmousemove = moveSplitbar;
-}
-
 function updateSplitPane()
 {
 	var width = mediaList.offsetWidth;
@@ -251,37 +197,13 @@ function moveSplitbar(e)
 	return cancelEvent(e);
 }
 
-//  prevent the mousedown event to trigger any other event
-function cancelEvent(e)
-{
-	if (e.stopPropagation)
-		e.stopPropagation();
-	if (e.preventDefault)
-		e.preventDefault();
-	e.cancelBubble = true;
-	e.returnValue = false;
-	return false;
-}
-
-function onResize()
-{
-	updateSplitPane();
-	clearTimeout(resizingTimeout);
-	resizingTimeout = setTimeout(onResizeEnd, 100);
-
-	function onResizeEnd()
-	{
-		if (searchBar.is(":focus"))
-			searchBarParent.animate({width: split.position().left - ($(window).width() - (searchBarParent.offset().left + searchBarParent.width()))}, 50);
-	}
-}
-
 // <editor-fold defaultstate="collapsed" desc="debug function">
 function debug()
 {
-	currentMedia = {'id': 'model', 'seasons': {'Season 1': {'Episode 01': '1', 'Episode 02': '2', 'Episode 03': '3'}, 'Season 2': {'Episode 03': '', 'Episode 04': '', 'Episode 05': ''}, 'Season 3': {'Episode 10': '', 'Episode 20': '', 'Episode 30': ''}, }}
+	currentMedia = {'id': 'model', "info": {"name": "Once upon a time"}, 'seasons': {'Season 1': {'Episode 01': '1', 'Episode 02': '2', 'Episode 03': '3'}, 'Season 2': {'Episode 03': '', 'Episode 04': '', 'Episode 05': ''}, 'Season 3': {'Episode 10': '', 'Episode 20': '', 'Episode 30': ''}, }}
 	medias['model'] = currentMedia;
 
-	addMedia('160315098', {'id': '160315098', 'duration': '60', 'overview': 'The service offered by The Lightman Group is truly unique. Simply stated, they can tell if you\'re lying. It\'s not the words you speak that give you away, it\'s what your body and face have to say. Dr. Cal Lightman and his team are experts at reading micro-expressions, the fleeting tics that express, non-verbally, what we are really feeling. With their finely honed interviewing and investigating skills, they have an uncanny ability to dig up the truth.', 'img': '1612484692', 'imdb': 'tt1235099', 'year': '2009', 'genres': 'Drama Crime', 'name': 'Lie To Me Season 1, 2 & 3', 'seasons': {'Season 1': {'Episode 01.avi': 'C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 1\\Episode 01.avi', }, 'Season 2': {'Episode 01.avi': 'C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 2\\Episode 01.avi', }, 'Season 3': {'Episode 01.avi': 'C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 3\\Episode 01.avi', }, }})
+	addMedia('160315098', {"id": "160315098", "info": {"duration": "60", "overview": "The service offered by The Lightman Group is truly unique. Simply stated, they can tell if you're lying. It's not the words you speak that give you away, it's what your body and face have to say. Dr. Cal Lightman and his team are experts at reading micro-expressions, the fleeting tics that express, non-verbally, what we are really feeling. With their finely honed interviewing and investigating skills, they have an uncanny ability to dig up the truth.", "img": "1612484692", "imdb": "tt1235099", "year": "2009", "genres": "Drama Crime", "name": "Lie To Me Season 1, 2 & 3"}, "seasons": {"Season 1": {"Episode 01.avi": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 1\\Episode 01.avi"}, "Season 2": {"Episode 01.avi": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 2\\Episode 01.avi"}, "Season 3": {"Episode 01.avi": "C:\\Users\\romsahel\\Videos\\Lie To Me Season 1, 2 & 3 Complete DVDRip HDTV\\Season 3\\Episode 01.avi"}}})
 }
+;
 // </editor-fold>
