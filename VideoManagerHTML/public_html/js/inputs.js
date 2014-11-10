@@ -68,7 +68,7 @@ function cancelEvent(e)
 
 function onResize()
 {
-	updateSplitPane();
+	moveSplitbar({pageX: $(window).width() / 2 });
 	clearTimeout(resizingTimeout);
 	resizingTimeout = setTimeout(onResizeEnd, 100);
 

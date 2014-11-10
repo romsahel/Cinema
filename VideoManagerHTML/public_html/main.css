@@ -184,23 +184,22 @@ header > .select {
 	display: table;
 }
 
-#main > div {
-	display: table-cell;
-	vertical-align: top;
-}
-
 #media-list {
 	width: 50%;
 	/* padding-right: 15px; */
 	min-width: 192px;
+	display: table-cell;
+	vertical-align: top;
 }
 
 #detail {
+	padding-top: 15px;
 	padding-left: 25px;
 	position: fixed;
 	right: 0px;
 	height: 100vh;
 
+	min-width: 666px;
 	display: table;
 }
 
@@ -438,7 +437,7 @@ header > .select {
 
 #episodes {
 	 width: 70%;
-	 height: 69%;  overflow-y: auto;  padding-right: 5%;
+	 height: 70%;  overflow-y: auto;  padding-right: 5%;
 }
 
 #episodes li span {

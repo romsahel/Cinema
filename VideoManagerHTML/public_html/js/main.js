@@ -206,8 +206,18 @@ function updateSplitPane()
 
 function moveSplitbar(e)
 {
-	mediaList.style.width = e.pageX;
-	updateSplitPane();
+	if ($(window).width() - e.pageX - 42 > 666)
+	{
+		mediaList.style.width = e.pageX;
+		updateSplitPane();
+	}
+	else
+	{
+		detail.style.width = 666;
+		var width = $(window).width() - 42 - 666;
+		split.css({left: width});
+		mediaList.style.width = width;
+	}
 
 	return cancelEvent(e);
 }
@@ -228,5 +238,7 @@ function debug()
 	addMedia('-369659925', {"id": "-369659925", "info": {"duration": "124", "overview": "Sin City is a neo-noir crime thriller based on Frank Miller's graphic novel series of the same name.The film is primarily based on three of Miller's works: The Hard Goodbye, about a man who embarks on a brutal rampage in search of his one-time sweetheart's killer; The Big Fat Kill, which focuses on a street war between a group of prostitutes and a group of mercenaries; and That Yellow Bastard, which follows an aging police officer who protects a young woman from a grotesquely disfigured serial killer.", "img": "-66238642", "imdb": "tt0401792", "year": "2005", "genres": "Action Crime Thriller", "name": "Sin City"}, "seasons": {"Files": {"Sin.City.EXTENDED.UNRATED.2005.1080p.BrRip.x264.YIFY+HI.mp4": {"name": "Sin.City.EXTENDED.UNRATED.2005.1080p.BrRip.x264.YIFY+HI.mp4", "path": "C:\\Users\\Romsahel\\Downloads\\Torrents\\Sin City EXTENDED and UNRATED (2005) [1080p]\\Sin.City.EXTENDED.UNRATED.2005.1080p.BrRip.x264.YIFY+HI.mp4", "seen": false}}}})
 	addMedia('491400276', {"id": "491400276", "info": {"duration": "131", "overview": "A man receives a mysterious e-mail appearing to be from his wife, who was murdered years earlier. As he frantically tries to find out whether she's alive, he finds himself being implicated in her death.", "img": "1012000215", "imdb": "tt0362225", "year": "2006", "genres": "Crime Drama Mystery Thriller", "name": "Tell No One"}, "seasons": {"Files": {"Tell.No.One.2006.720p.BluRay.x264.anoXmous_.mp4": {"name": "Tell.No.One.2006.720p.BluRay.x264.anoXmous_.mp4", "path": "C:\\Users\\Romsahel\\Downloads\\Torrents\\Tell.No.One.2006.720p.BluRay.x264.anoXmous\\Tell.No.One.2006.720p.BluRay.x264.anoXmous_.mp4", "seen": false}}}})
 	addLocation('Torrents')
+
+	$("#detail-poster").error(function () {  $(this).attr("src", "media/posters/unknown.jpg")  });
 }
 // </editor-fold>

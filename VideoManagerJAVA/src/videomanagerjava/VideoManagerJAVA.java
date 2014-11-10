@@ -6,8 +6,6 @@
 package videomanagerjava;
 
 import javafx.application.Application;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.scene.Scene;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
@@ -46,12 +44,12 @@ public class VideoManagerJAVA extends Application
 		Database.getInstance().readDatabase();
 		CWebEngine cWebEngine = new CWebEngine(webBrowser);
 
-		final ChangeListener<Number> changeListener = (ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) ->
-		{
-			cWebEngine.getWebEngine().executeScript("onResize()");
-		};
-		scene.widthProperty().addListener(changeListener);
-		scene.heightProperty().addListener(changeListener);
+//		final ChangeListener<Number> changeListener = (ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) ->
+//		{
+//			cWebEngine.getWebEngine().executeScript("onResize()");
+//		};
+//		scene.widthProperty().addListener(changeListener);
+//		scene.heightProperty().addListener(changeListener);
 
 		primaryStage.setTitle("Video Manager");
 		primaryStage.setScene(scene);
