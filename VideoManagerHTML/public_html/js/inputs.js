@@ -4,6 +4,11 @@ $(document).keypress(function (e) {
 		if (e.which !== 0 && e.charCode !== 0
 				&& !e.ctrlKey && !e.metaKey && !e.altKey)
 		{
+			if (e.keyCode == 60)
+			{
+				app.reload();
+				return;
+			}
 			if ((e.keyCode | e.charCode) !== 13)
 				searchBar.focus();
 		}

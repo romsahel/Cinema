@@ -28,14 +28,15 @@ public class CWebEngine
 
 	private final ArrayList<Media> medias = new ArrayList<>();
 	private ExecutorService executor;
+	private final WebEngine webEngine;
 
 	public CWebEngine(WebView webBrowser)
 	{	// Obtain the webEngine to navigate
-		final WebEngine webEngine = webBrowser.getEngine();
+		webEngine = webBrowser.getEngine();
 		webEngine.load("file:///" + new File("public_html/index.html").getAbsolutePath().replace('\\', '/'));
-		webEngine.getLoadWorker().stateProperty().addListener(new CChangeListener(webEngine));
+		webEngine.getLoadWorker().stateProperty().addListener(new CChangeListener(getWebEngine()));
 
-		((JSObject) webEngine.executeScript("window")).setMember("app", new DatabaseJS());
+		((JSObject) webEngine.executeScript("window")).setMember("app", new DatabaseJS(getWebEngine()));
 
 		for (Map.Entry<String, String> entrySet : Settings.getInstance().getLocations().entrySet())
 		{
@@ -94,6 +95,14 @@ public class CWebEngine
 			executor.execute(t);
 		}
 		executor.shutdown();
+	}
+
+	/**
+	 * @return the webEngine
+	 */
+	public WebEngine getWebEngine()
+	{
+		return webEngine;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="Inside class">

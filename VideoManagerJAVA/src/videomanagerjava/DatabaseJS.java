@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.web.WebEngine;
 import videomanagerjava.files.Database;
 
 /**
@@ -19,6 +20,13 @@ import videomanagerjava.files.Database;
  */
 public class DatabaseJS
 {
+
+	private final WebEngine webEngine;
+
+	public DatabaseJS(WebEngine webEngine)
+	{
+		this.webEngine = webEngine;
+	}
 
 	public void playMedia(String id, String currentSeason, String currentEpisode)
 	{
@@ -33,5 +41,10 @@ public class DatabaseJS
 		{
 			Logger.getLogger(DatabaseJS.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+
+	public void reload()
+	{
+		webEngine.reload();
 	}
 }

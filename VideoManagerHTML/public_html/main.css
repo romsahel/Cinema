@@ -199,8 +199,9 @@ header > .select {
 	padding-left: 25px;
 	position: fixed;
 	right: 0px;
-	display: none;
 	height: 100vh;
+
+	display: table;
 }
 
 #split {
@@ -246,11 +247,11 @@ header > .select {
 	height: 100%;
 }
 
-.poster:hover {
+.poster:hover, #media-list .selected .poster {
 	border-color: #2d72d9;
 }
 
-.poster .overlay:hover {
+.poster .overlay:hover, #media-list .selected .overlay {
 	opacity: 1;
 }
 
@@ -310,8 +311,10 @@ header > .select {
 }
 
 #banner {
+	display: table-row;
+
 	height: 356px;
-	margin-bottom: 25px;
+	margin-bottom: 10px;
 	width: 100%;
 }
 
@@ -381,7 +384,10 @@ header > .select {
 #banner li:last-child:after {
 	display: none;
 }
-
+#files {
+		display: table-cell;
+		padding-top: 15px;
+}
 #files ul {
 	list-style: none;
 	-webkit-user-select: none;
@@ -432,7 +438,7 @@ header > .select {
 
 #episodes {
 	 width: 70%;
-	 height: 40%;  overflow-y: auto;  padding-right: 5%;
+	 height: 69%;  overflow-y: auto;  padding-right: 5%;
 }
 
 #episodes li span {
