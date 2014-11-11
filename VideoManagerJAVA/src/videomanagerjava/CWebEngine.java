@@ -9,6 +9,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
@@ -23,7 +25,7 @@ import videomanagerjava.files.Settings;
  *
  * @author Romsahel
  */
-public class CWebEngine
+public final class CWebEngine
 {
 
 	private final ArrayList<Media> medias = new ArrayList<>();
@@ -66,6 +68,11 @@ public class CWebEngine
 			sb.append(", \"seasons\": ").append(JSONValue.toJSONString(o.getSeasons()));
 
 			String array = "{" + sb.toString() + "}";
+			Pattern pattern = Pattern.compile("genres\":\"\\[(.*)\\]\"");
+			Matcher matcher = pattern.matcher(array);
+			if (matcher.find())
+				array = array.replace(matcher.group(), "genres\": [" + matcher.group(1).replace("\\\"", "\"") + "]");
+			
 			Utils.callJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
 		}
 

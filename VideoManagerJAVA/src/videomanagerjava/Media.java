@@ -83,7 +83,7 @@ public class Media
 					{
 						getInfo().put("year", newYear);
 						getInfo().put("overview", jobj.get("overview").toString());
-						getInfo().put("genres", jobj.get("genres").toString().replace("[", "").replace("\"", "").replace("]", "").replace(",", " "));
+						getInfo().put("genres", jobj.get("genres").toString());
 						getInfo().put("imdb", jobj.get("imdb_id").toString());
 						getInfo().put("duration", jobj.get("runtime").toString());
 

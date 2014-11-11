@@ -101,7 +101,7 @@ header li {
 	padding-left: 10px;
 }
 
-#listsContainer > .select {
+#listsContainer > .select, #detailsGenreList {
 	background: rgba(23, 24, 27, 0.9);
 
 	list-style: none;
@@ -109,7 +109,7 @@ header li {
 	display: none;
 
 	position: fixed;
-	width: 100px;
+	width: auto;
 	padding: 0;
 	margin: 0;
 	margin-top: 30px;
@@ -120,19 +120,46 @@ header li {
 	z-index: 2;
 }
 
-header > .select {
+header > .select, #detail-genres {
 	cursor: pointer;
 }
 
 .select li {
 	padding-left: 10px;
 	transition: color 0.35s, background 0.5s, border-left 0.1s;
+	padding-right: 10px;
 }
 
 .select li:hover {
 	color: white;
 	background: #112c54;
 	border-left: solid 3px #2d72d9;
+
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.caret {
+	display: inline-block;
+	width: 0;
+	height: 0;
+	margin-left: 2px;
+	vertical-align: middle;
+	border-top: 4px solid;
+	border-right: 4px solid transparent;
+	border-left: 4px solid transparent;
+	cursor: pointer;
+}
+
+#detail-genres .option {
+	padding: 0;
+	color: #C3C5C7;
+}
+
+#detail-genres .caret {
+	margin: 0;
+	color: rgba(45, 114, 217, 0.75);
 }
 
 #location-adder {
@@ -163,18 +190,6 @@ header > .select {
 #search-bar input:focus {
 	outline: none;
 	box-shadow: 0px 0px 8px 1px rgba(45, 114, 217, 1);
-}
-
-.caret {
-	display: inline-block;
-	width: 0;
-	height: 0;
-	margin-left: 2px;
-	vertical-align: middle;
-	border-top: 4px solid;
-	border-right: 4px solid transparent;
-	border-left: 4px solid transparent;
-	cursor: pointer;
 }
 
 #main {
@@ -320,20 +335,21 @@ header > .select {
 
 #banner-left {
 	float:left;
-	max-width: 239px;
+	/* max-width: 239px; */
+	margin-right: 20px;
 }
 
 #banner-left img {
 	max-width: 239px;
-	box-shadow: 0px 0px 5px 5px rgba(0,0,0, 0.25);
-	border-style: solid;
-	border-width: 2px;
+	/* box-shadow: 0px 0px 30px 10px rgba(0,0,0, 0.5); */
+	/* border-style: solid; */
+	/* border-width: 2px; */
 	border-radius: 8px;
-	border-color: transparent;
+	/* border-color: transparent; */
 }
 
 #banner-right {
-	margin-left: 239px;
+	/* margin-left: 239px; */
 	padding-left: 25px;
 	padding-right: 25px;
 	height: inherit;
