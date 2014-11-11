@@ -38,7 +38,7 @@ public final class CWebEngine
 		webEngine.load("file:///" + new File("public_html/index.html").getAbsolutePath().replace('\\', '/'));
 		webEngine.getLoadWorker().stateProperty().addListener(new CChangeListener(getWebEngine()));
 
-		((JSObject) webEngine.executeScript("window")).setMember("app", new DatabaseJS(getWebEngine()));
+		((JSObject) webEngine.executeScript("window")).setMember("app", new JsToJava(getWebEngine()));
 
 		for (Map.Entry<String, String> entrySet : Settings.getInstance().getLocations().entrySet())
 		{

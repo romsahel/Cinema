@@ -1,10 +1,20 @@
+function goToLink(elt)
+{
+	var url = $(elt).attr('alt');
+	console.log(url);
+	if (navigator.vendor === "Google Inc.")
+		window.open(url);
+	else
+		app.openLink(url);
+}
+
 $(document).keypress(function (e) {
 	if (!searchBar.is(":focus"))
 	{
 		if (e.which !== 0 && e.charCode !== 0
 				&& !e.ctrlKey && !e.metaKey && !e.altKey)
 		{
-			if (e.keyCode == 60)
+			if (e.keyCode === 60)
 			{
 				app.reload();
 				return;
@@ -68,7 +78,7 @@ function cancelEvent(e)
 
 function onResize()
 {
-	moveSplitbar({pageX: $(window).width() / 2 });
+	moveSplitbar({pageX: $(window).width() / 2});
 	clearTimeout(resizingTimeout);
 	resizingTimeout = setTimeout(onResizeEnd, 100);
 

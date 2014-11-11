@@ -366,6 +366,12 @@ header > .select, #detail-genres {
 	height: 30%;
 }
 
+#detail-imdb img {
+	cursor: pointer;
+	position: relative;
+	top: 0.25em;
+}
+
 #detail-description {
 	overflow-y: auto;
 	height: 70%;
@@ -400,8 +406,8 @@ header > .select, #detail-genres {
 	display: none;
 }
 #files {
-		display: table-cell;
-		padding-top: 15px;
+	display: table-cell;
+	padding-top: 15px;
 }
 #files ul {
 	list-style: none;
@@ -452,8 +458,8 @@ header > .select, #detail-genres {
 }
 
 #episodes {
-	 width: 70%;
-	 height: 70%;  overflow-y: auto;  padding-right: 5%;
+	width: 70%;
+	height: 70%;  overflow-y: auto;  padding-right: 5%;
 }
 
 #episodes li span {

@@ -163,6 +163,8 @@ function updateDetails()
 
 	detailsToUpdate.duration.text(detailsToUpdate.duration.text() + " min");
 
+	$("#detail-imdb img").attr("alt", "http://www.imdb.com/title/" + currentMedia.info.imdb + "/");
+
 	var genres = currentMedia.info.genres;
 	$("#detail-genres a").text(genres[0]);
 	$("#detailsGenreList").empty();
