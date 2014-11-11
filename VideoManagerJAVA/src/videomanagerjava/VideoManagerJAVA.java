@@ -20,12 +20,23 @@ import videomanagerjava.files.Settings;
  */
 public class VideoManagerJAVA extends Application
 {
+	private static Stage stage;
+
+	/**
+	 * @return the stage
+	 */
+	public static Stage getStage()
+	{
+		return stage;
+	}
 
 	@Override
 	public void start(Stage primaryStage)
 	{
+		stage = primaryStage;
 		final AnchorPane anchorPane = new AnchorPane();
-		primaryStage.initStyle(StageStyle.DECORATED);
+		
+		stage.initStyle(StageStyle.DECORATED);
 		WebView webBrowser = new WebView();
 
 		//Set Layout Constraint
@@ -44,17 +55,10 @@ public class VideoManagerJAVA extends Application
 		Database.getInstance().readDatabase();
 		CWebEngine cWebEngine = new CWebEngine(webBrowser);
 
-//		final ChangeListener<Number> changeListener = (ObservableValue<? extends Number> observableValue, Number oldSceneWidth, Number newSceneWidth) ->
-//		{
-//			cWebEngine.getWebEngine().executeScript("onResize()");
-//		};
-//		scene.widthProperty().addListener(changeListener);
-//		scene.heightProperty().addListener(changeListener);
+		stage.setTitle("Video Manager");
+		stage.setScene(scene);
 
-		primaryStage.setTitle("Video Manager");
-		primaryStage.setScene(scene);
-
-		primaryStage.show();
+		stage.show();
 	}
 
 	/**

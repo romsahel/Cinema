@@ -72,12 +72,14 @@ public final class CWebEngine
 			Matcher matcher = pattern.matcher(array);
 			if (matcher.find())
 				array = array.replace(matcher.group(), "genres\": [" + matcher.group(1).replace("\\\"", "\"") + "]");
-			
+
 			Utils.callJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
 		}
 
 		for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
 			Utils.callJS(webEngine, "addLocation", next.getKey());
+
+		Utils.callJS(webEngine, "mediaList.children[1].click");
 
 		Database.getInstance().writeDatabase();
 	}

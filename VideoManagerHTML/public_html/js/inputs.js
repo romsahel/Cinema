@@ -8,6 +8,11 @@ function goToLink(elt)
 		app.openLink(url);
 }
 
+function addNewLocation()
+{
+	addLocation(app.addNewLocation());
+}
+
 $(document).keypress(function (e) {
 	if (!searchBar.is(":focus"))
 	{

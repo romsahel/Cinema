@@ -128,16 +128,16 @@ header > .select, #detail-genres {
 	padding-left: 10px;
 	transition: color 0.35s, background 0.5s, border-left 0.1s;
 	padding-right: 10px;
+	
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 .select li:hover {
 	color: white;
 	background: #112c54;
 	border-left: solid 3px #2d72d9;
-
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
 }
 
 .caret {

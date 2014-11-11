@@ -10,10 +10,13 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Optional;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.web.WebEngine;
+import javafx.stage.DirectoryChooser;
 import videomanagerjava.files.Database;
 
 /**
@@ -61,5 +64,33 @@ public class JsToJava
 			{
 				Logger.getLogger(JsToJava.class.getName()).log(Level.SEVERE, null, ex);
 			}
+	}
+
+	public String addNewLocation()
+	{
+		DirectoryChooser chooser = new DirectoryChooser();
+		chooser.setTitle("Add new location");
+		File defaultDirectory = new File("/");
+		chooser.setInitialDirectory(defaultDirectory);
+		File selectedDirectory = chooser.showDialog(VideoManagerJAVA.getStage());
+		if (selectedDirectory != null)
+		{
+			System.out.println(selectedDirectory);
+
+			final String name = Utils.getSuffix(selectedDirectory.getAbsolutePath(), Utils.getSeparator());
+
+			TextInputDialog dialog = new TextInputDialog(name);
+			dialog.setHeaderText(null);
+			dialog.setTitle("Add new location");
+			dialog.setContentText("Name of the location: ");
+
+			Optional<String> result = dialog.showAndWait();
+			if (result.isPresent())
+			{
+				return result.get();
+			}
+		}
+
+		return "";
 	}
 }

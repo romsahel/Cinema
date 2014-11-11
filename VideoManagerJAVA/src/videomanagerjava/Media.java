@@ -65,8 +65,14 @@ public class Media
 					 + formattedName.replace(" ", "+")
 					 + "&limit=" + limit;
 		if (!formattedName.equals(info.get("name")))
+		{
+			getInfo().put("type", "show");
 			url = url.replace("movies.json", "shows.json");
+		}
+		else
+			getInfo().put("type", "movie");
 
+		System.out.println(formattedName.replace(" ", "+"));
 		System.out.println(url);
 
 		JSONParser parser = new JSONParser();
