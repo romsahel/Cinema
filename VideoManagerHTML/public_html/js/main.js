@@ -62,7 +62,16 @@ function onPageLoaded()
 		}
 	});
 
-	mediaList.children[1].click();
+	if (mediaList.children.length > 1)
+		mediaList.children[1].click();
+}
+
+function getCurrentId()
+{
+	if (currentMedia !== null)
+		return currentMedia.id;
+	else
+		return null;
 }
 
 function onSeasonsClick(elt)

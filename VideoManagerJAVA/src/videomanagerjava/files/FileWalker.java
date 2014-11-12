@@ -27,13 +27,14 @@ public class FileWalker
 		File[] files = listFiles(new File(path));
 		ArrayList<Media> result = new ArrayList<>();
 
-		//	We walk through all the files in the root folder
-		for (File file : files)
-		{
-			final Media subWalk = walkRoot(file);
-			if (subWalk != null)
-				result.add(subWalk);
-		}
+		if (files != null)
+			//	We walk through all the files in the root folder
+			for (File file : files)
+			{
+				final Media subWalk = walkRoot(file);
+				if (subWalk != null)
+					result.add(subWalk);
+			}
 
 		return result;
 	}
@@ -56,7 +57,7 @@ public class FileWalker
 			addEpisode(path, media);
 
 		media.removeEmptySeasons();
-		
+
 //		if media files have been found, we return the media. Otherwise, we destroy it
 		if (media.getSeasons().size() > 0)
 			return media;

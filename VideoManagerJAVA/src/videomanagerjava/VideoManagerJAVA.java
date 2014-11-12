@@ -11,6 +11,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.stage.WindowEvent;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.Settings;
 
@@ -20,6 +21,7 @@ import videomanagerjava.files.Settings;
  */
 public class VideoManagerJAVA extends Application
 {
+
 	private static Stage stage;
 
 	/**
@@ -35,7 +37,7 @@ public class VideoManagerJAVA extends Application
 	{
 		stage = primaryStage;
 		final AnchorPane anchorPane = new AnchorPane();
-		
+
 		stage.initStyle(StageStyle.DECORATED);
 		WebView webBrowser = new WebView();
 
@@ -53,7 +55,14 @@ public class VideoManagerJAVA extends Application
 
 		Settings.getInstance().readSettings();
 		Database.getInstance().readDatabase();
-		CWebEngine cWebEngine = new CWebEngine(webBrowser);
+		final CWebEngine cWebEngine = new CWebEngine(webBrowser);
+
+		stage.setOnCloseRequest((WindowEvent we) ->
+		{
+			final String currentId = Utils.callJS(cWebEngine.getWebEngine(), "getCurrentId()");
+			Settings.getInstance().getGeneral().put("selectedId", currentId);
+			Settings.getInstance().writeSettings();
+		});
 
 		stage.setTitle("Video Manager");
 		stage.setScene(scene);

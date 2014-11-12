@@ -109,7 +109,7 @@ public class Utils
 		return null;
 	}
 
-	public static void callJS(WebEngine webEngine, String function, String... args)
+	public static void callFuncJS(WebEngine webEngine, String function, String... args)
 	{
 		Platform.runLater(() ->
 		{
@@ -128,6 +128,12 @@ public class Utils
 			System.out.println(js);
 			webEngine.executeScript(js);
 		});
+	}
+
+	public static String callJS(WebEngine webEngine, String code)
+	{
+		final Object executeScript = webEngine.executeScript(code);
+		return (String) executeScript;
 	}
 
 	/**

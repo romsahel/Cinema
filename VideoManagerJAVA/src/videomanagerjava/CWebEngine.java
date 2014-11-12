@@ -7,6 +7,7 @@ package videomanagerjava;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.regex.Matcher;
@@ -36,20 +37,30 @@ public final class CWebEngine
 	{	// Obtain the webEngine to navigate
 		webEngine = webBrowser.getEngine();
 		webEngine.load("file:///" + new File("public_html/index.html").getAbsolutePath().replace('\\', '/'));
-		webEngine.getLoadWorker().stateProperty().addListener(new CChangeListener(getWebEngine()));
+		webEngine.getLoadWorker().stateProperty().addListener(new CChangeListener());
 
-		((JSObject) webEngine.executeScript("window")).setMember("app", new JsToJava(getWebEngine()));
+		((JSObject) webEngine.executeScript("window")).setMember("app", new JsToJava(this));
 
-		for (Map.Entry<String, String> entrySet : Settings.getInstance().getLocations().entrySet())
-		{
-			String value = entrySet.getValue();
-			medias.addAll(FileWalker.getInstance().walk(value));
-		}
-		getImages();
+		final HashMap<String, String> locations = Settings.getInstance().getLocations();
+		String[] array = new String[locations.size()];
+
+		for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
+			Utils.callFuncJS(webEngine, "addLocation", next.getKey());
+
+		walkFiles(locations.values().toArray(array));
 
 	}
 
-	private void pageLoaded(WebEngine webEngine)
+	public void walkFiles(String... locations)
+	{
+		medias.clear();
+		for (String location : locations)
+			medias.addAll(FileWalker.getInstance().walk(location));
+
+		getImages();
+	}
+
+	public void refreshList()
 	{
 		//	wait for the info-getting job to be terminated
 		while (!executor.isTerminated());
@@ -73,13 +84,10 @@ public final class CWebEngine
 			if (matcher.find())
 				array = array.replace(matcher.group(), "genres\": [" + matcher.group(1).replace("\\\"", "\"") + "]");
 
-			Utils.callJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
+			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
 		}
 
-		for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
-			Utils.callJS(webEngine, "addLocation", next.getKey());
-
-		Utils.callJS(webEngine, "mediaList.children[1].click");
+		Utils.callFuncJS(webEngine, "mediaList.children[1].click");
 
 		Database.getInstance().writeDatabase();
 	}
@@ -118,13 +126,6 @@ public final class CWebEngine
 	private class CChangeListener implements javafx.beans.value.ChangeListener<Worker.State>
 	{
 
-		private final WebEngine webEngine;
-
-		public CChangeListener(WebEngine webEngine)
-		{
-			this.webEngine = webEngine;
-		}
-
 		@Override
 		public void changed(ObservableValue<? extends Worker.State> observable,
 							Worker.State oldValue, Worker.State newValue)
@@ -133,7 +134,7 @@ public final class CWebEngine
 				return;
 			(new Thread(() ->
 			 {
-				 pageLoaded(webEngine);
+				 refreshList();
 			})).start();
 		}
 	}

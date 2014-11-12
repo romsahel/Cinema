@@ -15,9 +15,9 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TextInputDialog;
-import javafx.scene.web.WebEngine;
 import javafx.stage.DirectoryChooser;
 import videomanagerjava.files.Database;
+import videomanagerjava.files.Settings;
 
 /**
  *
@@ -26,11 +26,11 @@ import videomanagerjava.files.Database;
 public class JsToJava
 {
 
-	private final WebEngine webEngine;
+	private final CWebEngine cWebEngine;
 
-	public JsToJava(WebEngine webEngine)
+	public JsToJava(CWebEngine cWebEngine)
 	{
-		this.webEngine = webEngine;
+		this.cWebEngine = cWebEngine;
 	}
 
 	public void playMedia(String id, String currentSeason, String currentEpisode)
@@ -50,7 +50,7 @@ public class JsToJava
 
 	public void reload()
 	{
-		webEngine.reload();
+		cWebEngine.getWebEngine().reload();
 	}
 
 	public void openLink(String link)
@@ -75,9 +75,8 @@ public class JsToJava
 		File selectedDirectory = chooser.showDialog(VideoManagerJAVA.getStage());
 		if (selectedDirectory != null)
 		{
-			System.out.println(selectedDirectory);
-
-			final String name = Utils.getSuffix(selectedDirectory.getAbsolutePath(), Utils.getSeparator());
+			final String folderPath = selectedDirectory.getAbsolutePath();
+			final String name = Utils.getSuffix(folderPath, Utils.getSeparator());
 
 			TextInputDialog dialog = new TextInputDialog(name);
 			dialog.setHeaderText(null);
@@ -87,6 +86,10 @@ public class JsToJava
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent())
 			{
+				Settings.getInstance().getLocations().put(result.get(), folderPath);
+				Settings.getInstance().writeSettings();
+				cWebEngine.walkFiles(folderPath);
+				cWebEngine.refreshList();
 				return result.get();
 			}
 		}
