@@ -18,7 +18,7 @@ body {
 }
 
 #model {
-	 display: none;
+	display: none;
 }
 
 /* Let's get this party started */
@@ -420,7 +420,8 @@ header > .select, #detail-genres {
 	margin: 1px;
 	cursor: pointer;
 	transition: background 0.1s, color 0.35s;
-	max-height: 2em;  overflow: hidden;  text-overflow: ellipsis;  white-space: nowrap;
+	max-height: 2em;
+	overflow: hidden;  text-overflow: ellipsis;  white-space: nowrap;
 }
 
 #files li:nth-child(even) {
@@ -478,6 +479,24 @@ header > .select, #detail-genres {
 	padding-left: 15px;
 	padding-bottom: 10px;
 	padding-top: 11px;
+	padding-right: 30px;
+}
+
+/*#episodes li::before {
+	content: '';
+	float: right;
+	background: url("media/seen.png");
+	background-repeat: no-repeat;
+	background-size: contain;
+	width: 22px;
+	height: 15px;
+	opacity: 0.2;
+	transition: opacity 0.35s;
+	position: relative;
+}*/
+
+#episodes .seen::before {
+	opacity: 1;
 }
 
 #watch-buttons {

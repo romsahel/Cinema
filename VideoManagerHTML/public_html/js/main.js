@@ -89,7 +89,9 @@ function updateDetailFiles()
 		var i = 1;
 		for (var eKey in currSeasons[sKey])
 		{
-			episodesToAppend = episodesToAppend + "<li>" + "<span>" + i + "</span><div>" + eKey + "</div></li>";
+			var div = "<div class=\"" + "\">";
+			var a = "<i></i>"
+			episodesToAppend = episodesToAppend + "<li>" + "<span>" + i + "</span>" + div + eKey + "</div>" + a + "</li>";
 			i = i + 1;
 		}
 		episodesToAppend = episodesToAppend + "</ul>";
