@@ -93,3 +93,8 @@ function onResize()
 			searchBarParent.animate({width: split.position().left - ($(window).width() - (searchBarParent.offset().left + searchBarParent.width()))}, 50);
 	}
 }
+
+function onScroll()
+{
+//	hideSelectOptions(0);
+}

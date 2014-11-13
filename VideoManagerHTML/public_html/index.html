@@ -42,17 +42,17 @@
 		</header>
 		<div id="listsContainer">
 			<ul class="select" id="sortList">
-				<li onclick="optionClick(this, '#sortOption')">Rating</li>
-				<li onclick="optionClick(this, '#sortOption')">Date</li>
+				<li onclick="optionClick(this)">Rating</li>
+				<li onclick="optionClick(this)">Date</li>
 			</ul>
 			<ul class="select" id="genreList">
-				<li onclick="optionClick(this, '#genreOption')">All</li>
+				<li onclick="optionClick(this)">All</li>
 			</ul>
 			<ul class="select" id="locationsList">
-				<li onclick="optionClick(this, '#locationOption')">All</li>
+				<li onclick="optionClick(this)">All</li>
 			</ul>
 			<ul class="select" id="detailsGenreList">
-				<li onclick="optionClick(this, '#detailsGenreOption')">All</li>
+				<li onclick="optionClick(this)">All</li>
 			</ul>
 		</div>
 		<div id="split" onmousedown="down(this)"></div>
@@ -74,16 +74,16 @@
 			<div id="detail">
 				<div id="banner">
 					<div id="banner-left">
-						<img id="detail-poster" src="" alt="poster"/>
+						<img id="detail-poster" src="" alt=""/>
 					</div>
 					<div id="banner-right">
 						<div id="banner-info">
 							<h1 id="detail-title"></h1>
 							<ul>
-								<li id="detail-year">2014</li>
-								<li id="detail-duration">99 min</li>
+								<li id="detail-year"></li>
+								<li id="detail-duration"></li>
 								<li id="detail-genres" class="select" onclick="selectSort(this, '#detailsGenreList', true)">
-									<a class="option" id="detailsGenreOption">All</a>
+									<a class="option" id="detailsGenreOption"></a>
 									<span class="caret"></span>
 								</li>
 								<li id="detail-imdb"><img onclick="goToLink(this);" src="media/imdb.png" width="27" height="16" alt="http://www.google.fr"/></li>

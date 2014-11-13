@@ -4,34 +4,44 @@ var currentEpisode = null;
 var currentSeason = null;
 
 var mediaList;
+var mediaModel;
+
+var detailsToUpdate;
 var detail;
 var seasons;
 var episodes;
-var model;
+
+var allGenres = {"array": [], "map": {}};
+var genresList;
 var locationsList;
-var split;
-var detailsToUpdate;
 var searchBarParent;
 var searchBar;
+
+var split;
 var resizingTimeout;
 
 function onPageLoaded()
 {
 	mediaList = document.getElementById("media-list");
-	detail = document.getElementById("detail");
-	model = document.getElementById("model");
-	locationsList = document.getElementById("locationsList");
-	split = $("#split");
-	searchBarParent = $('#search-bar');
-	searchBar = $('input[type="text"]');
-	seasons = $("#seasons");
-	episodes = $("#episodes");
+	mediaModel = document.getElementById("model");
+
 	detailsToUpdate = {
 		"name": $("#detail-title"),
 		"year": $("#detail-year"),
 		"duration": $("#detail-duration"),
 		"overview": $("#detail-description")
 	};
+	detail = document.getElementById("detail");
+	seasons = $("#seasons");
+	episodes = $("#episodes");
+
+
+	locationsList = document.getElementById("locationsList");
+	searchBarParent = $('#search-bar');
+	searchBar = $('input[type="text"]');
+	genresList = $('#genreList');
+
+	split = $("#split");
 
 	if (navigator.vendor === "Google Inc.")
 		debug();
@@ -40,6 +50,7 @@ function onPageLoaded()
 	updateSplitPane();
 
 	document.onmouseup = up;
+	window.onscroll = onScroll;
 
 	seasons.on('click', 'li', function () {
 		onSeasonsClick($(this));
@@ -96,13 +107,6 @@ function onSeasonsClick(elt)
 	});
 }
 
-$('html').click(function () {
-	var elements = $("#listsContainer > .select");
-	for (var i = 0; i < elements.length; i++) {
-		elements.fadeOut("fast");
-	}
-});
-
 function playMedia(local)
 {
 	if (local)
@@ -126,18 +130,34 @@ function updateSearch(search)
 	}
 }
 
-function optionClick(elt, option)
+$('html').click(hideSelectOptions);
+
+function hideSelectOptions()
 {
-	$(option).html($(elt).html());
+	$("#listsContainer > .select").fadeOut(150);
+}
+
+function optionClick(elt)
+{
+	var optionId = elt.parentNode.id;
+	optionId = optionId.substring(0, optionId.indexOf("List")) + "Option";
+	$('#' + optionId).html($(elt).html());
 }
 
 function selectSort(elt, list, noOffset)
 {
-	var pos = $(elt).offset();
+	hideSelectOptions();
+	var pos = null;
 	var offset = 10;
 	var width = $(elt).width();
 	if (noOffset)
+	{
 		offset = -10;
+		pos = $(elt).offset();
+	}
+	else
+		pos = $(elt).position();
+
 	$(list).css({left: pos.left + offset, top: pos.top + offset, 'min-width': width});
 	$(list).fadeToggle(200);
 	event.stopPropagation();
@@ -145,11 +165,35 @@ function selectSort(elt, list, noOffset)
 
 function addMedia(id, array)
 {
-	var media = model.cloneNode(true);
+	var media = mediaModel.cloneNode(true);
 
 	media.id = id;
 	media.getElementsByTagName("h4")[0].innerText = array.info.name;
 	media.children[0].style.backgroundImage = "url('media/posters/" + array.info.img + "')";
+
+	var genres = array.info.genres;
+	var changed = false;
+	for (var i in genres)
+	{
+		var g = genres[i];
+		if (!allGenres.map[g.toLowerCase()])
+		{
+			changed = true;
+			allGenres.array.push(g);
+			allGenres.map[g.toLowerCase()] = true;
+		}
+	}
+	if (changed)
+	{
+		allGenres.array.sort();
+		var toAppend = "<li onclick=\"optionClick(this, '#genreOption')\">All</li>";
+		for (var i in allGenres.array)
+		{
+			toAppend = toAppend + "<li onclick=\"optionClick(this, '#genreOption')\">" + allGenres.array[i] + "</li>";
+		}
+		genresList.empty();
+		genresList.append(toAppend);
+	}
 
 	mediaList.appendChild(media);
 	medias[id] = array;
@@ -182,7 +226,7 @@ function updateDetails()
 		$("#detail-genres span").show();
 		var genresToAppend = "";
 		for (var i = 0; i < genres.length; i = i + 1)
-			genresToAppend = genresToAppend + "<li>" + genres[i] + "</li>";
+			genresToAppend = genresToAppend + "<li onclick=\"optionClick(this)\">" + genres[i] + "</li>";
 		$("#detailsGenreList").append(genresToAppend);
 	}
 	else
@@ -210,7 +254,7 @@ function updateDetails()
 	episodes.append(episodesToAppend);
 
 	onSeasonsClick($(seasons.children()[0]));
-	$("#detail").show();
+
 	$("#detail").fadeTo(100, 1);
 
 	$('#detail-poster').attr('src', 'media/posters/' + currentMedia.info.img);
