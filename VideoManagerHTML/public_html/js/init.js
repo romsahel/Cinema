@@ -61,6 +61,8 @@ function onPageLoaded()
 
 	if (mediaList.children.length > 1)
 		mediaList.children[1].click();
+	else
+		detail.style.opacity = 0;
 }
 
 function optionClick(elt)

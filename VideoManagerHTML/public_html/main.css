@@ -2,6 +2,7 @@
     font-family: awesomeFont;
     src: url(media/FontAwesome.otf);
 }
+
 html
 {
 	-webkit-font-smoothing: antialiased;
@@ -17,7 +18,7 @@ body {
 }
 
 #model {
-	display: none;
+	/* display: none; */
 }
 
 /* Let's get this party started */

@@ -85,9 +85,11 @@ public final class CWebEngine
 				array = array.replace(matcher.group(), "genres\": [" + matcher.group(1).replace("\\\"", "\"") + "]");
 
 			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
-		}
 
-		Utils.callFuncJS(webEngine, "mediaList.children[1].click");
+			final String selectedId = Settings.getInstance().getGeneral().get("selectedId");
+			if (Long.toString(o.getId()).equals(selectedId))
+				Utils.callFuncJS(webEngine, "$(\"#" + selectedId + "\").click");
+		}
 
 		Database.getInstance().writeDatabase();
 	}

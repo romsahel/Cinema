@@ -93,6 +93,12 @@ public class Media
 						getInfo().put("imdb", jobj.get("imdb_id").toString());
 						getInfo().put("duration", jobj.get("runtime").toString());
 
+						final String imdbJson = Downloader.downloadString("http://www.omdbapi.com/?i="
+																		  + getInfo().get("imdb")
+																		  + "&plot=short&r=json");
+						JSONObject jobjImdb = (JSONObject) parser.parse(imdbJson);
+						getInfo().put("imdbRating", jobjImdb.get("imdbRating").toString());
+
 						String imgURL = (String) ((JSONObject) jobj.get("images")).get("poster");
 						imgURL = imgURL.replace(".jpg", "-300.jpg");
 
