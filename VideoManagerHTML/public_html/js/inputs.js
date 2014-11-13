@@ -8,11 +8,6 @@ function goToLink(elt)
 		app.openLink(url);
 }
 
-function addNewLocation()
-{
-	addLocation(app.addNewLocation());
-}
-
 $(document).keypress(function (e) {
 	if (!searchBar.is(":focus"))
 	{
@@ -92,9 +87,4 @@ function onResize()
 		if (searchBar.is(":focus"))
 			searchBarParent.animate({width: split.position().left - ($(window).width() - (searchBarParent.offset().left + searchBarParent.width()))}, 50);
 	}
-}
-
-function onScroll()
-{
-//	hideSelectOptions(0);
 }

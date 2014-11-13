@@ -128,7 +128,7 @@ header > .select, #detail-genres {
 	padding-left: 10px;
 	transition: color 0.35s, background 0.5s, border-left 0.1s;
 	padding-right: 10px;
-	
+
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;

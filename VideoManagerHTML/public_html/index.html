@@ -8,6 +8,8 @@
 		<link rel="stylesheet" type="text/css" href="main.css" media="screen" />
 		<link rel="stylesheet" type="text/css" href="mobile.css" media="screen" />
 		<script src="js/libs/jquery/jquery.js"></script>
+		<script src="js/init.js"></script>
+		<script src="js/adders.js"></script>
 		<script src="js/main.js"></script>
 		<script src="js/inputs.js"></script>
 	</head>
@@ -18,12 +20,12 @@
 				<li class="category" onclick=""><a>Movies</a></li>
 				<li class="category" onclick=""><a>TV Series</a></li>
 				<li></li>
-				<li class="select" onclick="selectSort(this, '#sortList')">
+				<li class="select" onclick="dropDownClick(this, '#sortList')">
 					<a>Sort by </a>
 					<a class="option" id="sortOption">Rating</a>
 					<span class="caret"></span>
 				</li>
-				<li class="select" onclick="selectSort(this, '#genreList')">
+				<li class="select" onclick="dropDownClick(this, '#genreList')">
 					<a>Genres </a>
 					<a class="option" id="genreOption">All</a>
 					<span class="caret"></span>
@@ -33,7 +35,7 @@
 				<li id="search-bar"><input type="text" oninput="updateSearch(this.value.toLowerCase());"
 										   onfocus="handleSearchFocus(true)" onblur="handleSearchFocus(false)"></li>
 				<li id="location-adder" onclick="addNewLocation()">+</li>
-				<li class="select" id="selectLocation" onclick="selectSort(this, '#locationsList')">
+				<li class="select" id="selectLocation" onclick="dropDownClick(this, '#locationsList')">
 					<a>Source </a>
 					<a class="option" id="locationOption">All</a>
 					<span class="caret"></span>
@@ -74,7 +76,7 @@
 			<div id="detail">
 				<div id="banner">
 					<div id="banner-left">
-						<img id="detail-poster" src="" alt=""/>
+						<img id="detail-poster" width="239" height="352" src="" alt=""/>
 					</div>
 					<div id="banner-right">
 						<div id="banner-info">
@@ -82,7 +84,7 @@
 							<ul>
 								<li id="detail-year"></li>
 								<li id="detail-duration"></li>
-								<li id="detail-genres" class="select" onclick="selectSort(this, '#detailsGenreList', true)">
+								<li id="detail-genres" class="select">
 									<a class="option" id="detailsGenreOption"></a>
 									<span class="caret"></span>
 								</li>

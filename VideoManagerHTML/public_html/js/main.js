@@ -1,112 +1,3 @@
-var medias = {};
-var currentMedia = null;
-var currentEpisode = null;
-var currentSeason = null;
-
-var mediaList;
-var mediaModel;
-
-var detailsToUpdate;
-var detail;
-var seasons;
-var episodes;
-
-var allGenres = {"array": [], "map": {}};
-var genresList;
-var locationsList;
-var searchBarParent;
-var searchBar;
-
-var split;
-var resizingTimeout;
-
-function onPageLoaded()
-{
-	mediaList = document.getElementById("media-list");
-	mediaModel = document.getElementById("model");
-
-	detailsToUpdate = {
-		"name": $("#detail-title"),
-		"year": $("#detail-year"),
-		"duration": $("#detail-duration"),
-		"overview": $("#detail-description")
-	};
-	detail = document.getElementById("detail");
-	seasons = $("#seasons");
-	episodes = $("#episodes");
-
-
-	locationsList = document.getElementById("locationsList");
-	searchBarParent = $('#search-bar');
-	searchBar = $('input[type="text"]');
-	genresList = $('#genreList');
-
-	split = $("#split");
-
-	if (navigator.vendor === "Google Inc.")
-		debug();
-
-	mediaList.style.width = $(window).width() / 2;
-	updateSplitPane();
-
-	document.onmouseup = up;
-	window.onscroll = onScroll;
-
-	seasons.on('click', 'li', function () {
-		onSeasonsClick($(this));
-	});
-
-	episodes.on('click', 'li', function () {
-		if ($(this).hasClass("selected"))
-			return;
-
-		$(this).parent().children().removeClass("selected");
-		$(this).addClass("selected");
-
-		var text = $($(this).children()[1]).text();
-		currentEpisode = {key: text, value: currentSeason.value[text]};
-
-		if (!$("#watch-buttons").is(":visible"))
-		{
-			detailsToUpdate.overview.height(detailsToUpdate.overview.height() - 50);
-			$("#watch-buttons").fadeIn(200);
-		}
-	});
-
-	if (mediaList.children.length > 1)
-		mediaList.children[1].click();
-}
-
-function getCurrentId()
-{
-	if (currentMedia !== null)
-		return currentMedia.id;
-	else
-		return null;
-}
-
-function onSeasonsClick(elt)
-{
-	if (elt.hasClass("selected"))
-		return;
-
-	$("#watch-buttons").fadeOut(100);
-	detailsToUpdate.overview.height("70%");
-	episodes.fadeTo(100, 0, function () {
-		var text = elt.text();
-		currentSeason = {key: text, value: currentMedia.seasons[text]};
-
-		elt.parent().children().removeClass("selected");
-		elt.addClass("selected");
-		episodes.children().removeClass("selected");
-		var selected = $(episodes.children()[elt.index()]);
-		selected.children().removeClass("selected");
-		selected.addClass("selected");
-
-		episodes.fadeTo("fast", 1);
-	});
-}
-
 function playMedia(local)
 {
 	if (local)
@@ -130,110 +21,64 @@ function updateSearch(search)
 	}
 }
 
-$('html').click(hideSelectOptions);
-
-function hideSelectOptions()
-{
-	$("#listsContainer > .select").fadeOut(150);
-}
-
-function optionClick(elt)
-{
-	var optionId = elt.parentNode.id;
-	optionId = optionId.substring(0, optionId.indexOf("List")) + "Option";
-	$('#' + optionId).html($(elt).html());
-}
-
-function selectSort(elt, list, noOffset)
+function dropDownClick(elt, list, noOffset)
 {
 	hideSelectOptions();
-	var pos = null;
-	var offset = 10;
+	var pos;
+	var position;
+	var offset;
 	var width = $(elt).width();
+
 	if (noOffset)
 	{
 		offset = -10;
 		pos = $(elt).offset();
+		position = "fixed";
 	}
 	else
+	{
+		offset = 10;
 		pos = $(elt).position();
+		position = "absolute";
+	}
 
-	$(list).css({left: pos.left + offset, top: pos.top + offset, 'min-width': width});
+	$(list).css({
+		'left': pos.left + offset,
+		'top': pos.top + offset,
+		'min-width': width,
+		'position': position
+	});
 	$(list).fadeToggle(200);
 	event.stopPropagation();
 }
 
-function addMedia(id, array)
-{
-	var media = mediaModel.cloneNode(true);
-
-	media.id = id;
-	media.getElementsByTagName("h4")[0].innerText = array.info.name;
-	media.children[0].style.backgroundImage = "url('media/posters/" + array.info.img + "')";
-
-	var genres = array.info.genres;
-	var changed = false;
-	for (var i in genres)
-	{
-		var g = genres[i];
-		if (!allGenres.map[g.toLowerCase()])
-		{
-			changed = true;
-			allGenres.array.push(g);
-			allGenres.map[g.toLowerCase()] = true;
-		}
-	}
-	if (changed)
-	{
-		allGenres.array.sort();
-		var toAppend = "<li onclick=\"optionClick(this, '#genreOption')\">All</li>";
-		for (var i in allGenres.array)
-		{
-			toAppend = toAppend + "<li onclick=\"optionClick(this, '#genreOption')\">" + allGenres.array[i] + "</li>";
-		}
-		genresList.empty();
-		genresList.append(toAppend);
-	}
-
-	mediaList.appendChild(media);
-	medias[id] = array;
-}
-
-function addLocation(name)
-{
-	var newLoc = locationsList.children[0].cloneNode(true);
-	newLoc.innerText = name;
-	locationsList.appendChild(newLoc);
-}
-
+// <editor-fold defaultstate="collapsed" desc="Detail updating">
 function updateDetails()
 {
+	var info = currentMedia.info;
 	seasons.empty();
 	episodes.empty();
 
 	for (var key in detailsToUpdate)
-		detailsToUpdate[key].text(currentMedia.info[key]);
+		detailsToUpdate[key].text(info[key]);
 
 	detailsToUpdate.duration.text(detailsToUpdate.duration.text() + " min");
 
-	$("#detail-imdb img").attr("alt", "http://www.imdb.com/title/" + currentMedia.info.imdb + "/");
+	$("#detail-imdb img").attr("alt", "http://www.imdb.com/title/" + info.imdb + "/");
 
-	var genres = currentMedia.info.genres;
-	$("#detail-genres a").text(genres[0]);
-	$("#detailsGenreList").empty();
-	if (genres.length > 1)
-	{
-		$("#detail-genres span").show();
-		var genresToAppend = "";
-		for (var i = 0; i < genres.length; i = i + 1)
-			genresToAppend = genresToAppend + "<li onclick=\"optionClick(this)\">" + genres[i] + "</li>";
-		$("#detailsGenreList").append(genresToAppend);
-	}
-	else
-	{
-		$("#detail-genres span").hide();
-	}
+	updateDetailGenres(info.genres);
 
+	updateDetailFiles();
+
+	onSeasonsClick($(seasons.children()[0]));
+
+	$("#detail").fadeTo(100, 1);
+
+	$('#detail-poster').attr('src', 'media/posters/' + info.img);
+}
+
+function updateDetailFiles()
+{
 	var currSeasons = currentMedia.seasons;
 	var seasonsToAppend = "";
 	var episodesToAppend = "";
@@ -252,12 +97,33 @@ function updateDetails()
 
 	seasons.append(seasonsToAppend);
 	episodes.append(episodesToAppend);
+}
 
-	onSeasonsClick($(seasons.children()[0]));
+function updateDetailGenres(genres)
+{
+	$("#detail-genres a").text(genres[0]);
+	$("#detailsGenreList").empty();
 
-	$("#detail").fadeTo(100, 1);
+	$("#detail-genres").unbind("click");
+	if (genres.length > 1)
+	{
+		$("#detail-genres").click(function () {
+			dropDownClick(this, '#detailsGenreList', true);
+		});
+		$("#detail-genres").css({'cursor': 'pointer'});
 
-	$('#detail-poster').attr('src', 'media/posters/' + currentMedia.info.img);
+		$("#detail-genres span").show();
+		var genresToAppend = "";
+		for (var i = 0; i < genres.length; i = i + 1)
+			genresToAppend = genresToAppend + "<li onclick=\"optionClick(this)\">" + genres[i] + "</li>";
+		$("#detailsGenreList").append(genresToAppend);
+	}
+	else
+	{
+		$("#detail-genres span").hide();
+		$("#detail-genres").click(null);
+		$("#detail-genres").css({'cursor': 'default'});
+	}
 }
 
 function showDetail(elt)
@@ -271,7 +137,9 @@ function showDetail(elt)
 	currentMedia = newMedia;
 	$("#detail").fadeTo(100, 0, updateDetails);
 }
+// </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Split bar">
 function updateSplitPane()
 {
 	var width = mediaList.offsetWidth;
@@ -297,6 +165,7 @@ function moveSplitbar(e)
 
 	return cancelEvent(e);
 }
+// </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="debug function">
 function debug()
