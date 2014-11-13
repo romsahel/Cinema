@@ -44,9 +44,6 @@ public final class CWebEngine
 		final HashMap<String, String> locations = Settings.getInstance().getLocations();
 		String[] array = new String[locations.size()];
 
-		for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
-			Utils.callFuncJS(webEngine, "addLocation", next.getKey());
-
 		walkFiles(locations.values().toArray(array));
 
 	}
@@ -85,12 +82,10 @@ public final class CWebEngine
 				array = array.replace(matcher.group(), "genres\": [" + matcher.group(1).replace("\\\"", "\"") + "]");
 
 			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
-
-			final String selectedId = Settings.getInstance().getGeneral().get("selectedId");
-			if (Long.toString(o.getId()).equals(selectedId))
-				Utils.callFuncJS(webEngine, "$(\"#" + selectedId + "\").click");
 		}
 
+		final String selectedId = Settings.getInstance().getGeneral().get("selectedId");
+		Utils.callFuncJS(webEngine, "setSelection", selectedId);
 		Database.getInstance().writeDatabase();
 	}
 
@@ -134,6 +129,10 @@ public final class CWebEngine
 		{
 			if (newValue != Worker.State.SUCCEEDED)
 				return;
+
+			for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
+				Utils.callFuncJS(webEngine, "addLocation", next.getKey());
+			
 			(new Thread(() ->
 			 {
 				 refreshList();
