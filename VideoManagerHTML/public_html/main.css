@@ -156,6 +156,8 @@ header > .select, #detail-genres {
 #detail-genres .option {
 	padding: 0;
 	color: #C3C5C7;
+	display: inline-block;
+	max-width: 65px; text-overflow: ellipsis; white-space: nowrap; vertical-align: bottom; overflow: hidden;
 }
 
 #detail-genres .caret {
@@ -393,14 +395,13 @@ header > .select, #detail-genres {
 }
 
 #banner li span {
-	margin-right: 3px;
 }
 
 #banner li:after {
 	font-size: 80%;
 	content:'\25CF';
-	margin-left: 15px;
-	margin-right: 15px;
+	margin-left: 12px;
+	margin-right: 12px;
 }
 
 #banner li:last-child:after {
@@ -416,12 +417,13 @@ header > .select, #detail-genres {
 }
 
 #files li, #watch-buttons {
-	padding: 9px 15px 9px 15px;
+	padding: 0px 15px 9px 15px;
 	margin: 1px;
 	cursor: pointer;
 	transition: background 0.1s, color 0.35s;
 	max-height: 2em;
-	overflow: hidden;  text-overflow: ellipsis;  white-space: nowrap;
+	overflow: hidden;  text-overflow: ellipsis;
+	white-space: nowrap;
 }
 
 #files li:nth-child(even) {
@@ -470,19 +472,21 @@ header > .select, #detail-genres {
 	width: 14px;
 	text-align: right;
 	margin-right: 15px;
+	overflow: hidden;
 	color: white;
 }
 
-#episodes li div {
-	display: inline;
+#episodes li > div {
+	display: inline-block;
 	border-left: #17181b solid 1px;
 	padding-left: 15px;
 	padding-bottom: 10px;
 	padding-top: 11px;
-	padding-right: 30px;
+	padding-right: 20px;
+	width: 90%;
 }
 
-/*#episodes li::before {
+#episodes li > div > span {
 	content: '';
 	float: right;
 	background: url("media/seen.png");
@@ -492,10 +496,16 @@ header > .select, #detail-genres {
 	height: 15px;
 	opacity: 0.2;
 	transition: opacity 0.35s;
-	position: relative;
-}*/
+	margin: 0;
+}
 
-#episodes .seen::before {
+#episodes li > div > div {
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#episodes li > div > span:hover, #episodes li > div > .seen {
 	opacity: 1;
 }
 
