@@ -461,9 +461,15 @@ header > .select, #detail-genres {
 	width: 15%;
 }
 
+#seasons li {
+	padding-top: 9px;
+}
+
 #episodes {
 	width: 70%;
-	height: 70%;  overflow-y: auto;  padding-right: 5%;
+	height: 70%;
+	overflow-y: auto;
+	padding-right: 5%;
 }
 
 #episodes li span {
@@ -489,14 +495,13 @@ header > .select, #detail-genres {
 #episodes li > div > span {
 	content: '';
 	float: right;
+	margin: 0;
+	width: 22px;
+	height: 15px;
+
 	background: url("media/seen.png");
 	background-repeat: no-repeat;
 	background-size: contain;
-	width: 22px;
-	height: 15px;
-	opacity: 0.2;
-	transition: opacity 0.35s;
-	margin: 0;
 }
 
 #episodes li > div > div {
@@ -505,9 +510,9 @@ header > .select, #detail-genres {
 	text-overflow: ellipsis;
 }
 
-#episodes li > div > span:hover, #episodes li > div > .seen {
+/*#episodes li > div > span:hover, #episodes li > div > .seen {
 	opacity: 1;
-}
+}*/
 
 #watch-buttons {
 	display: none;

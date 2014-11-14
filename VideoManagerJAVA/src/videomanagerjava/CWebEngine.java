@@ -85,7 +85,8 @@ public final class CWebEngine
 		}
 
 		final String selectedId = Settings.getInstance().getGeneral().get("selectedId");
-		Utils.callFuncJS(webEngine, "setSelection", selectedId);
+		if (selectedId != null)
+			Utils.callFuncJS(webEngine, "setSelection", selectedId);
 		Database.getInstance().writeDatabase();
 	}
 
@@ -132,7 +133,7 @@ public final class CWebEngine
 
 			for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
 				Utils.callFuncJS(webEngine, "addLocation", next.getKey());
-			
+
 			(new Thread(() ->
 			 {
 				 refreshList();
