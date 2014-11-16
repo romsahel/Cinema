@@ -8,12 +8,6 @@ function goToLink(elt)
 		app.openLink(url);
 }
 
-function setSelection(id)
-{
-	$("#" + id).click();
-	$("html, body").animate({ scrollTop: $("#" + id).offset().top - 50 }, 500);
-}
-
 $(document).keypress(function (e) {
 	if (!searchBar.is(":focus"))
 	{

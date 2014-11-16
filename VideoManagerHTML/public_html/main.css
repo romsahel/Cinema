@@ -214,6 +214,7 @@ header > .select, #detail-genres {
 	padding-top: 15px;
 	padding-left: 25px;
 	position: fixed;
+	/* top: 0; */
 	right: 0px;
 	height: 100vh;
 

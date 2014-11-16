@@ -80,6 +80,12 @@ public class CContextMenu
 	public static void show(MouseEvent e)
 	{
 		hide();
+		if (locationContext(e))
+			return;
+	}
+
+	private static boolean locationContext(MouseEvent e)
+	{
 		final Object object = webEngine.executeScript("$(\"#locationsList li:hover\")[0]");
 		if (object.getClass() == HTMLLIElementImpl.class)
 		{
@@ -91,9 +97,10 @@ public class CContextMenu
 				currentMenu = locationsMenu;
 				locationsMenu.getItems().get(0).setText(currentText);
 				locationsMenu.show(webView, e.getScreenX(), e.getScreenY());
-				return;
+				return true;
 			}
 		}
+		return false;
 	}
 
 	public static void hide()

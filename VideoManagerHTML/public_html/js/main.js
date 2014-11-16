@@ -26,18 +26,32 @@ function removeLocation()
 	return text;
 }
 
-/**
- * Comment
- */
+var currentId;
+function setSelection(id)
+{
+	currentId = id;
+}
+
 function emptyMediaList()
 {
-	console.log("empty")
 	var tmp = mediaList;
 	mediaList = mediaList.cloneNode(true);
 	$(mediaList).empty();
-	$(tmp).fadeTo(300, 0, function() {
+	$(tmp).fadeTo(300, 0, function () {
 		$(this).empty();
 		$(this).replaceWith(mediaList);
+
+		var currentSelection = $("#" + currentId);
+		if (currentSelection.length > 0)
+		{
+			currentSelection.click();
+			$("html, body").animate({scrollTop: currentSelection.offset().top - 50}, 500);
+		}
+		else
+		{
+			currentId = "";
+			$(detail).fadeTo(200, 0);
+		}
 	});
 }
 
@@ -151,6 +165,7 @@ function updateDetailGenres(genres)
 function showDetail(elt)
 {
 	var newMedia = medias[elt.id];
+	currentId = elt.id;
 	if (newMedia === currentMedia)
 		return;
 
@@ -207,7 +222,7 @@ function debug()
 	addMedia('-369659925', {"id": "-369659925", "info": {"duration": "124", "overview": "Sin City is a neo-noir crime thriller based on Frank Miller's graphic novel series of the same name.The film is primarily based on three of Miller's works: The Hard Goodbye, about a man who embarks on a brutal rampage in search of his one-time sweetheart's killer; The Big Fat Kill, which focuses on a street war between a group of prostitutes and a group of mercenaries; and That Yellow Bastard, which follows an aging police officer who protects a young woman from a grotesquely disfigured serial killer.", "img": "-66238642", "imdb": "tt0401792", "year": "2005", "genres": ["Action", "Crime", "Thriller"], "name": "Sin City", "imdbRating": "8.1", "type": "movie"}, "seasons": {"Files": {"Sin.City.EXTENDED.UNRATED.2005.1080p.BrRip.x264.YIFY+HI.mp4": {"name": "Sin.City.EXTENDED.UNRATED.2005.1080p.BrRip.x264.YIFY+HI.mp4", "path": "C:\\Users\\Romsahel\\Downloads\\Torrents\\Sin City EXTENDED and UNRATED (2005) [1080p]\\Sin.City.EXTENDED.UNRATED.2005.1080p.BrRip.x264.YIFY+HI.mp4", "seen": false, "time": 0}}}})
 	addMedia('491400276', {"id": "491400276", "info": {"duration": "131", "overview": "A man receives a mysterious e-mail appearing to be from his wife, who was murdered years earlier. As he frantically tries to find out whether she's alive, he finds himself being implicated in her death.", "img": "1012000215", "imdb": "tt0362225", "year": "2006", "genres": ["Crime", "Drama", "Mystery", "Thriller"], "name": "Tell No One", "imdbRating": "7.6", "type": "movie"}, "seasons": {"Files": {"Tell.No.One.2006.720p.BluRay.x264.anoXmous_.mp4": {"name": "Tell.No.One.2006.720p.BluRay.x264.anoXmous_.mp4", "path": "C:\\Users\\Romsahel\\Downloads\\Torrents\\Tell.No.One.2006.720p.BluRay.x264.anoXmous\\Tell.No.One.2006.720p.BluRay.x264.anoXmous_.mp4", "seen": false, "time": 5}}}})
 	addMedia('53247006', {"id": "53247006", "info": {"duration": "130", "overview": "A mysterious story of two magicians whose intense rivalry leads them on a life-long battle for supremacy -- full of obsession, deceit and jealousy with dangerous and deadly consequences.", "img": "327939635", "imdb": "tt0482571", "year": "2006", "genres": ["Drama", "Mystery", "Thriller"], "name": "The Prestige", "imdbRating": "8.5", "type": "movie"}, "seasons": {"Files": {"The.Prestige.2006.720p.Bluray.x264.anoXmous.mp4": {"name": "The.Prestige.2006.720p.Bluray.x264.anoXmous.mp4", "path": "C:\\Users\\Romsahel\\Downloads\\Torrents\\The.Prestige.2006.720p.Bluray.x264.anoXmous\\The.Prestige.2006.720p.Bluray.x264.anoXmous.mp4", "seen": false, "time": 0}}}})
-	$(mediaList).fadeTo('100', '1')
+	setSelection('-1424574422')
 	$("#detail-poster").error(function () {
 		$(this).attr("src", "media/posters/unknown.jpg")
 	});
