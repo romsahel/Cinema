@@ -59,6 +59,9 @@ function onPageLoaded()
 		onEpisodesClick($(this));
 	});
 
+//	episodes.on('click', 'li > div > span', function (e) {
+//	});
+
 	if (mediaList.children.length > 1)
 		mediaList.children[1].click();
 	else
@@ -92,8 +95,12 @@ function onEpisodesClick(elt)
 
 	if (!$("#watch-buttons").is(":visible"))
 	{
-		detailsToUpdate.overview.height(detailsToUpdate.overview.height() - 50);
-		$("#watch-buttons").fadeIn(200);
+		detailsToUpdate.overview.animate({
+			height: detailsToUpdate.overview.height() - 50
+		}, 100, function () {
+			// Animation complete.
+		});
+		$("#watch-buttons").fadeIn(300);
 	}
 }
 
@@ -117,6 +124,20 @@ function onSeasonsClick(elt)
 
 		episodes.fadeTo("fast", 1);
 	});
+}
+
+function onSeenToggleClick(elt, toSet)
+{
+	if (elt.hasClass("seen") && toSet == null)
+		elt.removeClass("seen");
+	else
+		elt.addClass("seen");
+
+	if (toSet == null)
+	{
+		var episode = elt.parent().parent();
+		app.toggleSeen(currentMedia.id, currentSeason.key, $(episode.children()[1]).text());
+	}
 }
 
 function getCurrentId()

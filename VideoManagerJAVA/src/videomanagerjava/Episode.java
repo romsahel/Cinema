@@ -16,7 +16,7 @@ public class Episode
 
 	private final String name;
 	private final String path;
-	private final boolean seen;
+	private boolean seen;
 	private long time;
 
 	/**
@@ -64,6 +64,14 @@ public class Episode
 	public boolean isSeen()
 	{
 		return seen;
+	}
+
+	/**
+	 * @param seen the seen to set
+	 */
+	public void setSeen(boolean seen)
+	{
+		this.seen = seen;
 	}
 
 	@Override

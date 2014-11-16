@@ -379,7 +379,6 @@ header > .select, #detail-genres {
 	overflow-y: auto;
 	height: 70%;
 	padding-right: 15px;
-	transition: height 0.35s;
 }
 
 #banner h1, #banner p {
@@ -501,7 +500,9 @@ header > .select, #detail-genres {
 
 	background: url("media/seen.png");
 	background-repeat: no-repeat;
-	background-size: contain;
+	background-size: 22px 15px;
+	opacity: 0.2;
+	transition: opacity 0.35s;
 }
 
 #episodes li > div > div {
@@ -510,12 +511,17 @@ header > .select, #detail-genres {
 	text-overflow: ellipsis;
 }
 
-/*#episodes li > div > span:hover, #episodes li > div > .seen {
+#episodes li > div > span:hover {
+	opacity: 0.5;
+}
+
+#episodes li > div > .seen, #episodes li > div > span:active {
 	opacity: 1;
-}*/
+}
 
 #watch-buttons {
 	display: none;
+	padding: 9px 15px 9px 15px;
 	color: white;
 	background: rgb(31, 32, 37);
 	transition: background 0.1s, color 0.35s;

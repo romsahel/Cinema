@@ -25,9 +25,12 @@ public class VLCController
 
 	static Timer timer = null;
 	static TimerTask timerTask = null;
+	static Episode currentEpisode;
 
 	public static void play(final Episode episode)
 	{
+		currentEpisode = episode;
+
 		final String file = episode.getPath();
 		String parameter = String.format("command=in_play&input=%s?command=pl_empty", file);
 //		If the request is null, we must launch VLC and wait for it to be prepared
@@ -38,7 +41,8 @@ public class VLCController
 
 		final String filename = (String) getNestedObject(sendRequest("command=seek&val=" + episode.getTime()),
 														 "information", "category", "meta", "filename");
-		cancelTimer();
+		episode.setSeen(true);
+		cancelTimer(false);
 		timer = new Timer();
 		timerTask = new TimerTask()
 		{
@@ -50,38 +54,54 @@ public class VLCController
 				final String status = sendRequest(null);
 				if (status == null)
 				{
-					cancelTimer();
+					cancelTimer(false);
 					return;
 				}
-				try
-				{
-					JSONObject obj = (JSONObject) new JSONParser().parse(status);
-					episode.setTime((long) obj.get("time"));
 
-					String name = (String) getNestedObject(obj, "information", "category", "meta", "filename");
+				JSONObject obj = setEpisodeTime(status, episode);
+				String name = "";
+				if (obj != null)
+					name = (String) getNestedObject(obj, "information", "category", "meta", "filename");
 
-					if (!name.equals(filename))
-						cancelTimer();
-
-				} catch (ParseException ex)
-				{
-					Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
-				}
+				if (!name.equals(filename))
+					cancelTimer(false);
 			}
 		};
-		timer.scheduleAtFixedRate(timerTask, 0, 10000);
+		timer.scheduleAtFixedRate(timerTask, 5000, 10000);
 	}
 
-	public static boolean cancelTimer()
+	public static boolean cancelTimer(boolean checkStatus)
 	{
 		if (timer != null && timerTask != null)
 		{
 			timerTask.cancel();
 			timer.cancel();
+
+			if (checkStatus)
+			{
+				final String status = sendRequest(null);
+				if (status != null)
+					setEpisodeTime(status, currentEpisode);
+			}
 			Database.getInstance().writeDatabase();
 			return true;
 		}
 		return false;
+	}
+
+	private static JSONObject setEpisodeTime(final String status, final Episode episode)
+	{
+		JSONObject obj;
+		try
+		{
+			obj = (JSONObject) new JSONParser().parse(status);
+		} catch (ParseException ex)
+		{
+			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
+			return null;
+		}
+		episode.setTime((long) obj.get("time"));
+		return obj;
 	}
 
 	private static Object getNestedObject(String json, String... keys)

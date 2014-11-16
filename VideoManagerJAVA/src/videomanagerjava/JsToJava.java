@@ -36,11 +36,23 @@ public class JsToJava
 
 	public void playMedia(String id, String currentSeason, String currentEpisode)
 	{
+		Episode episode = getEpisode(id, currentSeason, currentEpisode);
+		VLCController.play(episode);
+	}
+
+	public void toggleSeen(String id, String currentSeason, String currentEpisode)
+	{
+		System.out.println("toggling seen");
+		Episode episode = getEpisode(id, currentSeason, currentEpisode);
+		episode.setSeen(!episode.isSeen());
+	}
+
+	private Episode getEpisode(String id, String currentSeason, String currentEpisode) throws NumberFormatException
+	{
 		final Media media = Database.getInstance().getDatabase().get(Long.parseLong(id, 10));
 		final TreeMap<String, Episode> season = media.getSeasons().get(currentSeason);
 		final Episode episode = season.get(currentEpisode);
-
-		VLCController.play(episode);
+		return episode;
 	}
 
 	public void reload()

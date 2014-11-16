@@ -63,7 +63,7 @@ public class VideoManagerJAVA extends Application
 			final String currentId = Utils.callJS(cWebEngine.getWebEngine(), "getCurrentId()");
 			Settings.getInstance().getGeneral().put("selectedId", currentId);
 			Settings.getInstance().writeSettings();
-			if (!VLCController.cancelTimer())
+			if (!VLCController.cancelTimer(true))
 				Database.getInstance().writeDatabase();
 		});
 
