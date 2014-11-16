@@ -57,7 +57,8 @@ public final class CWebEngine
 	{
 		medias.clear();
 		for (String location : locations)
-			medias.addAll(FileWalker.getInstance().walk(location));
+			if (location != null)
+				medias.addAll(FileWalker.getInstance().walk(location));
 
 		getImages();
 	}
@@ -92,7 +93,6 @@ public final class CWebEngine
 		}
 
 //		Utils.callFuncJS(webEngine, "$(mediaList).fadeTo", "100", "1");
-
 		final String selectedId = Settings.getInstance().getGeneral().get("selectedId");
 		if (selectedId != null)
 			Utils.callFuncJS(webEngine, "setSelection", selectedId);

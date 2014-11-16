@@ -6,10 +6,12 @@
 package videomanagerjava;
 
 import com.sun.webkit.dom.HTMLLIElementImpl;
+import java.util.Optional;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
@@ -38,7 +40,6 @@ public class CContextMenu
 
 		MenuItem labelItem = new MenuItem("Label");
 		labelItem.setDisable(true);
-		locationItems.add(labelItem);
 
 		MenuItem removeItem = new MenuItem("Remove");
 		removeItem.setOnAction((ActionEvent event) ->
@@ -47,7 +48,32 @@ public class CContextMenu
 			Settings.getInstance().getLocations().remove(toRemove);
 			CWebEngine.walkFiles();
 			CWebEngine.refreshList();
+			hide();
 		});
+
+		MenuItem renameItem = new MenuItem("Rename");
+		renameItem.setOnAction((ActionEvent event) ->
+		{
+			final String toRename = hovered.getInnerText();
+			final String location = Settings.getInstance().getLocations().get(toRename);
+
+			TextInputDialog dialog = new TextInputDialog(toRename);
+			dialog.setHeaderText(null);
+			dialog.setTitle("Rename location");
+			dialog.setContentText("Name of the location: ");
+
+			Optional<String> result = dialog.showAndWait();
+			if (result.isPresent())
+			{
+				Settings.getInstance().getLocations().remove(toRename);
+				Settings.getInstance().getLocations().put(result.get(), location);
+				hovered.setTextContent(result.get());
+			}
+			hide();
+		});
+
+		locationItems.add(labelItem);
+		locationItems.add(renameItem);
 		locationItems.add(removeItem);
 	}
 
