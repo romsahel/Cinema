@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.DirectoryChooser;
+import utils.Utils;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.Settings;
 
@@ -39,13 +40,7 @@ public class JsToJava
 		final TreeMap<String, Episode> season = media.getSeasons().get(currentSeason);
 		final Episode episode = season.get(currentEpisode);
 
-		try
-		{
-			Desktop.getDesktop().open(new File(episode.getPath()));
-		} catch (IOException ex)
-		{
-			Logger.getLogger(JsToJava.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		VLCController.play(episode);
 	}
 
 	public void reload()

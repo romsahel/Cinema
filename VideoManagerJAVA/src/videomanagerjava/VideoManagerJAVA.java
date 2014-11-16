@@ -12,6 +12,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import utils.Utils;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.Settings;
 
@@ -62,6 +63,8 @@ public class VideoManagerJAVA extends Application
 			final String currentId = Utils.callJS(cWebEngine.getWebEngine(), "getCurrentId()");
 			Settings.getInstance().getGeneral().put("selectedId", currentId);
 			Settings.getInstance().writeSettings();
+			if (!VLCController.cancelTimer())
+				Database.getInstance().writeDatabase();
 		});
 
 		stage.setTitle("Video Manager");

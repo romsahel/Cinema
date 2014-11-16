@@ -134,7 +134,8 @@ public class Database
 				final JSONObject value = (JSONObject) obj.get(key);
 				Episode episode = new Episode((String) value.get("name"),
 											  (String) value.get("path"),
-											  (Boolean) value.get("seen"));
+											  (Boolean) value.get("seen"),
+											  (Long) value.get("time"));
 
 				map.put((String) value.get("name"), episode);
 

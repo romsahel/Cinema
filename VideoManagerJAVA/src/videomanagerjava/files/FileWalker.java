@@ -9,7 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import videomanagerjava.Episode;
 import videomanagerjava.Media;
-import videomanagerjava.Utils;
+import utils.Utils;
 
 /**
  *
