@@ -43,9 +43,6 @@ function onPageLoaded()
 
 	split = $("#split");
 
-	if (navigator.vendor === "Google Inc.")
-		debug();
-
 	mediaList.style.width = $(window).width() / 2;
 	updateSplitPane();
 
@@ -66,6 +63,9 @@ function onPageLoaded()
 		mediaList.children[1].click();
 	else
 		detail.style.opacity = 0;
+
+	if (navigator.vendor === "Google Inc.")
+		debug();
 }
 
 function optionClick(elt)
@@ -132,6 +132,8 @@ function onSeenToggleClick(elt, toSet)
 		elt.removeClass("seen");
 	else
 		elt.addClass("seen");
+
+	currentEpisode.value.seen = elt.hasClass("seen");
 
 	if (toSet == null)
 	{

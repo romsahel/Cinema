@@ -11,7 +11,7 @@ function goToLink(elt)
 function setSelection(id)
 {
 	$("#" + id).click();
-	$("html, body").animate({ scrollTop: $("#" + id).offset().top }, 500);
+	$("html, body").animate({ scrollTop: $("#" + id).offset().top - 50 }, 500);
 }
 
 $(document).keypress(function (e) {

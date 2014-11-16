@@ -114,7 +114,8 @@ public class Database
 			{
 				final String key = (String) it.next();
 				final Object value = obj.get(key);
-				if (value.getClass() == String.class)
+
+				if (value == null || value.getClass() == String.class)
 					map.put(key, value);
 				else
 				{

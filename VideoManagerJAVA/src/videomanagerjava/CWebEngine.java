@@ -5,7 +5,6 @@
  */
 package videomanagerjava;
 
-import utils.Utils;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
 import org.json.simple.JSONValue;
+import utils.Utils;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.FileWalker;
 import videomanagerjava.files.Settings;
@@ -30,9 +30,9 @@ import videomanagerjava.files.Settings;
 public final class CWebEngine
 {
 
-	private final ArrayList<Media> medias = new ArrayList<>();
-	private ExecutorService executor;
-	private final WebEngine webEngine;
+	private static final ArrayList<Media> medias = new ArrayList<>();
+	private static ExecutorService executor;
+	private static WebEngine webEngine;
 
 	public CWebEngine(WebView webBrowser)
 	{	// Obtain the webEngine to navigate
@@ -42,14 +42,18 @@ public final class CWebEngine
 
 		((JSObject) webEngine.executeScript("window")).setMember("app", new JsToJava(this));
 
-		final HashMap<String, String> locations = Settings.getInstance().getLocations();
-		String[] array = new String[locations.size()];
-
-		walkFiles(locations.values().toArray(array));
+		walkFiles();
 
 	}
 
-	public void walkFiles(String... locations)
+	private void walkFiles()
+	{
+		final HashMap<String, String> locations = Settings.getInstance().getLocations();
+		String[] array = new String[locations.size()];
+		walkFiles(locations.values().toArray(array));
+	}
+
+	public static void walkFiles(String... locations)
 	{
 		medias.clear();
 		for (String location : locations)
@@ -58,8 +62,10 @@ public final class CWebEngine
 		getImages();
 	}
 
-	public void refreshList()
+	public static void refreshList()
 	{
+		Utils.callFuncJS(webEngine, "emptyMediaList");
+
 		//	wait for the info-getting job to be terminated
 		while (!executor.isTerminated());
 
@@ -85,13 +91,15 @@ public final class CWebEngine
 			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
 		}
 
+//		Utils.callFuncJS(webEngine, "$(mediaList).fadeTo", "100", "1");
+
 		final String selectedId = Settings.getInstance().getGeneral().get("selectedId");
 		if (selectedId != null)
 			Utils.callFuncJS(webEngine, "setSelection", selectedId);
 		Database.getInstance().writeDatabase();
 	}
 
-	private void getImages()
+	private static void getImages()
 	{
 		executor = java.util.concurrent.Executors.newFixedThreadPool(4);
 		if (medias == null)
@@ -116,13 +124,13 @@ public final class CWebEngine
 	/**
 	 * @return the webEngine
 	 */
-	public WebEngine getWebEngine()
+	public static WebEngine getWebEngine()
 	{
 		return webEngine;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="Inside class">
-	private class CChangeListener implements javafx.beans.value.ChangeListener<Worker.State>
+	private static class CChangeListener implements javafx.beans.value.ChangeListener<Worker.State>
 	{
 
 		@Override

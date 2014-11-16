@@ -3,4 +3,4 @@ User must be able to edit details in order to change description, title, etc.
 User must be able to hide banner info details
 Fix small page bugss
 Filter by genre, sort by date, type(movie or show) etc.
-Look into OMDAPI
+Add options to "Locations" to analyze files by looking just at files and not folders (useful for popcorn folder)

@@ -135,7 +135,7 @@ header > .select, #detail-genres {
 	white-space: nowrap;
 }
 
-.select li:hover {
+.select li:hover, .select .hover {
 	color: white;
 	background: #112c54;
 	border-left: solid 3px #2d72d9;

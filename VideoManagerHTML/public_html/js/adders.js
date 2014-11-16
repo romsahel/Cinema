@@ -31,8 +31,6 @@ function addMedia(id, array)
 
 	updateGenres(array.info.genres);
 
-
-
 	mediaList.appendChild(media);
 	medias[id] = array;
 }
