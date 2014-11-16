@@ -27,13 +27,6 @@ import videomanagerjava.files.Settings;
 public class JsToJava
 {
 
-	private final CWebEngine cWebEngine;
-
-	public JsToJava(CWebEngine cWebEngine)
-	{
-		this.cWebEngine = cWebEngine;
-	}
-
 	public void playMedia(String id, String currentSeason, String currentEpisode)
 	{
 		Episode episode = getEpisode(id, currentSeason, currentEpisode);
@@ -57,7 +50,7 @@ public class JsToJava
 
 	public void reload()
 	{
-		cWebEngine.getWebEngine().reload();
+		CWebEngine.getWebEngine().reload();
 	}
 
 	public void openLink(String link)
@@ -95,8 +88,8 @@ public class JsToJava
 			{
 				Settings.getInstance().getLocations().put(result.get(), folderPath);
 				Settings.getInstance().writeSettings();
-				cWebEngine.walkFiles(folderPath);
-				cWebEngine.refreshList();
+				CWebEngine.walkFiles(folderPath);
+				CWebEngine.refreshList();
 				return result.get();
 			}
 		}

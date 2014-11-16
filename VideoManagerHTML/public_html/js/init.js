@@ -56,6 +56,10 @@ function onPageLoaded()
 		onEpisodesClick($(this));
 	});
 
+	genresList.on('click', 'li', function () {
+		filterByCategory($(this).text());
+	});
+
 //	episodes.on('click', 'li > div > span', function (e) {
 //	});
 

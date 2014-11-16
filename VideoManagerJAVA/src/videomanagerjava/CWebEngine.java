@@ -40,21 +40,22 @@ public final class CWebEngine
 		webEngine.load("file:///" + new File("public_html/index.html").getAbsolutePath().replace('\\', '/'));
 		webEngine.getLoadWorker().stateProperty().addListener(new CChangeListener());
 
-		((JSObject) webEngine.executeScript("window")).setMember("app", new JsToJava(this));
+		((JSObject) webEngine.executeScript("window")).setMember("app", new JsToJava());
 
 		walkFiles();
 
 	}
 
-	private void walkFiles()
+	private static String[] getLocations()
 	{
 		final HashMap<String, String> locations = Settings.getInstance().getLocations();
 		String[] array = new String[locations.size()];
-		walkFiles(locations.values().toArray(array));
+		return locations.values().toArray(array);
 	}
 
 	public static void walkFiles(String... locations)
 	{
+		locations = locations.length == 0 ? getLocations() : locations;
 		medias.clear();
 		for (String location : locations)
 			if (location != null)
