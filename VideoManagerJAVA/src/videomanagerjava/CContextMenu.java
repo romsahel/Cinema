@@ -5,6 +5,8 @@
  */
 package videomanagerjava;
 
+import com.sun.webkit.dom.HTMLDivElementImpl;
+import com.sun.webkit.dom.HTMLElementImpl;
 import com.sun.webkit.dom.HTMLLIElementImpl;
 import java.util.Optional;
 import javafx.collections.ObservableList;
@@ -15,6 +17,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import org.w3c.dom.Element;
 import videomanagerjava.files.Settings;
 
 /**
@@ -28,6 +31,8 @@ public class CContextMenu
 	private static WebView webView;
 
 	private static final ContextMenu locationsMenu = new ContextMenu();
+	private static final ContextMenu filesMenu = new ContextMenu();
+
 	private static ContextMenu currentMenu;
 	private static HTMLLIElementImpl hovered;
 
@@ -36,6 +41,58 @@ public class CContextMenu
 		webEngine = engine;
 		webView = view;
 
+		locationsMenuInit();
+		filesMenuInit();
+	}
+
+	private void filesMenuInit()
+	{
+		final ObservableList<MenuItem> filesItems = filesMenu.getItems();
+
+		MenuItem labelItem = new MenuItem("Label");
+		labelItem.setDisable(true);
+
+		MenuItem removeItem = new MenuItem("Remove");
+		removeItem.setOnAction((ActionEvent event) ->
+		{
+		});
+
+		MenuItem renameItem = new MenuItem("Rename");
+		renameItem.setOnAction((ActionEvent event) ->
+		{
+
+		});
+
+		MenuItem seenItem = new MenuItem("Toggle seen");
+		seenItem.setOnAction((ActionEvent event) ->
+		{
+			final Element parent = hovered.getParentElement();
+			if (parent.getAttribute("id").equals("seasons"))
+			{
+				
+			}
+			else
+			{
+				toggle(hovered);
+			}
+			hide();
+		});
+
+		filesItems.add(labelItem);
+		filesItems.add(seenItem);
+		filesItems.add(renameItem);
+		filesItems.add(removeItem);
+	}
+
+	private void toggle(HTMLLIElementImpl element)
+	{
+		final HTMLDivElementImpl div = (HTMLDivElementImpl) element.getElementsByTagName("div").item(0);
+		final HTMLElementImpl item = (HTMLElementImpl) div.getElementsByTagName("span").item(0);
+		item.click();
+	}
+
+	private void locationsMenuInit()
+	{
 		final ObservableList<MenuItem> locationItems = locationsMenu.getItems();
 
 		MenuItem labelItem = new MenuItem("Label");
@@ -82,6 +139,8 @@ public class CContextMenu
 		hide();
 		if (locationContext(e))
 			return;
+		if (filesContext(e))
+			return;
 	}
 
 	private static boolean locationContext(MouseEvent e)
@@ -97,8 +156,26 @@ public class CContextMenu
 				currentMenu = locationsMenu;
 				locationsMenu.getItems().get(0).setText(currentText);
 				locationsMenu.show(webView, e.getScreenX(), e.getScreenY());
-				return true;
 			}
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean filesContext(MouseEvent e)
+	{
+		final Object object = webEngine.executeScript("$(\"#files li:hover\")[0]");
+		if (object.getClass() == HTMLLIElementImpl.class)
+		{
+			hovered = (HTMLLIElementImpl) object;
+			String currentText = hovered.getInnerText();
+			final int indexOf = currentText.indexOf("\n");
+			currentText = currentText.substring(indexOf > 0 ? indexOf : 0).trim();
+
+			currentMenu = filesMenu;
+			filesMenu.getItems().get(0).setText(currentText);
+			filesMenu.show(webView, e.getScreenX(), e.getScreenY());
+			return true;
 		}
 		return false;
 	}
@@ -108,7 +185,8 @@ public class CContextMenu
 		if (currentMenu != null)
 		{
 			currentMenu.hide();
-			hovered.setClassName("");
+			if (currentMenu == locationsMenu)
+				hovered.setClassName("");
 		}
 		hovered = null;
 		currentMenu = null;

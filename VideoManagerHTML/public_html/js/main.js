@@ -200,17 +200,21 @@ function updateDetailGenres(genres)
 	}
 }
 
-function showDetail(elt)
+function showDetail(elt, refresh)
 {
 	var newMedia = medias[elt.id];
 	currentId = elt.id;
-	if (newMedia === currentMedia)
+	if (!refresh && newMedia === currentMedia)
 		return;
 
 	$(elt).parent().children().removeClass("selected");
 	$(elt).addClass("selected");
 	currentMedia = newMedia;
-	$("#detail").fadeTo(100, 0, updateDetails);
+
+	if (!refresh)
+		$("#detail").fadeTo(100, 0, updateDetails);
+	else
+		updateDetails();
 }
 // </editor-fold>
 

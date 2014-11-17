@@ -132,14 +132,14 @@ function onSeasonsClick(elt)
 
 function onSeenToggleClick(elt, toSet)
 {
-	if (elt.hasClass("seen") && toSet == null)
+	if (elt.hasClass("seen") && toSet === undefined)
 		elt.removeClass("seen");
 	else
 		elt.addClass("seen");
 
-	currentEpisode.value.seen = elt.hasClass("seen");
+	currentSeason.value[elt.parent().text()].seen = !currentSeason.value[elt.parent().text()].seen || toSet;
 
-	if (toSet == null)
+	if (toSet === undefined)
 	{
 		var episode = elt.parent().parent();
 		app.toggleSeen(currentMedia.id, currentSeason.key, $(episode.children()[1]).text());
