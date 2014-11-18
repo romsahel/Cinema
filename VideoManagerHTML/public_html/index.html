@@ -17,9 +17,9 @@
 	<body onload="onPageLoaded();" onresize="onResize()">
 		<header>
 			<ul>
-				<li class="category" onclick=""><a>All</a></li>
-				<li class="category" onclick=""><a>Movies</a></li>
-				<li class="category" onclick=""><a>TV Series</a></li>
+				<li class="category" onclick="filterByType()"><a onclick="">All</a></li>
+				<li class="category" onclick="filterByType('movie')"><a>Movies</a></li>
+				<li class="category" onclick="filterByType('show')"><a>TV Series</a></li>
 				<li></li>
 				<li class="select" onclick="dropDownClick(this, '#sortList')">
 					<a>Sort by </a>
