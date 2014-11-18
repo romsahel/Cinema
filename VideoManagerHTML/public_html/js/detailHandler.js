@@ -34,7 +34,7 @@ function updateDetailFiles()
 		var i = 1;
 		for (var eKey in currSeasons[sKey])
 		{
-			var span = "<span onclick='onSeenToggleClick($(this))'" + (currSeasons[sKey][eKey].seen ? " class=\"seen\"" : "") + "></span>";
+			var span = "<span" + (currSeasons[sKey][eKey].seen ? " class=\"seen\"" : "") + "></span>";
 			var div = "<div>" + span + "<div>" + eKey + "</div></div>";
 			episodesToAppend = episodesToAppend + "<li>" + "<span>" + i + "</span>" + div + "</li>";
 			i = i + 1;
@@ -88,4 +88,38 @@ function showDetail(elt, refresh)
 		$("#detail").fadeTo(100, 0, updateDetails);
 	else
 		updateDetails();
+}
+
+function toggleSeenSeason()
+{
+	var list = $("#episodes .selected li > div > span");
+	for (var i = 0; i < list.length; i++)
+	{
+		console.log(list[i]);
+		$(list[i]).click();
+	}
+}
+
+function onSeenToggleClick(e)
+{
+	toggleSeen($(this));
+	return cancelEvent(e);
+}
+
+function toggleSeen(elt, toSet)
+{
+	if (elt.hasClass("seen") && toSet === undefined)
+		elt.removeClass("seen");
+	else
+		elt.addClass("seen");
+
+	currentSeason.value[elt.parent().text()].seen = !currentSeason.value[elt.parent().text()].seen || toSet;
+
+	if (false && toSet === undefined)
+	{
+		var episode = elt.parent().parent();
+		app.toggleSeen(currentMedia.id, currentSeason.key, $(episode.children()[1]).text());
+	}
+
+	return false;
 }

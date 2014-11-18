@@ -56,6 +56,8 @@ function onPageLoaded()
 		onEpisodesClick($(this));
 	});
 
+	episodes.on('click', 'li  > div > span', onSeenToggleClick);
+
 	genresList.on('click', 'li', function () {
 		filterByCategory($(this).text());
 	});
@@ -128,22 +130,6 @@ function onSeasonsClick(elt)
 
 		episodes.fadeTo("fast", 1);
 	});
-}
-
-function onSeenToggleClick(elt, toSet)
-{
-	if (elt.hasClass("seen") && toSet === undefined)
-		elt.removeClass("seen");
-	else
-		elt.addClass("seen");
-
-	currentSeason.value[elt.parent().text()].seen = !currentSeason.value[elt.parent().text()].seen || toSet;
-
-	if (toSet === undefined)
-	{
-		var episode = elt.parent().parent();
-		app.toggleSeen(currentMedia.id, currentSeason.key, $(episode.children()[1]).text());
-	}
 }
 
 function getCurrentId()

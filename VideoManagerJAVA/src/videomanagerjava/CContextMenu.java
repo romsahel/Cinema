@@ -67,9 +67,10 @@ public class CContextMenu
 		seenItem.setOnAction((ActionEvent event) ->
 		{
 			final Element parent = hovered.getParentElement();
-			if (parent.getAttribute("id").equals("seasons"))
+			final String id = parent.getAttribute("id");
+			if (id != null && id.equals("seasons"))
 			{
-				
+
 			}
 			else
 			{
