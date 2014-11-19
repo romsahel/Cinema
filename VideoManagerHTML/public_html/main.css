@@ -91,7 +91,7 @@ header li {
 }
 
 
-.category:hover {
+.category:hover, .category.selected {
 	border-bottom: solid 3px #2d72d9;
 	color: white;
 	cursor: pointer;
@@ -119,6 +119,8 @@ header li {
 
 	box-shadow: 4px 10px 10px rgba(0,0,0,0.5);
 	z-index: 2;
+	max-height: 270px;
+	overflow-y: auto;
 }
 
 header > .select, #detail-genres {

@@ -16,9 +16,14 @@ function updateSearch(search)
 	}
 }
 
-function filterByType(type)
+function filterByType(elt, type)
 {
+	if (elt.hasClass("selected"))
+		return;
+
 	$("html, body").animate({scrollTop: 0}, 500);
+	$(".category").removeClass('selected');
+	elt.addClass('selected');
 	$(mediaList).fadeTo(200, 0, function () {
 		for (var key in medias)
 		{
