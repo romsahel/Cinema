@@ -3,10 +3,12 @@ package utils;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLConnection;
+import java.net.URLEncoder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import videomanagerjava.VLCController;
@@ -86,6 +88,20 @@ public class RequestUtils
 		{
 			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
 		}
+	}
+
+	public String pathToUrl(final String path)
+	{
+		String parameter = null;
+		try
+		{
+			String file = URLEncoder.encode(path.replace(" ", "\\ "), "UTF-8");
+			parameter = String.format("command=in_play&input=%s", file.replace("%5C+", "%20"));
+		} catch (UnsupportedEncodingException ex)
+		{
+			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		return parameter;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="Singleton">

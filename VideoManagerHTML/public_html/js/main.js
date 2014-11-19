@@ -1,6 +1,6 @@
 function playMedia()
 {
-	onSeenToggleClick($("#episodes > .selected > .selected > div > span"), true);
+	toggleSeen($("#episodes > .selected > .selected > div > span"), true);
 	app.playMedia(currentMedia.id, currentSeason.key, currentEpisode.key);
 }
 

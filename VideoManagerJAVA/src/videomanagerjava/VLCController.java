@@ -31,14 +31,13 @@ public class VLCController
 	{
 		currentEpisode = episode;
 
-		final String file = episode.getPath();
-		String parameter = String.format("command=in_play&input=%s?command=pl_empty", file);
-//		If the request is null, we must launch VLC and wait for it to be prepared
-		if (sendRequest(null) == null)
-			runVLC(file);
-		else
-			sendRequest(parameter);
+		String parameter = RequestUtils.getInstance().pathToUrl(episode.getPath());
 
+//		If the request is null, we must launch VLC and wait for it to be prepared
+		if (parameter == null || sendRequest("command=pl_empty") == null)
+			runVLC(episode.getPath());
+
+		sendRequest(parameter);
 		final String filename = (String) getNestedObject(sendRequest("command=seek&val=" + episode.getTime()),
 														 "information", "category", "meta", "filename");
 		episode.setSeen(true);
@@ -69,6 +68,7 @@ public class VLCController
 		};
 		timer.scheduleAtFixedRate(timerTask, 5000, 10000);
 	}
+
 
 	public static boolean cancelTimer(boolean checkStatus)
 	{
