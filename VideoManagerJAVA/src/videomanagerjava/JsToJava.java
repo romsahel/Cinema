@@ -37,7 +37,7 @@ public class JsToJava
 	{
 		System.out.println("toggling seen");
 		Episode episode = getEpisode(id, currentSeason, currentEpisode);
-		episode.setSeen(!episode.isSeen());
+		episode.toggleSeen();
 	}
 
 	private Episode getEpisode(String id, String currentSeason, String currentEpisode) throws NumberFormatException

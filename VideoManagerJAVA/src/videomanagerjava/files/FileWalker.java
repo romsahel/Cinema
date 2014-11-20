@@ -7,9 +7,9 @@ package videomanagerjava.files;
 
 import java.io.File;
 import java.util.ArrayList;
+import utils.Utils;
 import videomanagerjava.Episode;
 import videomanagerjava.Media;
-import utils.Utils;
 
 /**
  *
@@ -68,7 +68,7 @@ public class FileWalker
 	private void addEpisode(final String path, Media media)
 	{
 		final Episode episode = new Episode(path);
-		media.getDefaultSeason().put(episode.getName(), episode);
+		media.getDefaultSeason().put(episode.getProperties().get("name"), episode);
 	}
 
 	private void walkMedia(File f, Media media)

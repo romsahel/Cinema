@@ -5,6 +5,7 @@
  */
 package videomanagerjava;
 
+import java.util.HashMap;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
@@ -63,8 +64,12 @@ public class VideoManagerJAVA extends Application
 		stage.setOnCloseRequest((WindowEvent we) ->
 		{
 			final String currentId = Utils.callJS(webEngine, "getCurrentId()");
-			Settings.getInstance().getGeneral().put("selectedId", currentId);
-			Settings.getInstance().writeSettings();
+			final HashMap<String, String> general = Settings.getInstance().getGeneral();
+			if (!general.get("selectedId").equals(currentId))
+			{
+				general.put("selectedId", currentId);
+				Settings.getInstance().writeSettings();
+			}
 			if (!VLCController.cancelTimer(true))
 				Database.getInstance().writeDatabase();
 		});

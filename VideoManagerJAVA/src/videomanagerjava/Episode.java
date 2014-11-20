@@ -5,6 +5,8 @@
  */
 package videomanagerjava;
 
+import java.util.HashMap;
+import java.util.Map;
 import utils.Utils;
 
 /**
@@ -14,10 +16,7 @@ import utils.Utils;
 public class Episode
 {
 
-	private final String name;
-	private final String path;
-	private boolean seen;
-	private long time;
+	private final HashMap<String, String> properties;
 
 	/**
 	 *
@@ -28,77 +27,49 @@ public class Episode
 	 */
 	public Episode(String name, String path, boolean seen, long time)
 	{
-		this.name = name;
-		this.path = path;
-		this.seen = seen;
-		this.time = time;
+		properties = new HashMap<>();
+		properties.put("name", name);
+		properties.put("path", path);
+		properties.put("seen", Boolean.toString(seen));
+		properties.put("time", Long.toString(time));
 	}
 
 	public Episode(String path)
 	{
-		this.name = Utils.getSuffix(path, Utils.getSeparator());
-		this.path = path;
-		this.seen = false;
-		this.time = 0;
-	}
-
-	/**
-	 * @return the name
-	 */
-	public String getName()
-	{
-		return name;
-	}
-
-	/**
-	 * @return the path
-	 */
-	public String getPath()
-	{
-		return path;
-	}
-
-	/**
-	 * @return the seen
-	 */
-	public boolean isSeen()
-	{
-		return seen;
-	}
-
-	/**
-	 * @param seen the seen to set
-	 */
-	public void setSeen(boolean seen)
-	{
-		this.seen = seen;
+		properties = new HashMap<>();
+		properties.put("name", Utils.getSuffix(path, Utils.getSeparator()));
+		properties.put("path", path);
+		properties.put("seen", "false");
+		properties.put("time", "0");
 	}
 
 	@Override
 	public String toString()
 	{
-		return "{"
-			   + "\"name\": \"" + name + "\", "
-			   + "\"path\": \"" + path.replace("\\", "\\\\") + "\", "
-			   + "\"seen\": " + seen + ", "
-			   + "\"time\": " + time
-			   + '}';
+
+		StringBuilder sb = new StringBuilder();
+		for (Map.Entry<String, String> entrySet : properties.entrySet())
+		{
+			String key = entrySet.getKey();
+			String value = entrySet.getValue();
+			String quote = "\"";
+			if (key.equals("seen") || key.equals("time"))
+				quote = "";
+			sb.append(String.format(", \"%s\":%s%s%s", key, quote, value, quote));
+		}
+		return "{" + sb.toString().substring(2) + "}";
 	}
 
-	/**
-	 * @return the time
-	 */
-	public long getTime()
+	public HashMap<String, String> getProperties()
 	{
-		return time;
+		return properties;
 	}
 
-	/**
-	 * @param time the time to set
-	 */
-	public void setTime(long time)
+	void toggleSeen()
 	{
-		this.time = time;
+		if (properties.get("seen").equals("true"))
+			properties.put("seen", "false");
+		else
+			properties.put("seen", "true");
 	}
-
 }

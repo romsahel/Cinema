@@ -93,10 +93,11 @@ function showDetail(elt, refresh)
 function toggleSeenSeason()
 {
 	var list = $("#episodes .selected li > div > span");
+	var toSet = !$(list[0]).hasClass("seen");
+	console.log(toSet);
 	for (var i = 0; i < list.length; i++)
 	{
-		console.log(list[i]);
-		$(list[i]).click();
+		toggleSeen($(list[i]), toSet);
 	}
 }
 
@@ -108,10 +109,10 @@ function onSeenToggleClick(e)
 
 function toggleSeen(elt, toSet)
 {
-	if (elt.hasClass("seen") && toSet === undefined)
-		elt.removeClass("seen");
-	else
+	if (toSet === true || (!elt.hasClass("seen") && toSet === undefined))
 		elt.addClass("seen");
+	else
+		elt.removeClass("seen");
 
 	currentSeason.value[elt.parent().text()].seen = !currentSeason.value[elt.parent().text()].seen || toSet;
 

@@ -66,16 +66,10 @@ public class CContextMenu
 		MenuItem seenItem = new MenuItem("Toggle seen");
 		seenItem.setOnAction((ActionEvent event) ->
 		{
-			final Element parent = hovered.getParentElement();
-			final String id = parent.getAttribute("id");
-			if (id != null && id.equals("seasons"))
-			{
-
-			}
+			if (isSeason())
+					webEngine.executeScript("toggleSeenSeason()");
 			else
-			{
 				toggle(hovered);
-			}
 			hide();
 		});
 
@@ -83,6 +77,13 @@ public class CContextMenu
 		filesItems.add(seenItem);
 		filesItems.add(renameItem);
 		filesItems.add(removeItem);
+	}
+
+	private boolean isSeason()
+	{
+		final Element parent = hovered.getParentElement();
+		final String id = parent.getAttribute("id");
+		return (id != null && id.equals("seasons"));
 	}
 
 	private void toggle(HTMLLIElementImpl element)

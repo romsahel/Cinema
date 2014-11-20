@@ -6,6 +6,7 @@
 package videomanagerjava;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -31,28 +32,38 @@ public class VLCController
 	{
 		currentEpisode = episode;
 
-		String parameter = RequestUtils.getInstance().pathToUrl(episode.getPath());
+		final HashMap<String, String> properties = episode.getProperties();
+		final String path = properties.get("path");
+		String parameter = RequestUtils.getInstance().pathToUrl(path);
 
 //		If the request is null, we must launch VLC and wait for it to be prepared
 		if (parameter == null || sendRequest("command=pl_empty") == null)
-			runVLC(episode.getPath());
+			runVLC(path);
 		else
 			sendRequest(parameter);
 
 		System.out.println("Waiting for VLC and getting filename");
 		String filename = null;
 		while (filename == null)
-			filename = (String) getNestedObject(sendRequest("command=seek&val=" + episode.getTime()),
+			filename = (String) getNestedObject(sendRequest("command=seek&val=" + properties.get("time")),
 												"information", "category", "meta", "filename");
 		System.out.println(filename);
-		episode.setSeen(true);
-		cancelTimer(false);
+		properties.put("seen", "true");
+		cancelTimer(false, properties);
 		timer = new Timer();
-		timerTask = new TimerTaskImpl(episode, filename);
+		timerTask = new TimerTaskImpl(properties, filename);
 		timer.scheduleAtFixedRate(timerTask, 5000, 10000);
 	}
 
 	public static boolean cancelTimer(boolean checkStatus)
+	{
+		if (currentEpisode == null)
+			return false;
+
+		return cancelTimer(checkStatus, currentEpisode.getProperties());
+	}
+
+	public static boolean cancelTimer(boolean checkStatus, HashMap<String, String> properties)
 	{
 		if (timer != null && timerTask != null)
 		{
@@ -63,7 +74,7 @@ public class VLCController
 			{
 				final String status = sendRequest(null);
 				if (status != null)
-					setEpisodeTime(status, currentEpisode);
+					setEpisodeTime(status, properties);
 			}
 			Database.getInstance().writeDatabase();
 			return true;
@@ -71,11 +82,11 @@ public class VLCController
 		return false;
 	}
 
-	private static JSONObject setEpisodeTime(final String status, final Episode episode)
+	private static JSONObject setEpisodeTime(final String status, final HashMap<String, String> properties)
 	{
 		JSONObject obj = getJSONObject(status);
 		if (obj != null)
-			episode.setTime((long) obj.get("time"));
+			properties.put("time", Long.toString((long) obj.get("time")));
 		return obj;
 	}
 
@@ -136,12 +147,13 @@ public class VLCController
 
 	private static class TimerTaskImpl extends TimerTask
 	{
-		private final Episode episode;
+
+		private final HashMap<String, String> properties;
 		private final String filename;
 
-		public TimerTaskImpl(Episode episode, String filename)
+		public TimerTaskImpl(HashMap<String, String> properties, String filename)
 		{
-			this.episode = episode;
+			this.properties = properties;
 			this.filename = filename;
 		}
 
@@ -151,17 +163,17 @@ public class VLCController
 			final String status = sendRequest(null);
 			if (status == null)
 			{
-				cancelTimer(false);
+				cancelTimer(false, properties);
 				return;
 			}
 
-			JSONObject obj = setEpisodeTime(status, episode);
+			JSONObject obj = setEpisodeTime(status, properties);
 			String name = "";
 			if (obj != null)
 				name = (String) getNestedObject(obj, "information", "category", "meta", "filename");
 
 			if (!name.equals(filename))
-				cancelTimer(false);
+				cancelTimer(false, properties);
 		}
 	}
 }
