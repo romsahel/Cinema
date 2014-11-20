@@ -4,3 +4,5 @@ User must be able to hide banner info details
 Sort by date, etc.
 Add options to "Locations" to analyze files by looking just at files and not folders (useful for popcorn folder)
 Look into subliminal (to automatically download subtitles - execute python through java) 
+Select next episode after end of current
+Remember selected season and episode
