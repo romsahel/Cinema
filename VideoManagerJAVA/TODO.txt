@@ -6,3 +6,5 @@ Add options to "Locations" to analyze files by looking just at files and not fol
 Look into subliminal (to automatically download subtitles - execute python through java) 
 Select next episode after end of current
 Remember selected season and episode
+Loading icon (at launch, when starting VLC)
+Time of episode besides the Watch button

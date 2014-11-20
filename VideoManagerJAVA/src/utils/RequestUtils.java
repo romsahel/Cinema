@@ -19,6 +19,7 @@ import videomanagerjava.VLCController;
  */
 public class RequestUtils
 {
+
 	private RequestUtils()
 	{
 		Authenticator.setDefault(new Authenticator()
@@ -34,6 +35,7 @@ public class RequestUtils
 	public String sendGetRequest(String requestParameters)
 	{
 		String result;
+		System.out.println("Requesting: " + requestParameters);
 		String endpoint = "http://localhost:8080/requests/status.json";
 		if (endpoint.startsWith("http://"))
 		{
@@ -62,7 +64,7 @@ public class RequestUtils
 
 			closeReader(rd);
 
-			System.out.println(result);
+			System.out.println("Successful request");
 			return result;
 		}
 		return null;
@@ -105,7 +107,6 @@ public class RequestUtils
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="Singleton">
-
 	public static RequestUtils getInstance()
 	{
 		return HttpUtilsHolder.INSTANCE;
