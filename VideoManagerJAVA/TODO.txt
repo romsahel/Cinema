@@ -8,3 +8,4 @@ Select next episode after end of current
 Remember selected season and episode
 Loading icon (at launch, when starting VLC)
 Time of episode besides the Watch button
+Look into HPPC library to decrease memory usage
