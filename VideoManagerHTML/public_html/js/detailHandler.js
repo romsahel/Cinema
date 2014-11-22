@@ -15,7 +15,17 @@ function updateDetails()
 
 	updateDetailFiles();
 
-	onSeasonsClick($(seasons.children()[0]));
+	if (!selection.set)
+		onSeasonsClick($(seasons.children()[0]));
+	else if (selection.episode)
+	{
+		console.log("clicking season");
+		onSeasonsClick(seasons.children(".tmp"),
+				function () {
+					onEpisodesClick(episodes.find(".tmp"));
+				});
+	}
+	selection = {"set": false};
 
 	$("#detail").fadeTo(100, 1);
 
@@ -27,16 +37,18 @@ function updateDetailFiles()
 	var currSeasons = currentMedia.seasons;
 	var seasonsToAppend = "";
 	var episodesToAppend = "";
+	var selectedTag = " class=\"selected\"";
 	for (var sKey in currSeasons)
 	{
-		seasonsToAppend = seasonsToAppend + "<li>" + sKey + "</li>";
-		episodesToAppend = episodesToAppend + "<ul>";
+		var isCurrentSeason = (sKey === selection.season);
+		seasonsToAppend = seasonsToAppend + "<li class=\"" + (isCurrentSeason ? "tmp" : "") + "\">" + sKey + "</li>";
+		episodesToAppend = episodesToAppend + "<ul" + (isCurrentSeason ? selectedTag : "") + ">";
 		var i = 1;
 		for (var eKey in currSeasons[sKey])
 		{
 			var span = "<span" + (currSeasons[sKey][eKey].seen ? " class=\"seen\"" : "") + "></span>";
 			var div = "<div>" + span + "<div>" + eKey + "</div></div>";
-			episodesToAppend = episodesToAppend + "<li>" + "<span>" + i + "</span>" + div + "</li>";
+			episodesToAppend = episodesToAppend + "<li class=\"" + ((eKey === selection.episode) ? "tmp" : "") + "\"><span>" + i + "</span>" + div + "</li>";
 			i = i + 1;
 		}
 		episodesToAppend = episodesToAppend + "</ul>";
@@ -107,16 +119,17 @@ function onSeenToggleClick(e)
 	return cancelEvent(e);
 }
 
-function toggleSeen(elt, toSet)
+function toggleSeen(elt, toSet, noJavaCall)
 {
-	if (toSet === true || (!elt.hasClass("seen") && toSet === undefined))
+	var seenValue = elt.hasClass("seen");
+	if (toSet === true || (!seenValue && toSet === undefined))
 		elt.addClass("seen");
 	else
 		elt.removeClass("seen");
 
 	currentSeason.value[elt.parent().text()].seen = !currentSeason.value[elt.parent().text()].seen || toSet;
 
-	if (false && toSet === undefined)
+	if (seenValue !== toSet && !noJavaCall)
 	{
 		var episode = elt.parent().parent();
 		app.toggleSeen(currentMedia.id, currentSeason.key, $(episode.children()[1]).text());

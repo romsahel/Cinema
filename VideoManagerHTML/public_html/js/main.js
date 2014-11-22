@@ -1,6 +1,6 @@
 function playMedia()
 {
-	toggleSeen($("#episodes > .selected > .selected > div > span"), true);
+	toggleSeen($("#episodes > .selected > .selected > div > span"), true, true);
 	app.playMedia(currentMedia.id, currentSeason.key, currentEpisode.key);
 }
 
@@ -79,10 +79,13 @@ function removeLocation()
 	return text;
 }
 
-var currentId;
-function setSelection(id)
+var selection = {"set": false};
+function setSelection(id, season, episode)
 {
-	currentId = id;
+	selection.id = id;
+	selection.season = season;
+	selection.episode = episode;
+	selection.set = true;
 }
 
 function emptyMediaList()
@@ -99,10 +102,10 @@ function emptyMediaList()
 
 function _setSelection()
 {
-	if (currentId === "")
+	if (selection.id === "")
 		return;
 
-	var currentSelection = $("#" + currentId + ":visible");
+	var currentSelection = $("#" + selection.id + ":visible");
 	if (currentSelection.length > 0)
 	{
 		currentSelection.click();
@@ -200,7 +203,7 @@ function debug()
 	addMedia('1687081483', {"id": "1687081483", "info": {"img": "unknown.jpg", "year": null, "name": "Kaamelott+-+Livre+2+-+Tome+2 mkv", "type": "movie"}, "seasons": {"Files": {"Kaamelott+-+Livre+2+-+Tome+2.mkv": {"name": "Kaamelott+-+Livre+2+-+Tome+2.mkv", "path": "C:\\Users\\Romsahel\\Downloads\\Téléchargements Chrome\\Kaamelott+-+Livre+2+-+Tome+2.mkv", "seen": false, "time": 0}}}})
 	addMedia('1180599337', {"id": "1180599337", "info": {"img": "unknown.jpg", "year": null, "name": "Kaamelott+-+Livre+3+-+Tome+1 mkv", "type": "movie"}, "seasons": {"Files": {"Kaamelott+-+Livre+3+-+Tome+1.mkv": {"name": "Kaamelott+-+Livre+3+-+Tome+1.mkv", "path": "C:\\Users\\Romsahel\\Downloads\\Téléchargements Chrome\\Kaamelott+-+Livre+3+-+Tome+1.mkv", "seen": false, "time": 0}}}})
 	addMedia('1181522858', {"id": "1181522858", "info": {"img": "unknown.jpg", "year": null, "name": "Kaamelott+-+Livre+3+-+Tome+2 mkv", "type": "movie"}, "seasons": {"Files": {"Kaamelott+-+Livre+3+-+Tome+2.mkv": {"name": "Kaamelott+-+Livre+3+-+Tome+2.mkv", "path": "C:\\Users\\Romsahel\\Downloads\\Téléchargements Chrome\\Kaamelott+-+Livre+3+-+Tome+2.mkv", "seen": false, "time": 0}}}})
-	setSelection('491400276')
+	setSelection('-1788452738', 'Season 2', 'Lie To Me Season 2 Episode 03 - Control Factor.avi')
 	$("#detail-poster").error(function () {
 		$(this).attr("src", "media/posters/unknown.jpg")
 	});

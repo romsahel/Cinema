@@ -92,11 +92,8 @@ public final class CWebEngine
 
 			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
 		}
-
-//		Utils.callFuncJS(webEngine, "$(mediaList).fadeTo", "100", "1");
-		final String selectedId = Settings.getInstance().getGeneral().get("selectedId");
-		if (selectedId != null)
-			Utils.callFuncJS(webEngine, "setSelection", selectedId);
+		final HashMap<String, String> general = Settings.getInstance().getGeneral();
+		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
 		Database.getInstance().writeDatabase();
 	}
 

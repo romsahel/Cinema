@@ -116,10 +116,14 @@ public class Utils
 			String js = function + "(";
 			for (int i = 0; i < args.length; i++)
 			{
-				if (args[i].charAt(0) == '\\')
-					js += args[i].substring(1);
+				final String str = args[i];
+				if (str == null)
+					js += "null";
+				else if (str.charAt(0) == '\\')
+					js += str.substring(1);
 				else
-					js += "'" + args[i] + "'";
+					js += "'" + str + "'";
+
 				if (i != args.length - 1)
 					js += ", ";
 			}

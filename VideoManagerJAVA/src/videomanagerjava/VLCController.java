@@ -30,6 +30,9 @@ public class VLCController
 
 	public static void play(final Episode episode)
 	{
+		if (currentEpisode != null)
+			cancelTimer(false, currentEpisode.getProperties());
+
 		currentEpisode = episode;
 
 		final HashMap<String, String> properties = episode.getProperties();
@@ -49,7 +52,6 @@ public class VLCController
 												"information", "category", "meta", "filename");
 		System.out.println(filename);
 		properties.put("seen", "true");
-		cancelTimer(false, properties);
 		timer = new Timer();
 		timerTask = new TimerTaskImpl(properties, filename);
 		timer.scheduleAtFixedRate(timerTask, 5000, 10000);
@@ -114,13 +116,14 @@ public class VLCController
 	private static JSONObject getJSONObject(String json)
 	{
 		JSONObject obj = null;
-		try
-		{
-			obj = (JSONObject) new JSONParser().parse(json);
-		} catch (ParseException ex)
-		{
-			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		if (json != null)
+			try
+			{
+				obj = (JSONObject) new JSONParser().parse(json);
+			} catch (ParseException ex)
+			{
+				Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
+			}
 		return obj;
 	}
 

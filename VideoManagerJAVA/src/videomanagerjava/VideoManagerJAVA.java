@@ -16,7 +16,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import utils.Utils;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.Settings;
 
@@ -53,7 +52,7 @@ public class VideoManagerJAVA extends Application
 		AnchorPane.setRightAnchor(webView, 0.0);
 
 		//Create Scene
-		final Scene scene = new Scene(anchorPane, 1600, 600);
+		final Scene scene = new Scene(anchorPane, 1300, 900);
 		scene.getStylesheets().add("utils/main.css");
 
 		Settings.getInstance().readSettings();
@@ -63,13 +62,13 @@ public class VideoManagerJAVA extends Application
 
 		stage.setOnCloseRequest((WindowEvent we) ->
 		{
-			final String currentId = Utils.callJS(webEngine, "getCurrentId()");
 			final HashMap<String, String> general = Settings.getInstance().getGeneral();
-			if (!general.get("selectedId").equals(currentId))
-			{
-				general.put("selectedId", currentId);
-				Settings.getInstance().writeSettings();
-			}
+
+			general.put("currentMedia", (String) webEngine.executeScript("getCurrentId()"));
+			general.put("currentSeason", (String) webEngine.executeScript("$(\"#seasons .selected\").text()"));
+			general.put("currentEpisode", (String) webEngine.executeScript("$(\"#episodes > .selected > .selected > div\").text()"));
+			Settings.getInstance().writeSettings();
+
 			if (!VLCController.cancelTimer(true))
 				Database.getInstance().writeDatabase();
 		});

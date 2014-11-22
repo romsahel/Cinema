@@ -43,7 +43,7 @@ function onPageLoaded()
 
 	split = $("#split");
 
-	mediaList.style.width = $(window).width() / 2;
+	mediaList.style.width = $(window).width() - detail.offsetWidth - 60;
 	updateSplitPane();
 
 	document.onmouseup = up;
@@ -90,12 +90,15 @@ function hideSelectOptions()
 
 function onEpisodesClick(elt)
 {
+	console.log(elt)
 	if (elt.hasClass("selected"))
 		return;
 
+	console.log("removing class")
 	elt.parent().children().removeClass("selected");
 	elt.addClass("selected");
 
+	console.log("appplying class")
 	var text = $(elt.children()[1]).text();
 	currentEpisode = {key: text, value: currentSeason.value[text]};
 
@@ -110,16 +113,16 @@ function onEpisodesClick(elt)
 	}
 }
 
-function onSeasonsClick(elt)
+function onSeasonsClick(elt, f)
 {
 	if (elt.hasClass("selected"))
 		return;
 
+	var text = elt.text();
+	currentSeason = {key: text, value: currentMedia.seasons[text]};
 	$("#watch-buttons").fadeOut(100);
 	detailsToUpdate.overview.height("70%");
 	episodes.fadeTo(100, 0, function () {
-		var text = elt.text();
-		currentSeason = {key: text, value: currentMedia.seasons[text]};
 
 		elt.parent().children().removeClass("selected");
 		elt.addClass("selected");
@@ -129,6 +132,8 @@ function onSeasonsClick(elt)
 		selected.addClass("selected");
 
 		episodes.fadeTo("fast", 1);
+		if (f)
+			f();
 	});
 }
 
