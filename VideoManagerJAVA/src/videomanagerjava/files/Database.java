@@ -8,6 +8,7 @@ package videomanagerjava.files;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -37,14 +38,14 @@ public class Database
 
 	public void writeDatabase()
 	{
-		JSONArray db = new JSONArray();
+		ArrayList<JSONObject> db = new ArrayList<>();
 
 		for (Map.Entry<Long, Media> media : getDatabase().entrySet())
 			db.add(writeMedia(media.getValue()));
 
 		try (FileWriter file = new FileWriter("db.json"))
 		{
-			file.write(db.toJSONString());
+			file.write(JSONArray.toJSONString(db));
 			file.flush();
 		} catch (IOException ex)
 		{
@@ -54,17 +55,19 @@ public class Database
 
 	private JSONObject writeMedia(Media media)
 	{
-		JSONObject elt = new JSONObject();
+		HashMap<String, Object> elt = new HashMap<>();
+
+//		JSONObject elt = new JSONObject();
 
 		elt.put("id", media.getId());
 
 		writeMap("info", media.getInfo(), elt);
 		writeMap("seasons", media.getSeasons(), elt);
 
-		return elt;
+		return new JSONObject(elt);
 	}
 
-	private void writeMap(String name, Map map, JSONObject elt)
+	private void writeMap(String name, Map<String, ?> map, HashMap<String, Object> elt)
 	{
 		if (map.size() > 0)
 			elt.put(name, new JSONObject(map));
@@ -107,26 +110,33 @@ public class Database
 		return media;
 	}
 
-	private void readMap(JSONObject obj, final Map map)
+	private void readMap(JSONObject obj, final HashMap<String, String> map)
 	{
- 		if (obj != null)
+		if (obj != null)
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
 			{
 				final String key = (String) it.next();
 				final Object value = obj.get(key);
 
-				if (value == null || value.getClass() == String.class)
-					map.put(key, value);
-				else
-				{
-					TreeMap<String, Episode> newMap = new TreeMap<>();
-					readEpisodes((JSONObject) value, newMap);
-					map.put(key, newMap);
-				}
+				map.put(key, (String) value);
 			}
 	}
 
-	private void readEpisodes(JSONObject obj, final Map map)
+	private void readMap(JSONObject obj, final TreeMap<String, TreeMap<String, Episode>> map)
+	{
+		if (obj != null)
+			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
+			{
+				final String key = (String) it.next();
+				final Object value = obj.get(key);
+
+				TreeMap<String, Episode> newMap = new TreeMap<>();
+				readEpisodes((JSONObject) value, newMap);
+				map.put(key, newMap);
+			}
+	}
+
+	private void readEpisodes(JSONObject obj, final TreeMap<String, Episode> map)
 	{
 		if (obj != null)
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)

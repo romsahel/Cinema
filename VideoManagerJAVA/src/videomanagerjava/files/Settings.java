@@ -35,14 +35,14 @@ public class Settings
 
 	public void writeSettings()
 	{
-		JSONObject obj = new JSONObject();
+		HashMap<String, JSONObject> obj = new HashMap<>();
 
 		writeMap("locations", locations, obj);
 		writeMap("general", general, obj);
 
 		try (FileWriter file = new FileWriter("config.json"))
 		{
-			file.write(obj.toJSONString());
+			file.write(JSONObject.toJSONString(obj));
 			file.flush();
 		} catch (IOException ex)
 		{
@@ -50,7 +50,7 @@ public class Settings
 		}
 	}
 
-	private void writeMap(String name, final HashMap<String, String> map, JSONObject elt)
+	private void writeMap(String name, final HashMap<String, String> map, HashMap<String, JSONObject> elt)
 	{
 		if (map.size() > 0)
 			elt.put(name, new JSONObject(map));

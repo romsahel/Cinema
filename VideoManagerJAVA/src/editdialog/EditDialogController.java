@@ -46,7 +46,7 @@ public class EditDialogController extends AnchorPane
 	@FXML
 	private ImageView imageView;
 	@FXML
-	private TreeView tree;
+	private TreeView<String> tree;
 	@FXML
 	private Label windowTitle;
 
