@@ -57,8 +57,6 @@ public class Database
 	{
 		HashMap<String, Object> elt = new HashMap<>();
 
-//		JSONObject elt = new JSONObject();
-
 		elt.put("id", media.getId());
 
 		writeMap("info", media.getInfo(), elt);

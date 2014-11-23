@@ -5,17 +5,21 @@
  */
 package videomanagerjava;
 
-import utils.Utils;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import main.VideoManagerJAVA;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.Utils;
 import videomanagerjava.files.Downloader;
 
 /**
@@ -145,6 +149,24 @@ public class Media
 				it.remove();
 		}
 	}
+
+
+	public String toJSArray()
+	{
+		StringBuilder sb = new StringBuilder();
+		//	create an array with all the needed data: first general info
+		sb.append(String.format("\"%s\": \"%s\",", "id", this.getId()));
+		sb.append("\"info\": ").append(JSONValue.toJSONString(this.getInfo()));
+		//	appends the season episodes
+		sb.append(", \"seasons\": ").append(JSONValue.toJSONString(this.getSeasons()));
+		String array = "{" + sb.toString() + "}";
+		Pattern pattern = Pattern.compile("genres\":\"\\[(.*)\\]\"");
+		Matcher matcher = pattern.matcher(array);
+		if (matcher.find())
+			array = array.replace(matcher.group(), "genres\": [" + matcher.group(1).replace("\\\"", "\"") + "]");
+		return "\\" + array;
+	}
+
 
 	/**
 	 * @return the id

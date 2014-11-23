@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package videomanagerjava;
+package main;
 
 import java.util.HashMap;
 import javafx.application.Application;
@@ -16,6 +16,9 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import videomanagerjava.CContextMenu;
+import videomanagerjava.CWebEngine;
+import videomanagerjava.VLCController;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.Settings;
 

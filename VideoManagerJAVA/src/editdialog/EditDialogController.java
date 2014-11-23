@@ -42,7 +42,7 @@ public class EditDialogController extends AnchorPane
 	@FXML
 	private TextField urlField;
 	@FXML
-	private ComboBox typeCombo;
+	private ComboBox<String> typeCombo;
 	@FXML
 	private ImageView imageView;
 	@FXML
@@ -53,10 +53,11 @@ public class EditDialogController extends AnchorPane
 	private final EditDialog parent;
 	private final Stage stage;
 	private final Delta dragDelta = new Delta();
+	private final Media media;
 
 	public EditDialogController(EditDialog parent, Media media)
 	{
-		init();
+		load();
 
 		final HashMap<String, String> info = media.getInfo();
 		final String text = info.get("name");
@@ -67,6 +68,15 @@ public class EditDialogController extends AnchorPane
 		File f = new File("public_html\\media\\posters\\" + info.get("img"));
 		imageView.setImage(new Image(f.toURI().toString()));
 
+		initTree(media);
+
+		this.parent = parent;
+		this.stage = parent.getStage();
+		this.media = media;
+	}
+
+	private void initTree(Media media)
+	{
 		tree.setShowRoot(false);
 		tree.setEditable(true);
 		tree.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>()
@@ -91,12 +101,9 @@ public class EditDialogController extends AnchorPane
 			root.getChildren().add(season);
 		}
 		tree.setRoot(root);
-
-		this.parent = parent;
-		this.stage = parent.getStage();
 	}
 
-	private void init() throws RuntimeException
+	private void load() throws RuntimeException
 	{
 		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("EditDialogFXML.fxml"));
 		fxmlLoader.setRoot(this);
@@ -114,6 +121,26 @@ public class EditDialogController extends AnchorPane
 	@FXML
 	protected void onOK()
 	{
+		boolean changed = false;
+		final HashMap<String, String> info = media.getInfo();
+
+		final String title = titleField.getText().trim();
+		if (!info.get("name").equals(title))
+		{
+			info.put("name", title);
+			changed = true;
+		}
+
+		final String type = typeCombo.getSelectionModel().getSelectedItem().toLowerCase();
+		if (!info.get("type").equals(type))
+		{
+			info.put("name", type);
+			changed = true;
+		}
+		if (changed)
+			utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
+								   "updateMedia", Long.toString(media.getId()), media.toJSArray());
+
 		parent.hide();
 	}
 

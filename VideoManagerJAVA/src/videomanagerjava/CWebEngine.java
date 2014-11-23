@@ -10,14 +10,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import netscape.javascript.JSObject;
-import org.json.simple.JSONValue;
 import utils.Utils;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.FileWalker;
@@ -75,22 +72,7 @@ public final class CWebEngine
 		{
 			//	adds the media to the database
 			Database.getInstance().getDatabase().put(o.getId(), o);
-			StringBuilder sb = new StringBuilder();
-
-			//	create an array with all the needed data: first general info
-			sb.append(String.format("\"%s\": \"%s\",", "id", o.getId()));
-			sb.append("\"info\": ").append(JSONValue.toJSONString(o.getInfo()));
-
-			//	appends the season episodes
-			sb.append(", \"seasons\": ").append(JSONValue.toJSONString(o.getSeasons()));
-
-			String array = "{" + sb.toString() + "}";
-			Pattern pattern = Pattern.compile("genres\":\"\\[(.*)\\]\"");
-			Matcher matcher = pattern.matcher(array);
-			if (matcher.find())
-				array = array.replace(matcher.group(), "genres\": [" + matcher.group(1).replace("\\\"", "\"") + "]");
-
-			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), "\\" + array);
+			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), o.toJSArray());
 		}
 		final HashMap<String, String> general = Settings.getInstance().getGeneral();
 		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));

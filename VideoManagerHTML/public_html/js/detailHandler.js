@@ -1,6 +1,11 @@
-function updateDetails()
+function updateDetails(media)
 {
-	var info = currentMedia.info;
+	var info;
+	if (media)
+		info = media.info;
+	else
+		info = currentMedia.info;
+	
 	seasons.empty();
 	episodes.empty();
 

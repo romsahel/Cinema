@@ -67,6 +67,24 @@ function updateGenres(genres)
 	}
 }
 
+function sortMediaList()
+{
+	var list = document.getElementById('media-list');
+	var toSort = list.children;
+	toSort = Array.prototype.slice.call(toSort, 0);
+
+	toSort.sort(function (a, b) {
+		var aord = medias[a.id].info.name.toLowerCase();
+		var bord = medias[b.id].info.name.toLowerCase();
+		return (aord > bord) ? 1 : -1;
+	});
+
+	list.innerHTML = "";
+	for (var i = 0, l = toSort.length; i < l; i++) {
+		list.appendChild(toSort[i]);
+	}
+}
+
 function addNewLocation()
 {
 	addLocation(app.addNewLocation());
