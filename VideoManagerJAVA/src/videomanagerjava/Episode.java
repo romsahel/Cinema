@@ -5,6 +5,7 @@
  */
 package videomanagerjava;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 import utils.Utils;
@@ -34,11 +35,11 @@ public class Episode
 		properties.put("time", Long.toString(time));
 	}
 
-	public Episode(String path)
+	public Episode(File file)
 	{
 		properties = new HashMap<>();
-		properties.put("name", Utils.getSuffix(path, Utils.getSeparator()));
-		properties.put("path", path);
+		properties.put("name", Utils.getSuffix(file.getAbsolutePath(), Utils.getSeparator()));
+		properties.put("path", file.toURI().toString().replace('/', '\\').replace("file:\\", ""));
 		properties.put("seen", "false");
 		properties.put("time", "0");
 	}

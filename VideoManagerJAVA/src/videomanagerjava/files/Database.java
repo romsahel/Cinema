@@ -109,7 +109,7 @@ public class Database
 
 	private void readMap(JSONObject obj, final Map map)
 	{
-		if (obj != null)
+ 		if (obj != null)
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
 			{
 				final String key = (String) it.next();
@@ -134,7 +134,7 @@ public class Database
 				final String key = (String) it.next();
 				final JSONObject value = (JSONObject) obj.get(key);
 				Episode episode = new Episode((String) value.get("name"),
-											  (String) value.get("path"),
+											  JSONObject.escape((String) value.get("path")),
 											  (Boolean) value.get("seen"),
 											  (Long) value.get("time"));
 

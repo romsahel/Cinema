@@ -54,7 +54,7 @@ public class FileWalker
 		if (f.isDirectory())
 			walkMedia(f, media);
 		else if (isVideo(path, Utils.EXTENSIONS))
-			addEpisode(path, media);
+			addEpisode(f, media);
 
 		media.removeEmptySeasons();
 
@@ -65,9 +65,9 @@ public class FileWalker
 			return null;
 	}
 
-	private void addEpisode(final String path, Media media)
+	private void addEpisode(final File file, Media media)
 	{
-		final Episode episode = new Episode(path);
+		final Episode episode = new Episode(file);
 		media.getDefaultSeason().put(episode.getProperties().get("name"), episode);
 	}
 
@@ -86,7 +86,7 @@ public class FileWalker
 					media.getSeasons().put(walk.getInfo().get("name"), walk.getDefaultSeason());
 			}
 			else if (isVideo(path, Utils.EXTENSIONS))
-				addEpisode(path, media);
+				addEpisode(file, media);
 		}
 	}
 

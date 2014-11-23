@@ -1,11 +1,13 @@
 package utils;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.Authenticator;
 import java.net.PasswordAuthentication;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
@@ -44,6 +46,7 @@ public class RequestUtils
 			if (requestParameters != null && requestParameters.length() > 0)
 				urlStr += "?" + requestParameters;
 
+			System.out.println(urlStr);
 			URL url;
 			URLConnection conn;
 			BufferedReader rd;
@@ -63,7 +66,6 @@ public class RequestUtils
 			}
 
 			closeReader(rd);
-
 			System.out.println("Successful request");
 			return result;
 		}
@@ -98,6 +100,7 @@ public class RequestUtils
 		try
 		{
 			String file = URLEncoder.encode(path.replace(" ", "\\ "), "UTF-8");
+			final URI f = new File(path).toURI();
 			parameter = String.format("command=in_play&input=%s", file.replace("%5C+", "%20"));
 		} catch (UnsupportedEncodingException ex)
 		{

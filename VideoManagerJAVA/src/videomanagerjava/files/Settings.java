@@ -84,13 +84,16 @@ public class Settings
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
 			{
 				final String key = (String) it.next();
-				final String value = obj.get(key).toString();
-				map.put(key, value);
+				final Object get = obj.get(key);
+				if (get != null)
+				{
+					final String value = get.toString();
+					map.put(key, value);
+				}
 			}
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="Singleton">
-
 	public static Settings getInstance()
 	{
 		return SettingsHolder.INSTANCE;

@@ -414,7 +414,7 @@ header > .select, #detail-genres {
 	-webkit-user-select: none;
 }
 
-#files li, #watch-buttons {
+#files li, #watch-buttons > div {
 	padding: 0px 15px 9px 15px;
 	margin: 1px;
 	cursor: pointer;
@@ -432,12 +432,12 @@ header > .select, #detail-genres {
 	background: #1f2025;
 }
 
-#files li:hover, #watch-buttons:hover {
+#files li:hover, #watch-buttons > div:hover {
 	background: #26272d;
 	color: white;
 }
 
-#files li:active, #watch-buttons:active {
+#files li:active, #watch-buttons > div:active {
 	transition: background 0.75s, color 0.35s;
 	background: #9cb0ce;
 }
@@ -520,6 +520,8 @@ header > .select, #detail-genres {
 
 #watch-buttons {
 	display: none;
+}
+#watch-buttons > div {
 	padding: 9px 15px 9px 15px;
 	color: white;
 	background: rgb(31, 32, 37);
@@ -529,4 +531,6 @@ header > .select, #detail-genres {
 
 
 	text-align: center;
+	width: 25%;
+	display: inline-block;
 }

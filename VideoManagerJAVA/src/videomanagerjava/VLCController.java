@@ -5,7 +5,10 @@
  */
 package videomanagerjava;
 
+import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -37,13 +40,12 @@ public class VLCController
 
 		final HashMap<String, String> properties = episode.getProperties();
 		final String path = properties.get("path");
-		String parameter = RequestUtils.getInstance().pathToUrl(path);
 
 //		If the request is null, we must launch VLC and wait for it to be prepared
-		if (parameter == null || sendRequest("command=pl_empty") == null)
+		if (sendRequest("command=pl_empty") == null)
 			runVLC(path);
 		else
-			sendRequest(parameter);
+			sendRequest(String.format("command=in_play&input=%s", path));
 
 		System.out.println("Waiting for VLC and getting filename");
 		String filename = null;
@@ -129,11 +131,21 @@ public class VLCController
 
 	private static void runVLC(String file)
 	{
+		URI uri;
+		try
+		{
+			uri = new URI("file:/" + file.replace("\\", "/"));
+		} catch (URISyntaxException ex)
+		{
+			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
+			return;
+		}
+
 		System.out.println("Launching VLC and adding file to playlist.");
 		try
 		{
 			final String vlc = "C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe";
-			final String cmd = String.format("\"%s\" \"%s\"", vlc, file);
+			final String cmd = String.format("\"%s\" \"%s\"", vlc, new File(uri).getAbsolutePath());
 			System.out.println(cmd);
 			final ProcessBuilder process = new ProcessBuilder(cmd);
 			process.start();

@@ -1,4 +1,4 @@
-function playMedia()
+function playMedia(playFollowing)
 {
 	toggleSeen($("#episodes > .selected > .selected > div > span"), true, true);
 	app.playMedia(currentMedia.id, currentSeason.key, currentEpisode.key);
