@@ -37,7 +37,7 @@ public class RequestUtils
 	public String sendGetRequest(String requestParameters)
 	{
 		String result;
-		System.out.println("Requesting: " + requestParameters);
+//		System.out.println("Requesting: " + requestParameters);
 		String endpoint = "http://localhost:8080/requests/status.json";
 		if (endpoint.startsWith("http://"))
 		{
@@ -46,7 +46,7 @@ public class RequestUtils
 			if (requestParameters != null && requestParameters.length() > 0)
 				urlStr += "?" + requestParameters;
 
-			System.out.println(urlStr);
+//			System.out.println(urlStr);
 			URL url;
 			URLConnection conn;
 			BufferedReader rd;
@@ -66,7 +66,7 @@ public class RequestUtils
 			}
 
 			closeReader(rd);
-			System.out.println("Successful request");
+//			System.out.println("Successful request");
 			return result;
 		}
 		return null;

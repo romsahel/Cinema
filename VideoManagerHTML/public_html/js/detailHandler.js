@@ -39,7 +39,6 @@ function updateDetailFiles()
 	var seasonsToAppend = "";
 	var episodesToAppend = "";
 	var selectedTag = " class=\"selected\"";
-	var notEditable = ' contenteditable="false"';
 	for (var sKey in currSeasons)
 	{
 		var isCurrentSeason = (sKey === selection.season);
@@ -48,9 +47,9 @@ function updateDetailFiles()
 		var i = 1;
 		for (var eKey in currSeasons[sKey])
 		{
-			var span = "<span" + (currSeasons[sKey][eKey].seen ? " class=\"seen\"" : "") + notEditable + "></span>";
+			var span = "<span" + (currSeasons[sKey][eKey].seen ? " class=\"seen\"" : "") + "></span>";
 			var div = "<div>" + span + "<div>" + eKey + "</div></div>";
-			episodesToAppend = episodesToAppend + "<li class=\"" + ((eKey === selection.episode) ? "tmp" : "") + "\"><span" + notEditable + ">" + i + "</span>" + div + "</li>";
+			episodesToAppend = episodesToAppend + "<li class=\"" + ((eKey === selection.episode) ? "tmp" : "") + "\"><span>" + i + "</span>" + div + "</li>";
 			i = i + 1;
 		}
 		episodesToAppend = episodesToAppend + "</ul>";

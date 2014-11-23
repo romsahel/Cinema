@@ -1,7 +1,7 @@
 var medias = {};
 var currentMedia = null;
-var currentEpisode = null;
 var currentSeason = null;
+var currentEpisode = null;
 
 var mediaList;
 var mediaModel;

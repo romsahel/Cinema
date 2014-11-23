@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
+import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -27,10 +28,21 @@ import videomanagerjava.files.Settings;
 public class JsToJava
 {
 
-	public void playMedia(String id, String currentSeason, String currentEpisode)
+	public void playMedia(String id, String currentSeason, String currentEpisode, String lastEpisode)
 	{
-		Episode episode = getEpisode(id, currentSeason, currentEpisode);
-		VLCController.play(episode);
+		if (lastEpisode == null)
+		{
+			Episode episode = getEpisode(id, currentSeason, currentEpisode);
+			VLCController.play(episode);
+		}
+		else
+		{
+			final Media media = Database.getInstance().getDatabase().get(Long.parseLong(id, 10));
+			final TreeMap<String, Episode> season = media.getSeasons().get(currentSeason);
+			SortedMap<String, Episode> subMap = season.subMap(currentEpisode, true, lastEpisode, true);
+			Episode[] array = new Episode[subMap.size()];
+			VLCController.playAllFollowing(subMap.values().toArray(array));
+		}
 	}
 
 	public void toggleSeen(String id, String currentSeason, String currentEpisode)
