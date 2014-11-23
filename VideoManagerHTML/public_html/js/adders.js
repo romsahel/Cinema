@@ -7,9 +7,22 @@ function addMedia(id, array)
 	media.children[0].style.backgroundImage = "url('media/posters/" + array.info.img + "')";
 
 
+
+	var rateToAppend = createStars(array.info.imdbRating);
+	rateToAppend = rateToAppend + '\n<p>' + array.info.imdbRating + "/10" + '</p>';
+	media.getElementsByClassName("stars")[0].innerHTML = rateToAppend;
+
+	updateGenres(array.info.genres);
+
+	mediaList.appendChild(media);
+	medias[id] = array;
+}
+
+function createStars(imdbRating)
+{
 	var remainingStars = 5;
 	var rateToAppend = "";
-	var rating = parseFloat(array.info.imdbRating) / 2;
+	var rating = parseFloat(imdbRating) / 2;
 	var max = Math.floor(rating);
 	rating = rating - max;
 	for (; max > 0; max--)
@@ -25,14 +38,7 @@ function addMedia(id, array)
 	for (; remainingStars > 0; remainingStars--) {
 		rateToAppend = rateToAppend + '<span class="empty_star"></span>';
 	}
-
-	rateToAppend = rateToAppend + '\n<p>' + array.info.imdbRating + "/10" + '</p>';
-	media.getElementsByClassName("stars")[0].innerHTML = rateToAppend;
-
-	updateGenres(array.info.genres);
-
-	mediaList.appendChild(media);
-	medias[id] = array;
+	return rateToAppend;
 }
 
 function updateGenres(genres)

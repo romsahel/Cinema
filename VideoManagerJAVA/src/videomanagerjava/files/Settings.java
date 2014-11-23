@@ -50,7 +50,7 @@ public class Settings
 		}
 	}
 
-	private void writeMap(String name, Map map, JSONObject elt)
+	private void writeMap(String name, final HashMap<String, String> map, JSONObject elt)
 	{
 		if (map.size() > 0)
 			elt.put(name, new JSONObject(map));
@@ -78,13 +78,13 @@ public class Settings
 			System.out.println(next.getKey() + ": " + next.getValue());
 	}
 
-	private void readMap(JSONObject obj, final Map map)
+	private void readMap(JSONObject obj, final HashMap<String, String> map)
 	{
 		if (obj != null)
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
 			{
 				final String key = (String) it.next();
-				final Object value = obj.get(key);
+				final String value = obj.get(key).toString();
 				map.put(key, value);
 			}
 	}

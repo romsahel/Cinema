@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.text.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.shape.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.collections.*?>
+<?import javafx.geometry.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.collections.FXCollections ?>
+
+<fx:root id="AnchorPane" onKeyPressed="#onKeyPressed" prefHeight="572.0" prefWidth="600.0" type="javafx.scene.layout.AnchorPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+		<children>
+      <Pane layoutY="73.0" prefHeight="499.0" prefWidth="600.0" style="-fx-border-color: #1f2025; -fx-border-width: 2px;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="73.0">
+         <children>
+      			<GridPane alignment="CENTER" layoutX="15.0" prefHeight="137.0" prefWidth="339.0" AnchorPane.bottomAnchor="263.0" AnchorPane.leftAnchor="21.0" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="0.0">
+      				<columnConstraints>
+      					<ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="295.0" minWidth="10.0" prefWidth="41.0" />
+      					<ColumnConstraints hgrow="SOMETIMES" maxWidth="491.0" minWidth="10.0" prefWidth="298.0" />
+      				</columnConstraints>
+      				<rowConstraints>
+      					<RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      					<RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      					<RowConstraints maxHeight="40.0" minHeight="19.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      				</rowConstraints>
+      				<children>
+      					<TextField fx:id="titleField" promptText="Title" GridPane.columnIndex="1" />
+      					<ComboBox fx:id="typeCombo" prefHeight="25.0" prefWidth="494.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
+      						<items>
+      							<FXCollections fx:factory="observableArrayList">
+      								<String fx:value="Movie" />
+      								<String fx:value="Show" />
+      							</FXCollections>
+      						</items>
+      					</ComboBox>
+      					<Label text="Title:" />
+      					<Label text="Type:" GridPane.rowIndex="1" />
+      					<TextField fx:id="urlField" promptText="Custom URL to image" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+      					<Label text="Image:" GridPane.rowIndex="2" />
+      				</children>
+      				<padding>
+      					<Insets top="15.0" />
+      				</padding>
+      			</GridPane>
+            <AnchorPane layoutX="354.0" layoutY="8.0" prefHeight="475.0" prefWidth="245.0" AnchorPane.bottomAnchor="9.0" AnchorPane.leftAnchor="331.0" AnchorPane.rightAnchor="7.0" AnchorPane.topAnchor="9.0">
+               <children>
+      					<ImageView fx:id="imageView" fitHeight="263.0" fitWidth="190.0" layoutX="31.0" layoutY="37.0" pickOnBounds="true" preserveRatio="true" AnchorPane.topAnchor="37.0">
+      						<image>
+      							<Image url="@../../public_html/media/posters/unknown.jpg" />
+      						</image>
+      						<effect>
+      							<DropShadow />
+      						</effect>
+      					</ImageView>
+      					<Button layoutX="72.0" layoutY="333.0" mnemonicParsing="false" onAction="#onRefresh" prefHeight="25.0" prefWidth="96.0" text="Refresh image" AnchorPane.bottomAnchor="117.0" />
+      					<Button layoutX="31.0" layoutY="426.0" mnemonicParsing="false" onAction="#onCancel" prefHeight="25.0" prefWidth="70.0" text="Cancel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" />
+            					<Button layoutX="140.0" layoutY="395.0" mnemonicParsing="false" onAction="#onOK" prefHeight="25.0" prefWidth="70.0" text="OK" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="30.0" />
+               </children>
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+            </AnchorPane>
+      			<TreeView fx:id="tree" layoutX="15.0" layoutY="137.0" prefHeight="346.0" prefWidth="339.0" AnchorPane.bottomAnchor="23.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="240.0" AnchorPane.topAnchor="137.0" />
+         </children>
+         <opaqueInsets>
+            <Insets left="10.0" />
+         </opaqueInsets>
+      </Pane>
+      <Pane layoutX="-6.0" layoutY="-3.0" onMouseDragged="#onDrag" onMousePressed="#onDragStarted" prefHeight="80.0" prefWidth="600.0" style="-fx-background-color: #1f2025;" AnchorPane.bottomAnchor="492.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <effect>
+            <DropShadow />
+         </effect>
+         <children>
+            <Label fx:id="windowTitle" layoutX="21.0" prefHeight="80.0" prefWidth="579.0" text="Lie To Me" textAlignment="CENTER" textFill="#c3c5c7">
+               <font>
+                  <Font name="System Bold" size="26.0" />
+               </font>
+            </Label>
+         </children>
+         <opaqueInsets>
+            <Insets left="10.0" />
+         </opaqueInsets>
+         <padding>
+            <Insets left="25.0" />
+         </padding>
+      </Pane>
+		</children>
+</fx:root>

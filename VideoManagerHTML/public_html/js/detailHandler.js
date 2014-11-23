@@ -10,6 +10,8 @@ function updateDetails()
 	detailsToUpdate.duration.text(detailsToUpdate.duration.text() + " min");
 
 	$("#detail-imdb img").attr("alt", "http://www.imdb.com/title/" + info.imdb + "/");
+	$(banner).find(".stars").empty();
+	$(banner).find(".stars").append(createStars(info.imdbRating));
 
 	updateDetailGenres(info.genres);
 
@@ -19,7 +21,6 @@ function updateDetails()
 		onSeasonsClick($(seasons.children()[0]));
 	else if (selection.episode)
 	{
-		console.log("clicking season");
 		onSeasonsClick(seasons.children(".tmp"),
 				function () {
 					onEpisodesClick(episodes.find(".tmp"));
@@ -38,6 +39,7 @@ function updateDetailFiles()
 	var seasonsToAppend = "";
 	var episodesToAppend = "";
 	var selectedTag = " class=\"selected\"";
+	var notEditable = ' contenteditable="false"';
 	for (var sKey in currSeasons)
 	{
 		var isCurrentSeason = (sKey === selection.season);
@@ -46,9 +48,9 @@ function updateDetailFiles()
 		var i = 1;
 		for (var eKey in currSeasons[sKey])
 		{
-			var span = "<span" + (currSeasons[sKey][eKey].seen ? " class=\"seen\"" : "") + "></span>";
+			var span = "<span" + (currSeasons[sKey][eKey].seen ? " class=\"seen\"" : "") + notEditable + "></span>";
 			var div = "<div>" + span + "<div>" + eKey + "</div></div>";
-			episodesToAppend = episodesToAppend + "<li class=\"" + ((eKey === selection.episode) ? "tmp" : "") + "\"><span>" + i + "</span>" + div + "</li>";
+			episodesToAppend = episodesToAppend + "<li class=\"" + ((eKey === selection.episode) ? "tmp" : "") + "\"><span" + notEditable + ">" + i + "</span>" + div + "</li>";
 			i = i + 1;
 		}
 		episodesToAppend = episodesToAppend + "</ul>";
@@ -60,6 +62,9 @@ function updateDetailFiles()
 
 function updateDetailGenres(genres)
 {
+	if (!genres || genres.length <= 0)
+		return;
+
 	$("#detail-genres a").text(genres[0]);
 	$("#detailsGenreList").empty();
 
@@ -106,7 +111,7 @@ function toggleSeenSeason()
 {
 	var list = $("#episodes .selected li > div > span");
 	var toSet = !$(list[0]).hasClass("seen");
-	console.log(toSet);
+
 	for (var i = 0; i < list.length; i++)
 	{
 		toggleSeen($(list[i]), toSet);

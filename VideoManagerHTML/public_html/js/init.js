@@ -90,15 +90,12 @@ function hideSelectOptions()
 
 function onEpisodesClick(elt)
 {
-	console.log(elt)
 	if (elt.hasClass("selected"))
 		return;
 
-	console.log("removing class")
 	elt.parent().children().removeClass("selected");
 	elt.addClass("selected");
 
-	console.log("appplying class")
 	var text = $(elt.children()[1]).text();
 	currentEpisode = {key: text, value: currentSeason.value[text]};
 

@@ -8,6 +8,7 @@ package videomanagerjava;
 import com.sun.webkit.dom.HTMLDivElementImpl;
 import com.sun.webkit.dom.HTMLElementImpl;
 import com.sun.webkit.dom.HTMLLIElementImpl;
+import editdialog.EditDialog;
 import java.util.Optional;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -17,7 +18,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
-import org.w3c.dom.Element;
+import videomanagerjava.files.Database;
 import videomanagerjava.files.Settings;
 
 /**
@@ -31,10 +32,10 @@ public class CContextMenu
 	private static WebView webView;
 
 	private static final ContextMenu locationsMenu = new ContextMenu();
-	private static final ContextMenu filesMenu = new ContextMenu();
+	private static final ContextMenu mediasMenu = new ContextMenu();
 
 	private static ContextMenu currentMenu;
-	private static HTMLLIElementImpl hovered;
+	private static HTMLElementImpl hovered;
 
 	public CContextMenu(WebEngine engine, WebView view)
 	{
@@ -42,55 +43,34 @@ public class CContextMenu
 		webView = view;
 
 		locationsMenuInit();
-		filesMenuInit();
+		mediasMenuInit();
 	}
 
-	private void filesMenuInit()
+	private void mediasMenuInit()
 	{
-		final ObservableList<MenuItem> filesItems = filesMenu.getItems();
+		final ObservableList<MenuItem> filesItems = mediasMenu.getItems();
 
 		MenuItem labelItem = new MenuItem("Label");
 		labelItem.setDisable(true);
 
+		MenuItem editItem = new MenuItem("Edit");
+		editItem.setOnAction((ActionEvent event) ->
+		{
+			final String id = hovered.getParentElement().getAttribute("id");
+			final Media media = Database.getInstance().getDatabase().get(Long.parseLong(id, 10));
+			new EditDialog(media).show();
+			hide();
+		});
+
 		MenuItem removeItem = new MenuItem("Remove");
 		removeItem.setOnAction((ActionEvent event) ->
 		{
-		});
-
-		MenuItem renameItem = new MenuItem("Rename");
-		renameItem.setOnAction((ActionEvent event) ->
-		{
-
-		});
-
-		MenuItem seenItem = new MenuItem("Toggle seen");
-		seenItem.setOnAction((ActionEvent event) ->
-		{
-			if (isSeason())
-					webEngine.executeScript("toggleSeenSeason()");
-			else
-				toggle(hovered);
 			hide();
 		});
 
 		filesItems.add(labelItem);
-		filesItems.add(seenItem);
-		filesItems.add(renameItem);
+		filesItems.add(editItem);
 		filesItems.add(removeItem);
-	}
-
-	private boolean isSeason()
-	{
-		final Element parent = hovered.getParentElement();
-		final String id = parent.getAttribute("id");
-		return (id != null && id.equals("seasons"));
-	}
-
-	private void toggle(HTMLLIElementImpl element)
-	{
-		final HTMLDivElementImpl div = (HTMLDivElementImpl) element.getElementsByTagName("div").item(0);
-		final HTMLElementImpl item = (HTMLElementImpl) div.getElementsByTagName("span").item(0);
-		item.click();
 	}
 
 	private void locationsMenuInit()
@@ -141,7 +121,7 @@ public class CContextMenu
 		hide();
 		if (locationContext(e))
 			return;
-		if (filesContext(e))
+		if (mediasContext(e))
 			return;
 	}
 
@@ -164,19 +144,17 @@ public class CContextMenu
 		return false;
 	}
 
-	private static boolean filesContext(MouseEvent e)
+	private static boolean mediasContext(MouseEvent e)
 	{
-		final Object object = webEngine.executeScript("$(\"#files li:hover\")[0]");
-		if (object.getClass() == HTMLLIElementImpl.class)
+		final Object object = webEngine.executeScript("$(\".poster:hover\")[0]");
+		if (object.getClass() == HTMLDivElementImpl.class)
 		{
-			hovered = (HTMLLIElementImpl) object;
-			String currentText = hovered.getInnerText();
-			final int indexOf = currentText.indexOf("\n");
-			currentText = currentText.substring(indexOf > 0 ? indexOf : 0).trim();
+			hovered = (HTMLDivElementImpl) object;
+			String currentText = hovered.getNextElementSibling().getTextContent();
 
-			currentMenu = filesMenu;
-			filesMenu.getItems().get(0).setText(currentText);
-			filesMenu.show(webView, e.getScreenX(), e.getScreenY());
+			currentMenu = mediasMenu;
+			mediasMenu.getItems().get(0).setText(currentText);
+			mediasMenu.show(webView, e.getScreenX(), e.getScreenY());
 			return true;
 		}
 		return false;

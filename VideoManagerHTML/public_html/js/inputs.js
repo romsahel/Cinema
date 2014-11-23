@@ -8,6 +8,13 @@ function goToLink(elt)
 		app.openLink(url);
 }
 
+function preventEnter(e)
+{
+	if (e.keyCode === 13)
+		return cancelEvent(e);
+	return;
+}
+
 $(document).keypress(function (e) {
 	if (!searchBar.is(":focus"))
 	{

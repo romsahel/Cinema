@@ -117,7 +117,7 @@ public class Utils
 			for (int i = 0; i < args.length; i++)
 			{
 				final String str = args[i];
-				if (str == null)
+				if (str == null || str.length() == 0)
 					js += "null";
 				else if (str.charAt(0) == '\\')
 					js += str.substring(1);

@@ -1,8 +1,3 @@
-@font-face {
-    font-family: awesomeFont;
-    src: url(media/FontAwesome.otf);
-}
-
 html
 {
 	-webkit-font-smoothing: antialiased;
@@ -168,6 +163,7 @@ header > .select, #detail-genres {
 }
 
 #location-adder {
+	margin-top: 1px;
 	color: #2d72d9;
 	transition: color 0.35s;
 	font-weight: bolder;
