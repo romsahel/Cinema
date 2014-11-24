@@ -5,6 +5,7 @@
  */
 package videomanagerjava;
 
+import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
@@ -75,11 +76,15 @@ public class VLCController
 		while (currentId == -1)
 		{
 			sendRequest = sendRequest("command=seek&val=" + properties.get("time"));
-			final Object get = getJSONObject(sendRequest).get("currentplid");
-			if (get != null)
+			final JSONObject jsonObject = getJSONObject(sendRequest);
+			if (jsonObject != null)
 			{
-				currentId = (long) get;
-				firstId = currentId;
+				final Object get = jsonObject.get("currentplid");
+				if (get != null)
+				{
+					currentId = (long) get;
+					firstId = currentId;
+				}
 			}
 		}
 
@@ -179,11 +184,7 @@ public class VLCController
 		System.out.println("Launching VLC and adding file to playlist.");
 		try
 		{
-			final String vlc = "C:\\Program Files (x86)\\VideoLAN\\VLC\\vlc.exe";
-			final String cmd = String.format("\"%s\" \"%s\"", vlc, new File(uri).getAbsolutePath());
-			System.out.println(cmd);
-			final ProcessBuilder process = new ProcessBuilder(cmd);
-			process.start();
+			Desktop.getDesktop().open(new File(uri));
 		} catch (IOException ex)
 		{
 			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
