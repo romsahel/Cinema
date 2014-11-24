@@ -13,9 +13,9 @@
   <stayAlive>false</stayAlive>
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
-  <icon></icon>
+  <icon>C:\Users\Romsahel\Desktop\saloute.ICO</icon>
   <classPath>
-    <mainClass>videomanagerjava.VideoManagerJAVA</mainClass>
+    <mainClass>main.VideoManagerJAVA</mainClass>
     <cp>lib/json-simple-1.1.1.jar</cp>
     <cp>lib/openjfx-dialogs-1.0.2.jar</cp>
   </classPath>
@@ -27,4 +27,11 @@
     <jdkPreference>preferJre</jdkPreference>
     <runtimeBits>64/32</runtimeBits>
   </jre>
+  <messages>
+    <startupErr>An error occurred while starting the application.</startupErr>
+    <bundledJreErr>This application was configured to use a bundled Java Runtime Environment but the runtime is missing or corrupted.</bundledJreErr>
+    <jreVersionErr>This application requires a Java Runtime Environment</jreVersionErr>
+    <launcherErr>The registry refers to a nonexistent Java Runtime Environment installation or the runtime is corrupted.</launcherErr>
+    <instanceAlreadyExistsMsg>An application instance is already running.</instanceAlreadyExistsMsg>
+  </messages>
 </launch4jConfig>
