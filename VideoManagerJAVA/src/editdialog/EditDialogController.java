@@ -33,6 +33,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import videomanagerjava.Episode;
 import videomanagerjava.Media;
+import videomanagerjava.files.Database;
 
 /**
  * FXML Controller class
@@ -89,7 +90,7 @@ public class EditDialogController extends AnchorPane
 			@Override
 			public TreeCell<String> call(TreeView<String> p)
 			{
-				return new EditableTreeCell();
+				return new EditableTreeCell(media);
 			}
 		});
 		TreeItem<String> root = new TreeItem<>("Root Node");
@@ -138,7 +139,7 @@ public class EditDialogController extends AnchorPane
 			alert.setHeaderText("Do you want to update info according to your changes?");
 			alert.setContentText("Changing the title or the type of media can induce changes in the information. Do you want to fetch new data?");
 
-			alert.getButtonTypes().setAll( new ButtonType("Yes", ButtonData.YES), new ButtonType("No"));
+			alert.getButtonTypes().setAll(new ButtonType("Yes", ButtonData.YES), new ButtonType("No"));
 
 			Optional<ButtonType> result = alert.showAndWait();
 			if (result.get().getButtonData() == ButtonData.YES)
@@ -146,9 +147,11 @@ public class EditDialogController extends AnchorPane
 
 			info.put("type", type);
 			info.put("name", title);
-			utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
-								   "updateMedia", Long.toString(media.getId()), media.toJSArray());
 		}
+
+		utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
+							   "updateMedia", Long.toString(media.getId()), media.toJSArray());
+		Database.getInstance().writeDatabase();
 		parent.hide();
 	}
 

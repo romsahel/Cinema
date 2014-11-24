@@ -5,13 +5,17 @@
  */
 package editdialog;
 
+import java.util.TreeMap;
 import javafx.event.ActionEvent;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
+import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import videomanagerjava.Episode;
+import videomanagerjava.Media;
 
 /**
  *
@@ -21,8 +25,9 @@ public final class EditableTreeCell extends TreeCell<String>
 {
 
 	private TextField textField;
+	private final Media media;
 
-	public EditableTreeCell()
+	public EditableTreeCell(Media media)
 	{
 		MenuItem addMenuItem = new MenuItem("Rename");
 		addMenuItem.setOnAction((ActionEvent event) ->
@@ -30,6 +35,7 @@ public final class EditableTreeCell extends TreeCell<String>
 			startEdit();
 		});
 		setContextMenu(new ContextMenu(addMenuItem));
+		this.media = media;
 	}
 
 	@Override
@@ -82,11 +88,30 @@ public final class EditableTreeCell extends TreeCell<String>
 
 	private void createTextField()
 	{
-		textField = new TextField(getString());
+		textField = new TextField(this.getString());
 		textField.setOnKeyReleased((KeyEvent t) ->
 		{
-			if (t.getCode() == KeyCode.ENTER && textField.getText().length() > 0)
-				commitEdit(textField.getText());
+		final String string = this.getString();
+			final String text = textField.getText();
+			if (t.getCode() == KeyCode.ENTER && text.length() > 0)
+			{
+				final TreeItem<String> treeItem = this.getTreeItem();
+				if (treeItem.isLeaf())
+				{
+					TreeMap<String, Episode> season = media.getSeasons().get(treeItem.getParent().getValue());
+					final Episode get = season.get(string);
+					season.put(text, get);
+					get.getProperties().put("name", text);
+					season.remove(string);
+				}
+				else
+				{
+					TreeMap<String, TreeMap<String, Episode>> seasons = media.getSeasons();
+					seasons.put(text, seasons.get(string));
+					seasons.remove(string);
+				}
+				commitEdit(text);
+			}
 			else if (t.getCode() == KeyCode.ESCAPE)
 				cancelEdit();
 		});
