@@ -16,6 +16,8 @@ function addMedia(id, array)
 
 	mediaList.appendChild(media);
 	medias[id] = array;
+
+	return media;
 }
 
 function createStars(imdbRating)

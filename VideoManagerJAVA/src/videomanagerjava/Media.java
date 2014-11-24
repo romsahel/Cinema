@@ -69,7 +69,9 @@ public class Media
 		String url = "http://api.trakt.tv/search/movies.json/5921de65414d60b220c6296761061a3b?query="
 					 + formattedName.replace(" ", "+")
 					 + "&limit=" + limit;
-		if (!formattedName.equals(info.get("name")))
+		String type = getInfo().get("type");
+		if ((type == null && !formattedName.equals(info.get("name")))
+				|| (type != null && type.equals("show")))
 		{
 			getInfo().put("type", "show");
 			url = url.replace("movies.json", "shows.json");

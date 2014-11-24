@@ -17,12 +17,15 @@ function seenNextEpisode(name, index)
 
 function updateMedia(id, array)
 {
-	medias[id] = array;
-	updateDetails(array);
-	$("#" + id).fadeTo(200, 0, function()
+	$("#" + id).fadeTo(200, 0, function ()
 	{
-		$(this).find("h4").text(array.info.name);
-		$(this).fadeTo(200, 1);
+		var newMedia = addMedia(id, array);
+		if (currentMedia.id === id)
+		{
+			updateDetails();
+			newMedia.click();
+		}
+		$(this).remove();
 		sortMediaList();
 	});
 }

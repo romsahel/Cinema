@@ -9,9 +9,14 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonBar.ButtonData;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -121,26 +126,29 @@ public class EditDialogController extends AnchorPane
 	@FXML
 	protected void onOK()
 	{
-		boolean changed = false;
 		final HashMap<String, String> info = media.getInfo();
 
 		final String title = titleField.getText().trim();
-		if (!info.get("name").equals(title))
-		{
-			info.put("name", title);
-			changed = true;
-		}
-
 		final String type = typeCombo.getSelectionModel().getSelectedItem().toLowerCase();
-		if (!info.get("type").equals(type))
+		if (!info.get("name").equals(title) || !info.get("type").equals(type))
 		{
-			info.put("name", type);
-			changed = true;
-		}
-		if (changed)
+
+			Alert alert = new Alert(AlertType.CONFIRMATION);
+			alert.setTitle("Update?");
+			alert.setHeaderText("Do you want to update info according to your changes?");
+			alert.setContentText("Changing the title or the type of media can induce changes in the information. Do you want to fetch new data?");
+
+			alert.getButtonTypes().setAll( new ButtonType("Yes", ButtonData.YES), new ButtonType("No"));
+
+			Optional<ButtonType> result = alert.showAndWait();
+			if (result.get().getButtonData() == ButtonData.YES)
+				media.downloadInfos();
+
+			info.put("type", type);
+			info.put("name", title);
 			utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
 								   "updateMedia", Long.toString(media.getId()), media.toJSArray());
-
+		}
 		parent.hide();
 	}
 
