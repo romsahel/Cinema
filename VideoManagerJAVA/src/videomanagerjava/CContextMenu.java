@@ -18,6 +18,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import org.w3c.dom.Element;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.Settings;
 
@@ -33,9 +34,11 @@ public class CContextMenu
 
 	private static final ContextMenu locationsMenu = new ContextMenu();
 	private static final ContextMenu mediasMenu = new ContextMenu();
+	private static final ContextMenu filesMenu = new ContextMenu();
 
 	private static ContextMenu currentMenu;
 	private static HTMLElementImpl hovered;
+	private static boolean isSeason;
 
 	public CContextMenu(WebEngine engine, WebView view)
 	{
@@ -44,6 +47,51 @@ public class CContextMenu
 
 		locationsMenuInit();
 		mediasMenuInit();
+		filesMenuInit();
+	}
+
+	private void filesMenuInit()
+	{
+		final ObservableList<MenuItem> filesItems = filesMenu.getItems();
+
+		MenuItem labelItem = new MenuItem("Label");
+		labelItem.setDisable(true);
+
+		MenuItem seenItem = new MenuItem("Toggle seen");
+		seenItem.setOnAction((ActionEvent event) ->
+		{
+			if (isSeason)
+				webEngine.executeScript("toggleSeenSeason()");
+			else
+				toggle(hovered);
+			hide();
+		});
+
+		MenuItem seenUntilItem = new MenuItem("Toggle seen until there");
+		seenUntilItem.setOnAction((ActionEvent event) ->
+		{
+			webEngine.executeScript("toggleEpisodesUntilThere()");
+			hide();
+		});
+
+		filesItems.add(labelItem);
+		filesItems.add(seenItem);
+		filesItems.add(seenUntilItem);
+	}
+
+	private static boolean isSeason()
+	{
+		final Element parent = hovered.getParentElement();
+		final String id = parent.getAttribute("id");
+		isSeason = (id != null && id.equals("seasons"));
+		return isSeason;
+	}
+
+	private void toggle(HTMLElementImpl element)
+	{
+		final HTMLDivElementImpl div = (HTMLDivElementImpl) element.getElementsByTagName("div").item(0);
+		final HTMLElementImpl item = (HTMLElementImpl) div.getElementsByTagName("span").item(0);
+		item.click();
 	}
 
 	private void mediasMenuInit()
@@ -123,6 +171,30 @@ public class CContextMenu
 			return;
 		if (mediasContext(e))
 			return;
+		if (filesContext(e))
+			return;
+	}
+
+	private static boolean filesContext(MouseEvent e)
+	{
+		final Object object = webEngine.executeScript("$(\"#files li:hover\")[0]");
+		if (object.getClass() == HTMLLIElementImpl.class)
+		{
+			hovered = (HTMLLIElementImpl) object;
+			hovered.click();
+
+			String currentText = hovered.getInnerText();
+			final int indexOf = currentText.indexOf("\n");
+			currentText = currentText.substring(indexOf > 0 ? indexOf : 0).trim();
+
+			currentMenu = filesMenu;
+			final ObservableList<MenuItem> items = filesMenu.getItems();
+			items.get(0).setText(currentText);
+			filesMenu.show(webView, e.getScreenX(), e.getScreenY());
+			items.get(2).setVisible(!isSeason());
+			return true;
+		}
+		return false;
 	}
 
 	private static boolean locationContext(MouseEvent e)
@@ -168,6 +240,7 @@ public class CContextMenu
 			if (currentMenu == locationsMenu)
 				hovered.setClassName("");
 		}
+
 		hovered = null;
 		currentMenu = null;
 	}

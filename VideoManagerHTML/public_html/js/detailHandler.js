@@ -126,6 +126,20 @@ function toggleSeenSeason()
 	}
 }
 
+function toggleEpisodesUntilThere()
+{
+	var list = $("#episodes .selected li > div > span");
+	var toSet = !$(list[0]).hasClass("seen");
+
+	for (var i = 0; i < list.length; i++)
+	{
+		var current = $(list[i]);
+		toggleSeen(current, toSet);
+		if (current.parent().parent().hasClass("selected"))
+			break;
+	}
+}
+
 function onSeenToggleClick(e)
 {
 	toggleSeen($(this));

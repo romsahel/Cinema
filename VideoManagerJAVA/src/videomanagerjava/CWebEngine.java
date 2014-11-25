@@ -58,6 +58,8 @@ public final class CWebEngine
 			if (location != null)
 				medias.addAll(FileWalker.getInstance().walk(location));
 
+		medias.addAll(Database.getInstance().getDatabase().values());
+
 		getImages();
 	}
 

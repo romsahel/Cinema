@@ -47,7 +47,7 @@ public class FileWalker
 		final Media get = Database.getInstance().getDatabase().get(hashCode);
 //		If it has, we return the corresponding media in DB
 		if (get != null)
-			return get;
+			return null;
 //		We create the media with a proper name and its id
 		Media media = new Media(getCleanName(Utils.getSuffix(path, Utils.getSeparator())), hashCode);
 

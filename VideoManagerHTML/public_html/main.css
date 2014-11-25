@@ -506,17 +506,11 @@ header > .select, #detail-genres {
 }
 
 #episodes li > div > span.mac {
-    -webkit-animation: lowOpacity 1s; /* Chrome, Safari, Opera */
+    -webkit-animation: lowOpacity 1s;
 	-webkit-animation-fill-mode: forwards;
-    animation: lowOpacity 1s;
 }
 
 @-webkit-keyframes lowOpacity {
-    100% { opacity: 0.2; }
-}
-
-/* Standard syntax */
-@keyframes lowOpacity {
     100% { opacity: 0.2; }
 }
 
@@ -531,17 +525,11 @@ header > .select, #detail-genres {
 }
 
 #episodes li > div > span.mac:hover {
-     -webkit-animation: midOpacity 1s;   Chrome, Safari, Opera
+     -webkit-animation: midOpacity 1s;
 	-webkit-animation-fill-mode: forwards;
-    animation: midOpacity 1s infinite;
 }
 
 @-webkit-keyframes midOpacity {
-    50% { opacity: 0.5; }
-}
-
-/* Standard syntax */
-@keyframes midOpacity {
     50% { opacity: 0.5; }
 }
 
