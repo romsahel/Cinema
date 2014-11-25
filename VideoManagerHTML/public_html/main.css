@@ -500,8 +500,24 @@ header > .select, #detail-genres {
 	background: url("media/seen.png");
 	background-repeat: no-repeat;
 	background-size: 22px 15px;
-	opacity: 0.2;
+
 	transition: opacity 0.35s;
+	opacity: 0.2;
+}
+
+#episodes li > div > span.mac {
+    -webkit-animation: lowOpacity 1s; /* Chrome, Safari, Opera */
+	-webkit-animation-fill-mode: forwards;
+    animation: lowOpacity 1s;
+}
+
+@-webkit-keyframes lowOpacity {
+    100% { opacity: 0.2; }
+}
+
+/* Standard syntax */
+@keyframes lowOpacity {
+    100% { opacity: 0.2; }
 }
 
 #episodes li > div > div {
@@ -514,8 +530,25 @@ header > .select, #detail-genres {
 	opacity: 0.5;
 }
 
+#episodes li > div > span.mac:hover {
+     -webkit-animation: midOpacity 1s;   Chrome, Safari, Opera
+	-webkit-animation-fill-mode: forwards;
+    animation: midOpacity 1s infinite;
+}
+
+@-webkit-keyframes midOpacity {
+    50% { opacity: 0.5; }
+}
+
+/* Standard syntax */
+@keyframes midOpacity {
+    50% { opacity: 0.5; }
+}
+
 #episodes li > div > .seen, #episodes li > div > span:active {
-	opacity: 1;
+    -webkit-animation: none !important;
+    animation: none !important;
+	opacity: 1 !important;
 }
 
 #watch-buttons {

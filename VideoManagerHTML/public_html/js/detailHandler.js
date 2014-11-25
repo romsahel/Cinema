@@ -5,7 +5,7 @@ function updateDetails(media)
 		info = media.info;
 	else
 		info = currentMedia.info;
-	
+
 	seasons.empty();
 	episodes.empty();
 
@@ -52,7 +52,11 @@ function updateDetailFiles()
 		var i = 1;
 		for (var eKey in currSeasons[sKey])
 		{
-			var span = "<span" + (currSeasons[sKey][eKey].seen ? " class=\"seen\"" : "") + "></span>";
+			var spanClass = (currSeasons[sKey][eKey].seen ? "seen" : "");
+			if (navigator.appVersion.indexOf("Mac") !== -1)
+				spanClass += " mac";
+
+			var span = "<span class=\"" + spanClass + "\"></span>";
 			var div = "<div>" + span + "<div>" + eKey + "</div></div>";
 			episodesToAppend = episodesToAppend + "<li class=\"" + ((eKey === selection.episode) ? "tmp" : "") + "\"><span>" + i + "</span>" + div + "</li>";
 			i = i + 1;

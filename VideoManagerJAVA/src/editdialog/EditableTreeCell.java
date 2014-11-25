@@ -75,7 +75,7 @@ public final class EditableTreeCell extends TreeCell<String>
 		else if (isEditing())
 		{
 			if (textField != null)
-				textField.setText(getString());
+				textField.setText(getString());	
 			setText(null);
 			setGraphic(textField);
 		}
@@ -91,7 +91,7 @@ public final class EditableTreeCell extends TreeCell<String>
 		textField = new TextField(this.getString());
 		textField.setOnKeyReleased((KeyEvent t) ->
 		{
-		final String string = this.getString();
+			final String string = this.getString();
 			final String text = textField.getText();
 			if (t.getCode() == KeyCode.ENTER && text.length() > 0)
 			{
