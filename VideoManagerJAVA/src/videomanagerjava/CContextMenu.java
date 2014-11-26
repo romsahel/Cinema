@@ -9,6 +9,7 @@ import com.sun.webkit.dom.HTMLDivElementImpl;
 import com.sun.webkit.dom.HTMLElementImpl;
 import com.sun.webkit.dom.HTMLLIElementImpl;
 import editdialog.EditDialog;
+import java.util.HashMap;
 import java.util.Optional;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -102,10 +103,11 @@ public class CContextMenu
 		labelItem.setDisable(true);
 
 		MenuItem editItem = new MenuItem("Edit");
+		final HashMap<Long, Media> database = Database.getInstance().getDatabase();
 		editItem.setOnAction((ActionEvent event) ->
 		{
 			final String id = hovered.getParentElement().getAttribute("id");
-			final Media media = Database.getInstance().getDatabase().get(Long.parseLong(id, 10));
+			final Media media = database.get(Long.parseLong(id, 10));
 			new EditDialog(media).show();
 			hide();
 		});
@@ -113,6 +115,9 @@ public class CContextMenu
 		MenuItem removeItem = new MenuItem("Remove");
 		removeItem.setOnAction((ActionEvent event) ->
 		{
+			final String id = hovered.getParentElement().getAttribute("id");
+			database.put(Long.valueOf(id), null);
+			webEngine.executeScript("$('#" + id + "').fadeOut(200)");
 			hide();
 		});
 

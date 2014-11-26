@@ -72,6 +72,8 @@ public final class CWebEngine
 
 		for (Media o : medias)
 		{
+			if (o == null)
+				continue;
 			//	adds the media to the database
 			Database.getInstance().getDatabase().put(o.getId(), o);
 			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), o.toJSArray());
@@ -89,6 +91,8 @@ public final class CWebEngine
 
 		for (Media o : medias)
 		{
+			if (o == null)
+				continue;
 			Thread t = new Thread()
 			{
 				@Override

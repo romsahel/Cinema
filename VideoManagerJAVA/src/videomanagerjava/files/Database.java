@@ -41,7 +41,7 @@ public class Database
 		ArrayList<JSONObject> db = new ArrayList<>();
 
 		for (Map.Entry<Long, Media> media : getDatabase().entrySet())
-			db.add(writeMedia(media.getValue()));
+			db.add(writeMedia(media.getKey(), media.getValue()));
 
 		try (FileWriter file = new FileWriter("db.json"))
 		{
@@ -53,15 +53,17 @@ public class Database
 		}
 	}
 
-	private JSONObject writeMedia(Media media)
+	private JSONObject writeMedia(Long id, Media media)
 	{
 		HashMap<String, Object> elt = new HashMap<>();
 
-		elt.put("id", media.getId());
+		elt.put("id", id);
 
-		writeMap("info", media.getInfo(), elt);
-		writeMap("seasons", media.getSeasons(), elt);
-
+		if (media != null)
+		{
+			writeMap("info", media.getInfo(), elt);
+			writeMap("seasons", media.getSeasons(), elt);
+		}
 		return new JSONObject(elt);
 	}
 
@@ -84,8 +86,9 @@ public class Database
 			for (Iterator iterator = db.iterator(); iterator.hasNext();)
 			{
 				JSONObject elt = (JSONObject) iterator.next();
-				final Media media = readMedia(elt);
-				database.put(media.getId(), media);
+				final long id = (long) elt.get("id");
+				final Media media = readMedia(id, elt);
+				database.put(id, media);
 			}
 		} catch (IOException | ParseException ex)
 		{
@@ -97,20 +100,20 @@ public class Database
 			System.out.println(next.getKey() + ": " + next.getValue());
 	}
 
-	private Media readMedia(JSONObject elt)
+	private Media readMedia(long id, JSONObject elt)
 	{
-		final long id = (long) elt.get("id");
 		final Media media = new Media(id);
-
-		readMap((JSONObject) elt.get("info"), media.getInfo());
-		readMap((JSONObject) elt.get("seasons"), media.getSeasons());
+		if (!readMap((JSONObject) elt.get("info"), media.getInfo()))
+			if (!readMap((JSONObject) elt.get("seasons"), media.getSeasons()))
+				return null;
 
 		return media;
 	}
 
-	private void readMap(JSONObject obj, final HashMap<String, String> map)
+	private boolean readMap(JSONObject obj, final HashMap<String, String> map)
 	{
-		if (obj != null)
+		final boolean isNotNull = obj != null;
+		if (isNotNull)
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
 			{
 				final String key = (String) it.next();
@@ -118,11 +121,13 @@ public class Database
 
 				map.put(key, (String) value);
 			}
+		return isNotNull;
 	}
 
-	private void readMap(JSONObject obj, final TreeMap<String, TreeMap<String, Episode>> map)
+	private boolean readMap(JSONObject obj, final TreeMap<String, TreeMap<String, Episode>> map)
 	{
-		if (obj != null)
+		final boolean isNotNull = obj != null;
+		if (isNotNull)
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
 			{
 				final String key = (String) it.next();
@@ -132,6 +137,7 @@ public class Database
 				readEpisodes((JSONObject) value, newMap);
 				map.put(key, newMap);
 			}
+		return isNotNull;
 	}
 
 	private void readEpisodes(JSONObject obj, final TreeMap<String, Episode> map)
