@@ -103,9 +103,9 @@ public class Database
 	private Media readMedia(long id, JSONObject elt)
 	{
 		final Media media = new Media(id);
-		if (!readMap((JSONObject) elt.get("info"), media.getInfo()))
-			if (!readMap((JSONObject) elt.get("seasons"), media.getSeasons()))
-				return null;
+		readMap((JSONObject) elt.get("info"), media.getInfo());
+		if (!readMap((JSONObject) elt.get("seasons"), media.getSeasons()))
+			return null;
 
 		return media;
 	}

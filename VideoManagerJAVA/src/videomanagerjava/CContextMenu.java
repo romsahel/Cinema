@@ -227,6 +227,7 @@ public class CContextMenu
 		if (object.getClass() == HTMLDivElementImpl.class)
 		{
 			hovered = (HTMLDivElementImpl) object;
+			hovered.click();
 			String currentText = hovered.getNextElementSibling().getTextContent();
 
 			currentMenu = mediasMenu;

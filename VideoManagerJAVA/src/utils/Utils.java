@@ -24,7 +24,7 @@ public class Utils
 	};
 	public static final String[] EXTENSIONS =
 	{
-		".avi", ".mkv", ".mp4"
+		".avi", ".mkv", ".mp4", ".m4v"
 	};
 
 	private static String fileSeparator = null;

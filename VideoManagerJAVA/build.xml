@@ -55,11 +55,11 @@
 			<fileset dir="../VideoManagerHTML/public_html"/>
 		</copy>
 	</target>
-	<target name="package-for-launch4j" depends="clean,compile,jar">
+	<target name="package-for-windows" depends="clean,compile,jar">
 		<property name="launch4jexe.dir" location="C:\Program Files (x86)\Launch4j" />
 		<taskdef name="launch4j"
-			 classname="net.sf.launch4j.ant.Launch4jTask"
-			 classpath="${launch4jexe.dir}/launch4j.jar
+				 classname="net.sf.launch4j.ant.Launch4jTask"
+				 classpath="${launch4jexe.dir}/launch4j.jar
             :${launch4jexe.dir}/lib/xstream.jar" />
 		<property name="launch4j.jar.name" value="Cinema"/>
 		<property name="launch4j.dir" value="exe"/>
@@ -76,9 +76,23 @@
 		</jar>
 		<zip destfile="${launch4j.jar}">
 			<zipfileset src="${launch4j.dir}/temp_final.jar"
-					excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
+						excludes="META-INF/*.SF, META-INF/*.DSA, META-INF/*.RSA"/>
 		</zip>
 		<delete file="${launch4j.dir}/temp_final.jar"/>
 		<launch4j configFile="launch4j.xml" />
+	</target>
+
+	<taskdef name="bundleapp"
+			  classname="com.oracle.appbundler.AppBundlerTask"
+			  classpath="lib/appbundler-1.0.jar" />
+	<target name="package-for-osx">
+		<bundleapp outputdirectory="dist"
+				   name="VideoManagerJAVA"
+				   displayname="VideoManagerJAVA"
+				   identifier="main.VideoManagerJAVA"
+				   mainclassname="main.VideoManagerJAVA">
+			<librarypath dir="dist/lib"/>
+			<classpath file="dist/VideoManagerJAVA.jar" />
+		</bundleapp>
 	</target>
 </project>
