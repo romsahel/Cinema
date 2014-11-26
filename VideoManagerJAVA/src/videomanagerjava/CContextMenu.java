@@ -71,8 +71,8 @@ public class CContextMenu
 		MenuItem seenUntilItem = new MenuItem("Toggle seen until there");
 		seenUntilItem.setOnAction((ActionEvent event) ->
 		{
-			webEngine.executeScript("toggleEpisodesUntilThere()");
 			hide();
+			webEngine.executeScript("toggleEpisodesUntilThere()");
 		});
 
 		filesItems.add(labelItem);
@@ -107,18 +107,19 @@ public class CContextMenu
 		editItem.setOnAction((ActionEvent event) ->
 		{
 			final String id = hovered.getParentElement().getAttribute("id");
+			hide();
 			final Media media = database.get(Long.parseLong(id, 10));
 			new EditDialog(media).show();
-			hide();
 		});
 
 		MenuItem removeItem = new MenuItem("Remove");
 		removeItem.setOnAction((ActionEvent event) ->
 		{
 			final String id = hovered.getParentElement().getAttribute("id");
+			hide();
 			database.put(Long.valueOf(id), null);
 			webEngine.executeScript("$('#" + id + "').fadeOut(200)");
-			hide();
+			Database.getInstance().writeDatabase();
 		});
 
 		filesItems.add(labelItem);
@@ -136,11 +137,11 @@ public class CContextMenu
 		MenuItem removeItem = new MenuItem("Remove");
 		removeItem.setOnAction((ActionEvent event) ->
 		{
+			hide();
 			final String toRemove = (String) webEngine.executeScript("removeLocation()");
 			Settings.getInstance().getLocations().remove(toRemove);
 			CWebEngine.walkFiles();
 			CWebEngine.refreshList();
-			hide();
 		});
 
 		MenuItem renameItem = new MenuItem("Rename");

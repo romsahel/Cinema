@@ -5,6 +5,7 @@
  */
 package editdialog;
 
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -38,14 +39,22 @@ public class EditDialog
 
 		Scene scene = new Scene(fxml);
 		stage.setScene(scene);
-		stage.showAndWait();
+		stage.show();
 		stage.setX(parentStage.getX() + parentStage.getWidth() / 2 - stage.getWidth() / 2);
 		stage.setY(parentStage.getY() + parentStage.getHeight() / 2 - stage.getHeight() / 2);
 	}
 
 	public void hide()
 	{
-		stage.hide();
+		Platform.runLater(new Runnable()
+		{
+
+			@Override
+			public void run()
+			{
+				stage.hide();
+			}
+		});
 	}
 
 	/**

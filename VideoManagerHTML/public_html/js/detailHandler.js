@@ -33,7 +33,7 @@ function updateDetails(media)
 	}
 	selection = {"set": false};
 
-	$("#detail").fadeTo(100, 1);
+	$("#detail").fadeTo(200, 1);
 
 	$('#detail-poster').attr('src', 'media/posters/' + info.img);
 }
@@ -110,7 +110,7 @@ function showDetail(elt, refresh)
 	currentMedia = newMedia;
 
 	if (!refresh)
-		$("#detail").fadeTo(100, 0, updateDetails);
+		$("#detail").fadeTo(200, 0, updateDetails);
 	else
 		updateDetails();
 }

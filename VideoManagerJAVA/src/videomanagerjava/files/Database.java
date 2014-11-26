@@ -64,6 +64,7 @@ public class Database
 			writeMap("info", media.getInfo(), elt);
 			writeMap("seasons", media.getSeasons(), elt);
 		}
+
 		return new JSONObject(elt);
 	}
 

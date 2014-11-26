@@ -82,7 +82,7 @@
 		<launch4j configFile="launch4j.xml" />
 	</target>
 
-	<taskdef name="bundleapp"
+<!--	<taskdef name="bundleapp"
 			  classname="com.oracle.appbundler.AppBundlerTask"
 			  classpath="lib/appbundler-1.0.jar" />
 	<target name="package-for-osx">
@@ -94,5 +94,5 @@
 			<librarypath dir="dist/lib"/>
 			<classpath file="dist/VideoManagerJAVA.jar" />
 		</bundleapp>
-	</target>
+	</target>-->
 </project>

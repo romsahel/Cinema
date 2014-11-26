@@ -64,8 +64,6 @@ public class Media
 
 	public void downloadInfos()
 	{
-		System.out.println(id);
-		
 		final String formattedName = Utils.removeSeason(info.get("name"));
 		final int limit = getInfo().get("year") == null ? 1 : 3;
 		String url = "http://api.trakt.tv/search/movies.json/5921de65414d60b220c6296761061a3b?query="

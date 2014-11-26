@@ -122,31 +122,54 @@ public class EditDialogController extends AnchorPane
 		{
 			throw new RuntimeException(exception);
 		}
+
+	}
+
+	@FXML
+	protected void onOKandForce()
+	{
+		System.out.println("force");
+		onOK(false);
 	}
 
 	@FXML
 	protected void onOK()
 	{
+		System.out.println("ok");
+		onOK(false);
+	}
+
+	@FXML
+	protected void test()
+	{
+		System.out.println("test");
+	}
+
+	private void onOK(boolean force)
+	{
 		final HashMap<String, String> info = media.getInfo();
 
 		final String title = titleField.getText().trim();
 		final String type = typeCombo.getSelectionModel().getSelectedItem().toLowerCase();
-		if (!info.get("name").equals(title) || !info.get("type").equals(type))
+		if (force || (!info.get("name").equals(title) || !info.get("type").equals(type)))
 		{
+			Optional<ButtonType> result = null;
+			if (!force)
+			{
+				Alert alert = new Alert(AlertType.CONFIRMATION);
+				alert.setTitle("Update?");
+				alert.setHeaderText("Do you want to update info according to your changes?");
+				alert.setContentText("Changing the title or the type of media can induce changes in the information. Do you want to fetch new data?");
 
-			Alert alert = new Alert(AlertType.CONFIRMATION);
-			alert.setTitle("Update?");
-			alert.setHeaderText("Do you want to update info according to your changes?");
-			alert.setContentText("Changing the title or the type of media can induce changes in the information. Do you want to fetch new data?");
+				alert.getButtonTypes().setAll(new ButtonType("Yes", ButtonData.YES), new ButtonType("No"));
 
-			alert.getButtonTypes().setAll(new ButtonType("Yes", ButtonData.YES), new ButtonType("No"));
-
-			Optional<ButtonType> result = alert.showAndWait();
-			if (result.get().getButtonData() == ButtonData.YES)
-				media.downloadInfos();
-
+				result = alert.showAndWait();
+			}
 			info.put("type", type);
 			info.put("name", title);
+			if (force || result.get().getButtonData() == ButtonData.YES)
+				media.downloadInfos();
+
 		}
 
 		utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
@@ -187,11 +210,12 @@ public class EditDialogController extends AnchorPane
 	{
 		if (keyEvent.getCode() == KeyCode.ESCAPE)
 			parent.hide();
+		if (keyEvent.getCode() == KeyCode.ENTER)
+			onOK(keyEvent.isShiftDown());
 	}
 
 	class Delta
 	{
-
 		double x, y;
 	}
 

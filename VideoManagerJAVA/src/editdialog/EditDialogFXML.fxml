@@ -40,7 +40,19 @@
       					</ComboBox>
       					<Label text="Title:" />
       					<Label text="Type:" GridPane.rowIndex="1" />
-      					<TextField fx:id="urlField" promptText="Custom URL to image" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <GridPane GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+            					<TextField fx:id="urlField" prefHeight="25.0" prefWidth="227.0" promptText="Custom URL to image" />
+            					<Button mnemonicParsing="false" onAction="#onRefresh" prefHeight="25.0" prefWidth="76.0" text="Refresh" GridPane.columnIndex="1" />
+                     </children>
+                  </GridPane>
       					<Label text="Image:" GridPane.rowIndex="2" />
       				</children>
       				<padding>
@@ -57,9 +69,13 @@
       							<DropShadow />
       						</effect>
       					</ImageView>
-      					<Button layoutX="72.0" layoutY="333.0" mnemonicParsing="false" onAction="#onRefresh" prefHeight="25.0" prefWidth="96.0" text="Refresh image" AnchorPane.bottomAnchor="117.0" />
       					<Button layoutX="31.0" layoutY="426.0" mnemonicParsing="false" onAction="#onCancel" prefHeight="25.0" prefWidth="70.0" text="Cancel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" />
-            					<Button layoutX="140.0" layoutY="395.0" mnemonicParsing="false" onAction="#onOK" prefHeight="25.0" prefWidth="70.0" text="OK" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="30.0" />
+                  <SplitMenuButton alignment="CENTER" contentDisplay="CENTER" layoutX="140.0" layoutY="450.0" mnemonicParsing="false" onAction="#onOK" prefHeight="25.0" prefWidth="70.0" text="OK">
+                    <items>
+                      <MenuItem mnemonicParsing="false" onAction="#onOKandForce" text="Force update and OK" />
+                      <MenuItem mnemonicParsing="false" text="Action 2" />
+                    </items>
+                  </SplitMenuButton>
                </children>
                <opaqueInsets>
                   <Insets />

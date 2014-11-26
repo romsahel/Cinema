@@ -136,7 +136,7 @@ function onSeasonsClick(elt, f)
 
 function getCurrentId()
 {
-	if (currentMedia !== null)
+	if (currentMedia)
 		return currentMedia.id;
 	else
 		return null;

@@ -44,9 +44,8 @@ public class FileWalker
 		final String path = f.getAbsolutePath();
 		final long hashCode = path.hashCode();
 //		We start by looking if this folder has already been walked
-		final Media get = Database.getInstance().getDatabase().get(hashCode);
-//		If it has, we return the corresponding media in DB
-		if (get != null)
+//		If it has, we return null so that it is not overwritten
+		if (Database.getInstance().getDatabase().containsKey(hashCode))
 			return null;
 //		We create the media with a proper name and its id
 		Media media = new Media(getCleanName(Utils.getSuffix(path, Utils.getSeparator())), hashCode);
