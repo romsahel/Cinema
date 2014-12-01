@@ -72,8 +72,7 @@
       					<Button layoutX="31.0" layoutY="426.0" mnemonicParsing="false" onAction="#onCancel" prefHeight="25.0" prefWidth="70.0" text="Cancel" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="31.0" />
                   <SplitMenuButton alignment="CENTER" contentDisplay="CENTER" layoutX="140.0" layoutY="450.0" mnemonicParsing="false" onAction="#onOK" prefHeight="25.0" prefWidth="70.0" text="OK">
                     <items>
-                      <MenuItem mnemonicParsing="false" onAction="#onOKandForce" text="Force update and OK" />
-                      <MenuItem mnemonicParsing="false" text="Action 2" />
+                      <MenuItem mnemonicParsing="false" onAction="#onOKandForce" text="Update info and refetch" />
                     </items>
                   </SplitMenuButton>
                </children>
