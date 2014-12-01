@@ -5,7 +5,6 @@
  */
 package videomanagerjava;
 
-import main.VideoManagerJAVA;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.DirectoryChooser;
+import main.VideoManagerJAVA;
 import utils.Utils;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.Settings;
@@ -46,11 +46,12 @@ public class JsToJava
 		}
 	}
 
-	public void toggleSeen(String id, String currentSeason, String currentEpisode)
+	public void toggleSeen(String id, String currentSeason, String currentEpisode, boolean value, boolean reset)
 	{
-		System.out.println("toggling seen");
 		Episode episode = getEpisode(id, currentSeason, currentEpisode);
-		episode.toggleSeen();
+		episode.setSeen(value);
+		if (reset)
+			episode.getProperties().put("time", "0");
 	}
 
 	private Episode getEpisode(String id, String currentSeason, String currentEpisode) throws NumberFormatException

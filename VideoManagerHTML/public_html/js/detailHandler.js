@@ -115,15 +115,17 @@ function showDetail(elt, refresh)
 		updateDetails();
 }
 
-function toggleSeenSeason()
+function toggleSeenSeason(reset)
 {
 	var list = $("#episodes .selected li > div > span");
-	var toSet = !$(list[0]).hasClass("seen");
+	var toSet;
+	if (reset)
+		toSet = false;
+	else
+		toSet = !$(list[0]).hasClass("seen");
 
 	for (var i = 0; i < list.length; i++)
-	{
-		toggleSeen($(list[i]), toSet);
-	}
+		toggleSeen($(list[i]), toSet, false, reset);
 }
 
 function toggleEpisodesUntilThere()
@@ -142,24 +144,29 @@ function toggleEpisodesUntilThere()
 
 function onSeenToggleClick(e)
 {
+	console.log(this);
 	toggleSeen($(this));
 	return cancelEvent(e);
 }
 
-function toggleSeen(elt, toSet, noJavaCall)
+function toggleSeen(elt, toSet, noJavaCall, reset)
 {
+	if (elt === null)
+		elt = $("#episodes .selected li.selected > div > span");
+
 	var seenValue = elt.hasClass("seen");
 	if (toSet === true || (!seenValue && toSet === undefined))
 		elt.addClass("seen");
 	else
 		elt.removeClass("seen");
 
-	currentSeason.value[elt.parent().text()].seen = !currentSeason.value[elt.parent().text()].seen || toSet;
+	toSet = !currentSeason.value[elt.parent().text()].seen || toSet;
+	currentSeason.value[elt.parent().text()].seen = toSet;
 
 	if (seenValue !== toSet && !noJavaCall)
 	{
 		var episode = elt.parent().parent();
-		app.toggleSeen(currentMedia.id, currentSeason.key, $(episode.children()[1]).text());
+		app.toggleSeen(currentMedia.id, currentSeason.key, $(episode.children()[1]).text(), toSet, reset);
 	}
 
 	return false;
