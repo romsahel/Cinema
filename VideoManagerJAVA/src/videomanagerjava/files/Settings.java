@@ -5,6 +5,7 @@
  */
 package videomanagerjava.files;
 
+import gnu.trove.map.hash.THashMap;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -24,13 +25,13 @@ import org.json.simple.parser.ParseException;
 public class Settings
 {
 
-	private final HashMap<String, String> locations;
-	private final HashMap<String, String> general;
+	private final THashMap<String, String> locations;
+	private final THashMap<String, String> general;
 
 	private Settings()
 	{
-		locations = new HashMap<>();
-		general = new HashMap<>();
+		locations = new THashMap<>();
+		general = new THashMap<>();
 	}
 
 	public void writeSettings()
@@ -50,7 +51,7 @@ public class Settings
 		}
 	}
 
-	private void writeMap(String name, final HashMap<String, String> map, HashMap<String, JSONObject> elt)
+	private void writeMap(String name, final THashMap<String, String> map, HashMap<String, JSONObject> elt)
 	{
 		if (map.size() > 0)
 			elt.put(name, new JSONObject(map));
@@ -78,7 +79,7 @@ public class Settings
 			System.out.println(next.getKey() + ": " + next.getValue());
 	}
 
-	private void readMap(JSONObject obj, final HashMap<String, String> map)
+	private void readMap(JSONObject obj, final THashMap<String, String> map)
 	{
 		if (obj != null)
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
@@ -102,12 +103,12 @@ public class Settings
 	/**
 	 * @return the locations
 	 */
-	public HashMap<String, String> getLocations()
+	public THashMap<String, String> getLocations()
 	{
 		return locations;
 	}
 
-	public HashMap<String, String> getGeneral()
+	public THashMap<String, String> getGeneral()
 	{
 		return general;
 	}

@@ -5,8 +5,8 @@
  */
 package videomanagerjava;
 
+import gnu.trove.map.hash.THashMap;
 import java.io.File;
-import java.util.HashMap;
 import java.util.Map;
 import utils.Utils;
 
@@ -17,7 +17,7 @@ import utils.Utils;
 public class Episode
 {
 
-	private final HashMap<String, String> properties;
+	private final THashMap<String, String> properties;
 
 	/**
 	 *
@@ -28,7 +28,7 @@ public class Episode
 	 */
 	public Episode(String name, String path, boolean seen, long time)
 	{
-		properties = new HashMap<>();
+		properties = new THashMap<>();
 		setProperty("name", name);
 		setProperty("path", path);
 		setProperty("seen", Boolean.toString(seen));
@@ -37,7 +37,7 @@ public class Episode
 
 	public Episode(File file)
 	{
-		properties = new HashMap<>();
+		properties = new THashMap<>();
 		setProperty("name", Utils.getSuffix(file.getAbsolutePath(), Utils.getSeparator()));
 		setProperty("path", file.toURI().toString().replace('/', '\\').replace("file:\\", ""));
 		setProperty("seen", "false");
@@ -61,12 +61,12 @@ public class Episode
 		return "{" + sb.toString().substring(2) + "}";
 	}
 
-	public void setProperty(String key, String value)
+	public final void setProperty(String key, String value)
 	{
 		properties.put(key.intern(), value.intern());
 	}
 
-	public HashMap<String, String> getProperties()
+	public THashMap<String, String> getProperties()
 	{
 		return properties;
 	}

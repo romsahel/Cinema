@@ -62,7 +62,7 @@
 				 classpath="${launch4jexe.dir}/launch4j.jar
             :${launch4jexe.dir}/lib/xstream.jar" />
 		<property name="launch4j.jar.name" value="Cinema"/>
-		<property name="launch4j.dir" value="exe"/>
+		<property name="launch4j.dir" value="dist/exe"/>
 		<property name="launch4j.jar" value="${launch4j.dir}/${launch4j.jar.name}.jar"/>
 		<echo message="Packaging ${application.title} into a single JAR at ${launch4j.jar}"/>
 		<delete dir="${launch4j.dir}"/>

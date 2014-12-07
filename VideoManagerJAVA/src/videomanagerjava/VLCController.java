@@ -5,12 +5,12 @@
  */
 package videomanagerjava;
 
+import gnu.trove.map.hash.THashMap;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
@@ -69,7 +69,7 @@ public class VLCController
 		init();
 
 		currentEpisode = episode;
-		final HashMap<String, String> properties = episode.getProperties();
+		final THashMap<String, String> properties = episode.getProperties();
 		final String path = properties.get("path");
 
 //		If the request is null, we must launch VLC and wait for it to be prepared
@@ -112,7 +112,7 @@ public class VLCController
 		return cancelTimer(checkStatus, currentEpisode.getProperties());
 	}
 
-	public static boolean cancelTimer(boolean checkStatus, HashMap<String, String> properties)
+	public static boolean cancelTimer(boolean checkStatus, THashMap<String, String> properties)
 	{
 		if (timer != null && timerTask != null)
 		{
@@ -134,7 +134,7 @@ public class VLCController
 		return false;
 	}
 
-	private static JSONObject setEpisodeTime(final String status, final HashMap<String, String> properties)
+	private static JSONObject setEpisodeTime(final String status, final THashMap<String, String> properties)
 	{
 		JSONObject obj = getJSONObject(status);
 		if (obj != null)
@@ -207,10 +207,10 @@ public class VLCController
 	private static class TimerTaskImpl extends TimerTask
 	{
 
-		private HashMap<String, String> properties;
+		private THashMap<String, String> properties;
 		private String filename;
 
-		public TimerTaskImpl(HashMap<String, String> properties, String filename)
+		public TimerTaskImpl(THashMap<String, String> properties, String filename)
 		{
 			this.properties = properties;
 			this.filename = filename;
@@ -252,7 +252,7 @@ public class VLCController
 						{
 //							we update the timer's data
 							final Episode tmpEpisode = followingEpisodes[index];
-							final HashMap<String, String> newProperties = tmpEpisode.getProperties();
+							final THashMap<String, String> newProperties = tmpEpisode.getProperties();
 							final String uriName = Utils.getSuffix(new File(name).toURI().toString(), "/");
 							if (newProperties.get("path").endsWith(uriName))
 							{

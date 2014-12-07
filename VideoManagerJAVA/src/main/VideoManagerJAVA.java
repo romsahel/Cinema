@@ -5,11 +5,13 @@
  */
 package main;
 
+import gnu.trove.map.hash.THashMap;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.logging.FileHandler;
+import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -69,7 +71,7 @@ public class VideoManagerJAVA extends Application
 
 		stage.setOnCloseRequest((WindowEvent we) ->
 		{
-			final HashMap<String, String> general = Settings.getInstance().getGeneral();
+			final THashMap<String, String> general = Settings.getInstance().getGeneral();
 
 			general.put("currentMedia", (String) webEngine.executeScript("getCurrentId()"));
 			general.put("currentSeason", (String) webEngine.executeScript("$(\"#seasons .selected\").text()"));
@@ -106,6 +108,17 @@ public class VideoManagerJAVA extends Application
 		try
 		{
 			handler = new FileHandler("cinema-log.xml");
+			handler.setFormatter(new Formatter()
+			{
+				@Override
+				public String format(LogRecord record)
+				{
+					if (record.getLevel() == Level.INFO)
+						return record.getMessage() + "\r\n";
+					else
+						return this.format(record);
+				}
+			});
 		} catch (IOException | SecurityException ex)
 		{
 			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);

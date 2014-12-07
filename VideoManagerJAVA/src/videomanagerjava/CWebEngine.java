@@ -5,9 +5,9 @@
  */
 package videomanagerjava;
 
+import gnu.trove.map.hash.THashMap;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import javafx.beans.value.ObservableValue;
@@ -45,7 +45,7 @@ public final class CWebEngine
 
 	private static String[] getLocations()
 	{
-		final HashMap<String, String> locations = Settings.getInstance().getLocations();
+		final THashMap<String, String> locations = Settings.getInstance().getLocations();
 		String[] array = new String[locations.size()];
 		return locations.values().toArray(array);
 	}
@@ -78,9 +78,11 @@ public final class CWebEngine
 			Database.getInstance().getDatabase().put(o.getId(), o);
 			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), o.toJSArray());
 		}
-		final HashMap<String, String> general = Settings.getInstance().getGeneral();
-		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
 		Database.getInstance().writeDatabase();
+		
+		final THashMap<String, String> general = Settings.getInstance().getGeneral();
+		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
+		Utils.callFuncJS(webEngine, "sortMediaList");
 	}
 
 	private static void getImages()

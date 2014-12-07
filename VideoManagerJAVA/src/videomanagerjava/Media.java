@@ -5,7 +5,7 @@
  */
 package videomanagerjava;
 
-import java.util.HashMap;
+import gnu.trove.map.hash.THashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -31,7 +31,7 @@ public class Media
 	private final static String DEFAULT_KEY = "Files";
 	private final TreeMap<String, TreeMap<String, Episode>> seasons;
 	private final long id;
-	private final HashMap<String, String> info;
+	private final THashMap<String, String> info;
 
 	public Media(long id)
 	{
@@ -49,7 +49,7 @@ public class Media
 
 	public Media(String name, long id, String img)
 	{
-		info = new HashMap<>();
+		info = new THashMap<>();
 		this.seasons = new TreeMap<>();
 
 		this.id = id;
@@ -64,7 +64,7 @@ public class Media
 	public void downloadInfos()
 	{
 		final String formattedName = Utils.removeSeason(info.get("name"));
-		final HashMap<String, String> infoList = getInfo();
+		final THashMap<String, String> infoList = getInfo();
 		final int limit = infoList.get("year") == null ? 1 : 3;
 		String url = "http://api.trakt.tv/search/movies.json/5921de65414d60b220c6296761061a3b?query="
 					 + formattedName.replace(" ", "+")
@@ -184,7 +184,7 @@ public class Media
 	/**
 	 * @return the info
 	 */
-	public HashMap<String, String> getInfo()
+	public THashMap<String, String> getInfo()
 	{
 		return info;
 	}

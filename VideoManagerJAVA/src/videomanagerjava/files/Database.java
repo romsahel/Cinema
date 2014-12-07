@@ -5,11 +5,11 @@
  */
 package videomanagerjava.files;
 
+import gnu.trove.map.hash.THashMap;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.TreeMap;
@@ -29,11 +29,11 @@ import videomanagerjava.Media;
 public class Database
 {
 
-	private final HashMap<Long, Media> database;
+	private final THashMap<Long, Media> database;
 
 	private Database()
 	{
-		database = new HashMap<>();
+		database = new THashMap<>();
 	}
 
 	public void writeDatabase()
@@ -55,7 +55,7 @@ public class Database
 
 	private JSONObject writeMedia(Long id, Media media)
 	{
-		HashMap<String, Object> elt = new HashMap<>();
+		THashMap<String, Object> elt = new THashMap<>();
 
 		elt.put("id", id);
 
@@ -68,7 +68,7 @@ public class Database
 		return new JSONObject(elt);
 	}
 
-	private void writeMap(String name, Map<String, ?> map, HashMap<String, Object> elt)
+	private void writeMap(String name, Map<String, ?> map, THashMap<String, Object> elt)
 	{
 		if (map.size() > 0)
 			elt.put(name, new JSONObject(map));
@@ -104,14 +104,14 @@ public class Database
 	private Media readMedia(long id, JSONObject elt)
 	{
 		final Media media = new Media(id);
-		readMap((JSONObject) elt.get("info"), media.getInfo());
-		if (!readMap((JSONObject) elt.get("seasons"), media.getSeasons()))
+		readMapInfo((JSONObject) elt.get("info"), media.getInfo());
+		if (!readMapSeasons((JSONObject) elt.get("seasons"), media.getSeasons()))
 			return null;
 
 		return media;
 	}
 
-	private boolean readMap(JSONObject obj, final HashMap<String, String> map)
+	private boolean readMapInfo(JSONObject obj, final THashMap<String, String> map)
 	{
 		final boolean isNotNull = obj != null;
 		if (isNotNull)
@@ -125,7 +125,7 @@ public class Database
 		return isNotNull;
 	}
 
-	private boolean readMap(JSONObject obj, final TreeMap<String, TreeMap<String, Episode>> map)
+	private boolean readMapSeasons(JSONObject obj, final TreeMap<String, TreeMap<String, Episode>> map)
 	{
 		final boolean isNotNull = obj != null;
 		if (isNotNull)
@@ -167,7 +167,7 @@ public class Database
 	/**
 	 * @return the medias
 	 */
-	public HashMap<Long, Media> getDatabase()
+	public THashMap<Long, Media> getDatabase()
 	{
 		return database;
 	}

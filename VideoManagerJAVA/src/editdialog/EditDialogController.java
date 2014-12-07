@@ -5,9 +5,9 @@
  */
 package editdialog;
 
+import gnu.trove.map.hash.THashMap;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import javafx.fxml.FXML;
@@ -61,7 +61,7 @@ public class EditDialogController extends AnchorPane
 	{
 		load();
 
-		final HashMap<String, String> info = media.getInfo();
+		final THashMap<String, String> info = media.getInfo();
 		final String text = info.get("name");
 		titleField.setText(text);
 		windowTitle.setText(text);
@@ -143,7 +143,7 @@ public class EditDialogController extends AnchorPane
 
 	private void onOK(boolean force)
 	{
-		final HashMap<String, String> info = media.getInfo();
+		final THashMap<String, String> info = media.getInfo();
 
 		final String title = titleField.getText().trim();
 		final String type = typeCombo.getSelectionModel().getSelectedItem().toLowerCase();
@@ -170,7 +170,7 @@ public class EditDialogController extends AnchorPane
 	@FXML
 	protected void onRefresh()
 	{
-		final HashMap<String, String> info = media.getInfo();
+		final THashMap<String, String> info = media.getInfo();
 		final String image = Downloader.downloadImage(urlField.getText());
 		info.put("img", image);
 

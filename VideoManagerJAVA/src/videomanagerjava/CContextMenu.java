@@ -9,7 +9,7 @@ import com.sun.webkit.dom.HTMLDivElementImpl;
 import com.sun.webkit.dom.HTMLElementImpl;
 import com.sun.webkit.dom.HTMLLIElementImpl;
 import editdialog.EditDialog;
-import java.util.HashMap;
+import gnu.trove.map.hash.THashMap;
 import java.util.Optional;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -119,7 +119,7 @@ public class CContextMenu
 		labelItem.setDisable(true);
 
 		MenuItem editItem = new MenuItem("Edit");
-		final HashMap<Long, Media> database = Database.getInstance().getDatabase();
+		final THashMap<Long, Media> database = Database.getInstance().getDatabase();
 		editItem.setOnAction((ActionEvent event) ->
 		{
 			final String id = hovered.getParentElement().getAttribute("id");

@@ -5,13 +5,11 @@
  */
 package utils;
 
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.scene.web.WebEngine;
-import main.VideoManagerJAVA;
 
 /**
  *
@@ -132,7 +130,7 @@ public class Utils
 			}
 
 			js += ")";
-			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.INFO, js);
+			Logger.getLogger("").info(js);
 			webEngine.executeScript(js);
 		});
 	}
