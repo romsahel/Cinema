@@ -75,9 +75,25 @@ public class CContextMenu
 			webEngine.executeScript("toggleEpisodesUntilThere()");
 		});
 
+		MenuItem resetItem = new MenuItem("Reset");
+		resetItem.setOnAction((ActionEvent event) ->
+		{
+			if (isSeason)
+				webEngine.executeScript("toggleSeenSeason(true)");
+			else
+			{
+				final HTMLDivElementImpl div = (HTMLDivElementImpl) hovered.getElementsByTagName("div").item(0);
+				final HTMLElementImpl item = (HTMLElementImpl) div.getElementsByTagName("span").item(0);
+
+				webEngine.executeScript("toggleSeen(null, false, false, true)");
+			}
+			hide();
+		});
+
 		filesItems.add(labelItem);
 		filesItems.add(seenItem);
 		filesItems.add(seenUntilItem);
+		filesItems.add(resetItem);
 	}
 
 	private static boolean isSeason()

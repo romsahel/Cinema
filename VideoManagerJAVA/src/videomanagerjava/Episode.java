@@ -71,11 +71,8 @@ public class Episode
 		return properties;
 	}
 
-	void toggleSeen()
+	void setSeen(boolean seen)
 	{
-		if (properties.get("seen").equals("true"))
-			setProperty("seen", "false");
-		else
-			setProperty("seen", "true");
+		setProperty("seen", Boolean.toString(seen));
 	}
 }

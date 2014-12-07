@@ -9,14 +9,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.control.Alert;
-import javafx.scene.control.Alert.AlertType;
-import javafx.scene.control.ButtonBar.ButtonData;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -34,6 +29,7 @@ import javafx.util.Callback;
 import videomanagerjava.Episode;
 import videomanagerjava.Media;
 import videomanagerjava.files.Database;
+import videomanagerjava.files.Downloader;
 
 /**
  * FXML Controller class
@@ -71,7 +67,7 @@ public class EditDialogController extends AnchorPane
 		windowTitle.setText(text);
 		typeCombo.getSelectionModel().select(info.get("type").equals("show") ? 1 : 0);
 
-		File f = new File("public_html\\media\\posters\\" + info.get("img"));
+		File f = new File(Downloader.POSTER_PATH + info.get("img"));
 		imageView.setImage(new Image(f.toURI().toString()));
 
 		initTree(media);
@@ -153,23 +149,10 @@ public class EditDialogController extends AnchorPane
 		final String type = typeCombo.getSelectionModel().getSelectedItem().toLowerCase();
 		if (force || (!info.get("name").equals(title) || !info.get("type").equals(type)))
 		{
-			Optional<ButtonType> result = null;
-			if (!force)
-			{
-				Alert alert = new Alert(AlertType.CONFIRMATION);
-				alert.setTitle("Update?");
-				alert.setHeaderText("Do you want to update info according to your changes?");
-				alert.setContentText("Changing the title or the type of media can induce changes in the information. Do you want to fetch new data?");
-
-				alert.getButtonTypes().setAll(new ButtonType("Yes", ButtonData.YES), new ButtonType("No"));
-
-				result = alert.showAndWait();
-			}
 			media.setInfo("type", type);
 			media.setInfo("name", title);
-			if (force || result.get().getButtonData() == ButtonData.YES)
+			if (force)
 				media.downloadInfos();
-
 		}
 
 		utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
@@ -187,7 +170,12 @@ public class EditDialogController extends AnchorPane
 	@FXML
 	protected void onRefresh()
 	{
-		System.out.println("The button was clicked!");
+		final HashMap<String, String> info = media.getInfo();
+		final String image = Downloader.downloadImage(urlField.getText());
+		info.put("img", image);
+
+		File f = new File(Downloader.POSTER_PATH + image);
+		imageView.setImage(new Image(f.toURI().toString()));
 	}
 
 	@FXML
