@@ -15,6 +15,43 @@ function preventEnter(e)
 	return;
 }
 
+var timeout = null
+function updateSearch(search)
+{
+	console.log("coucou")
+	console.log(search !== "")
+	console.log("coucou")
+	if (timeout !== null)
+		clearTimeout(timeout);
+
+	for (var key in medias) {
+		var div = $('#' + key);
+		var elt = medias[key];
+		if ((elt.info.name.toLowerCase()).indexOf(search) === -1)
+		{
+			if (currentId === key)
+			{
+				currentId = "";
+				$(detail).stop().fadeTo(150, 0);
+				$("#media-list .selected").removeClass("selected");
+				currentMedia = null;
+			}
+			div.stop().fadeOut(200);
+		}
+		else
+			div.stop().fadeIn(200);
+	}
+	if (search !== "")
+		timeout = setTimeout(function () {
+			var visible = $("#media-list > div:visible");
+			console.log(visible.size());
+			if (visible.size() > 0)
+			{
+				visible[0].click();
+			}
+		}, 250);
+}
+
 $(document).keypress(function (e) {
 	if (!searchBar.is(":focus"))
 	{
