@@ -54,7 +54,11 @@ public class VLCController
 		followingEpisodes = array;
 		final String command = "command=in_enqueue&input=";
 		for (int i = 1; i < array.length; i++)
-			sendRequest(command + array[i].getProperties().get("path"));
+		{
+			final THashMap<String, String> properties = array[i].getProperties();
+			sendRequest(command + properties.get("path"));
+			getSubtitles(properties);
+		}
 	}
 
 	public static void play(final Episode episode, boolean withSubtitles)
