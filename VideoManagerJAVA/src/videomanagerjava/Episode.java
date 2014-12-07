@@ -29,19 +29,19 @@ public class Episode
 	public Episode(String name, String path, boolean seen, long time)
 	{
 		properties = new HashMap<>();
-		properties.put("name", name);
-		properties.put("path", path);
-		properties.put("seen", Boolean.toString(seen));
-		properties.put("time", Long.toString(time));
+		setProperty("name", name);
+		setProperty("path", path);
+		setProperty("seen", Boolean.toString(seen));
+		setProperty("time", Long.toString(time));
 	}
 
 	public Episode(File file)
 	{
 		properties = new HashMap<>();
-		properties.put("name", Utils.getSuffix(file.getAbsolutePath(), Utils.getSeparator()));
-		properties.put("path", file.toURI().toString().replace('/', '\\').replace("file:\\", ""));
-		properties.put("seen", "false");
-		properties.put("time", "0");
+		setProperty("name", Utils.getSuffix(file.getAbsolutePath(), Utils.getSeparator()));
+		setProperty("path", file.toURI().toString().replace('/', '\\').replace("file:\\", ""));
+		setProperty("seen", "false");
+		setProperty("time", "0");
 	}
 
 	@Override
@@ -61,6 +61,11 @@ public class Episode
 		return "{" + sb.toString().substring(2) + "}";
 	}
 
+	public void setProperty(String key, String value)
+	{
+		properties.put(key.intern(), value.intern());
+	}
+
 	public HashMap<String, String> getProperties()
 	{
 		return properties;
@@ -69,8 +74,8 @@ public class Episode
 	void toggleSeen()
 	{
 		if (properties.get("seen").equals("true"))
-			properties.put("seen", "false");
+			setProperty("seen", "false");
 		else
-			properties.put("seen", "true");
+			setProperty("seen", "true");
 	}
 }

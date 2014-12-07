@@ -165,8 +165,8 @@ public class EditDialogController extends AnchorPane
 
 				result = alert.showAndWait();
 			}
-			info.put("type", type);
-			info.put("name", title);
+			media.setInfo("type", type);
+			media.setInfo("name", title);
 			if (force || result.get().getButtonData() == ButtonData.YES)
 				media.downloadInfos();
 
@@ -216,6 +216,7 @@ public class EditDialogController extends AnchorPane
 
 	class Delta
 	{
+
 		double x, y;
 	}
 

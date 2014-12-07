@@ -75,7 +75,7 @@ public final class EditableTreeCell extends TreeCell<String>
 		else if (isEditing())
 		{
 			if (textField != null)
-				textField.setText(getString());	
+				textField.setText(getString());
 			setText(null);
 			setGraphic(textField);
 		}
@@ -101,7 +101,7 @@ public final class EditableTreeCell extends TreeCell<String>
 					TreeMap<String, Episode> season = media.getSeasons().get(treeItem.getParent().getValue());
 					final Episode get = season.get(string);
 					season.put(text, get);
-					get.getProperties().put("name", text);
+					get.setProperty("name", text);
 					season.remove(string);
 				}
 				else

@@ -56,28 +56,29 @@ public class Media
 		this.id = id;
 		if (name != null)
 		{
-			info.put("year", Utils.getYear(name));
-			info.put("name", Utils.formatName(name));
+			setInfo("year", Utils.getYear(name));
+			setInfo("name", Utils.formatName(name));
 		}
-		info.put("img", img);
+		setInfo("img", img);
 	}
 
 	public void downloadInfos()
 	{
 		final String formattedName = Utils.removeSeason(info.get("name"));
-		final int limit = getInfo().get("year") == null ? 1 : 3;
+		final HashMap<String, String> infoList = getInfo();
+		final int limit = infoList.get("year") == null ? 1 : 3;
 		String url = "http://api.trakt.tv/search/movies.json/5921de65414d60b220c6296761061a3b?query="
 					 + formattedName.replace(" ", "+")
 					 + "&limit=" + limit;
-		String type = getInfo().get("type");
+		String type = infoList.get("type");
 		if ((type == null && !formattedName.equals(info.get("name")))
-				|| (type != null && type.equals("show")))
+			|| (type != null && type.equals("show")))
 		{
-			getInfo().put("type", "show");
+			setInfo("type", "show");
 			url = url.replace("movies.json", "shows.json");
 		}
 		else
-			getInfo().put("type", "movie");
+			setInfo("type", "movie");
 
 		System.out.println(formattedName.replace(" ", "+"));
 		System.out.println(url);
@@ -91,25 +92,25 @@ public class Media
 			{
 				JSONObject jobj = (JSONObject) obj;
 				final String newYear = jobj.get("year").toString();
-				if (getInfo().get("year") == null || newYear.equals(getInfo().get("year")))
+				if (infoList.get("year") == null || newYear.equals(infoList.get("year")))
 					try
 					{
-						getInfo().put("year", newYear);
-						getInfo().put("overview", jobj.get("overview").toString());
-						getInfo().put("genres", jobj.get("genres").toString());
-						getInfo().put("imdb", jobj.get("imdb_id").toString());
-						getInfo().put("duration", jobj.get("runtime").toString());
+						setInfo("year", newYear);
+						setInfo("overview", jobj.get("overview").toString());
+						setInfo("genres", jobj.get("genres").toString());
+						setInfo("imdb", jobj.get("imdb_id").toString());
+						setInfo("duration", jobj.get("runtime").toString());
 
 						final String imdbJson = Downloader.downloadString("http://www.omdbapi.com/?i="
-																		  + getInfo().get("imdb")
+																		  + infoList.get("imdb")
 																		  + "&plot=short&r=json");
 						JSONObject jobjImdb = (JSONObject) parser.parse(imdbJson);
-						getInfo().put("imdbRating", jobjImdb.get("imdbRating").toString());
+						setInfo("imdbRating", jobjImdb.get("imdbRating").toString());
 
 						String imgURL = (String) ((JSONObject) jobj.get("images")).get("poster");
 						imgURL = imgURL.replace(".jpg", "-300.jpg");
 
-						getInfo().put("img", Downloader.downloadImage(imgURL));
+						setInfo("img", Downloader.downloadImage(imgURL));
 						break;
 					} catch (Exception e)
 					{
@@ -124,8 +125,8 @@ public class Media
 			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
 		} finally
 		{
-			if (getInfo().get("img") == null)
-				getInfo().put("img", "unknown.jpg");
+			if (infoList.get("img") == null)
+				setInfo("img", "unknown.jpg");
 		}
 	}
 
@@ -152,7 +153,6 @@ public class Media
 		}
 	}
 
-
 	public String toJSArray()
 	{
 		StringBuilder sb = new StringBuilder();
@@ -169,13 +169,19 @@ public class Media
 		return "\\" + array;
 	}
 
-
 	/**
 	 * @return the id
 	 */
 	public long getId()
 	{
 		return id;
+	}
+
+	public final void setInfo(String key, String value)
+	{
+		if (value != null)
+			value = value.intern();
+		info.put(key.intern(), value);
 	}
 
 	/**
