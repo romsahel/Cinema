@@ -58,6 +58,14 @@ public class VLCController
 
 	public static void play(final Episode episode)
 	{
+		new Thread(() ->
+		{
+			playEpisode(episode);
+		}).start();
+	}
+
+	private static void playEpisode(final Episode episode)
+	{
 		init();
 
 		currentEpisode = episode;
@@ -70,7 +78,7 @@ public class VLCController
 		else
 			sendRequest("command=in_play&input=" + path);
 
-		System.out.println("Waiting for VLC and getting filename");
+		Logger.getLogger(VLCController.class.getName()).log(Level.INFO, "Waiting for VLC and getting filename");
 
 		String sendRequest = null;
 		while (currentId == -1)
@@ -181,7 +189,7 @@ public class VLCController
 			return;
 		}
 
-		System.out.println("Launching VLC and adding file to playlist.");
+		Logger.getLogger(VLCController.class.getName()).log(Level.INFO, "Launching VLC and adding file to playlist.");
 		try
 		{
 			Desktop.getDesktop().open(new File(uri));
@@ -212,7 +220,7 @@ public class VLCController
 //		On each timer, we'll check for different things
 		public void run()
 		{
-			System.out.println("Timer");
+			Logger.getLogger(VLCController.class.getName()).log(Level.INFO, "Timer");
 			final String status = sendRequest(null);
 //			In case VLC has been closed, we cancel the timer
 			if (status == null)

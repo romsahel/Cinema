@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import main.VideoManagerJAVA;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
@@ -80,8 +79,8 @@ public class Media
 		else
 			setInfo("type", "movie");
 
-		System.out.println(formattedName.replace(" ", "+"));
-		System.out.println(url);
+		Logger.getLogger(Media.class.getName()).log(Level.INFO, formattedName.replace(" ", "+"));
+		Logger.getLogger(Media.class.getName()).log(Level.INFO, url);
 
 		JSONParser parser = new JSONParser();
 		try
@@ -120,9 +119,7 @@ public class Media
 			}
 		} catch (ParseException ex)
 		{
-			System.err.println("====");
-			System.err.println(url);
-			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Media.class.getName()).log(Level.SEVERE, url, ex);
 		} finally
 		{
 			if (infoList.get("img") == null)

@@ -5,7 +5,12 @@
  */
 package main;
 
+import java.io.IOException;
 import java.util.HashMap;
+import java.util.logging.FileHandler;
+import java.util.logging.Handler;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
@@ -60,8 +65,7 @@ public class VideoManagerJAVA extends Application
 
 		Settings.getInstance().readSettings();
 		Database.getInstance().readDatabase();
-		final CWebEngine cWebEngine = new CWebEngine(webView);
-		final WebEngine webEngine = cWebEngine.getWebEngine();
+		final WebEngine webEngine = new CWebEngine(webView).getWebEngine();
 
 		stage.setOnCloseRequest((WindowEvent we) ->
 		{
@@ -76,7 +80,7 @@ public class VideoManagerJAVA extends Application
 				Database.getInstance().writeDatabase();
 		});
 
-		//adding context menu
+//		adding context menu
 		CContextMenu cContextMenu = new CContextMenu(webEngine, webView);
 		webView.setContextMenuEnabled(false);
 		webView.addEventHandler(MouseEvent.MOUSE_CLICKED, (MouseEvent e) ->
@@ -98,6 +102,17 @@ public class VideoManagerJAVA extends Application
 	 */
 	public static void main(String[] args)
 	{
+		Handler handler = null;
+		try
+		{
+			handler = new FileHandler("cinema-log.xml");
+		} catch (IOException | SecurityException ex)
+		{
+			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
+		}
+		if (handler != null)
+			Logger.getLogger("").addHandler(handler);
+
 		launch(args);
 	}
 }

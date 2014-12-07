@@ -2,15 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/Users/romsahel/NetBeansProjects/Cinema/VideoManagerJAVA/src/videomanagerjava/Media.java</file>
-            <file>file:/Users/romsahel/NetBeansProjects/Cinema/VideoManagerJAVA/src/videomanagerjava/files/Database.java</file>
-            <file>file:/Users/romsahel/NetBeansProjects/Cinema/VideoManagerJAVA/src/utils/Utils.java</file>
-            <file>file:/Users/romsahel/NetBeansProjects/Cinema/VideoManagerJAVA/src/editdialog/EditDialogController.java</file>
-            <file>file:/Users/romsahel/NetBeansProjects/Cinema/VideoManagerJAVA/db.json</file>
-            <file>file:/Users/romsahel/NetBeansProjects/Cinema/VideoManagerJAVA/src/videomanagerjava/CWebEngine.java</file>
-            <file>file:/Users/romsahel/NetBeansProjects/Cinema/VideoManagerJAVA/src/videomanagerjava/files/FileWalker.java</file>
-            <file>file:/Users/romsahel/NetBeansProjects/Cinema/VideoManagerJAVA/src/videomanagerjava/CContextMenu.java</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

@@ -1,6 +1,8 @@
 *.class
 /VideoManagerJAVA/public_html
-private.xml
+/VideoManagerJAVA/nbproject/
+Cinema.exe
+*.xml
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
 

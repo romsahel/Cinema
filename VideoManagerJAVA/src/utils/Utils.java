@@ -5,10 +5,13 @@
  */
 package utils;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javafx.application.Platform;
 import javafx.scene.web.WebEngine;
+import main.VideoManagerJAVA;
 
 /**
  *
@@ -36,7 +39,7 @@ public class Utils
 		if (i == -1)
 			return src;
 		else
-			return src.substring(0, i);
+			return new String(src.substring(0, i));
 	}
 
 	public static String getSuffix(String src, String... delimiter)
@@ -46,7 +49,7 @@ public class Utils
 		if (i == -1)
 			return src;
 		else
-			return src.substring(i + 1);
+			return new String(src.substring(i + 1));
 	}
 
 	public static int findIndex(String src, String... delimiter)
@@ -82,7 +85,7 @@ public class Utils
 		toFormat = toFormat.replaceAll("_", " ");
 		toFormat = toFormat.replaceAll("[(]?(19|20)[0-9]{2}[)]?", "");
 
-		return toFormat.trim();
+		return new String(toFormat.trim());
 	}
 
 	public static String removeSeason(String toFormat)
@@ -129,7 +132,7 @@ public class Utils
 			}
 
 			js += ")";
-			System.out.println(js);
+			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.INFO, js);
 			webEngine.executeScript(js);
 		});
 	}
