@@ -84,11 +84,17 @@
 						<article id="detail-description">
 						</article>
 						<div id="watch-buttons">
-							<div onclick="playMedia(false)">
-								<strong>Watch</strong>
+							<div>
+								<div class="button" onclick="playMedia(false)">
+									<strong>Watch</strong>
+								</div>
+								<div onclick="playMedia(false, true)">CC</div>
 							</div>
-							<div onclick="playMedia(true)">
-								<strong>Watch from there</strong>
+							<div>
+								<div class="button" onclick="playMedia(true)">
+									<strong>Watch from there</strong>
+								</div>
+								<div>▲</div>
 							</div>
 						</div>
 					</div>

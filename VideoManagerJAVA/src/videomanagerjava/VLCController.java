@@ -15,6 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.VideoManagerJAVA;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -47,30 +48,33 @@ public class VLCController
 		followingEpisodes = null;
 	}
 
-	public static void playAllFollowing(Episode[] array)
+	public static void playAllFollowing(Episode[] array, boolean withSubtitles)
 	{
-		play(array[0]);
+		play(array[0], withSubtitles);
 		followingEpisodes = array;
 		final String command = "command=in_enqueue&input=";
 		for (int i = 1; i < array.length; i++)
 			sendRequest(command + array[i].getProperties().get("path"));
 	}
 
-	public static void play(final Episode episode)
+	public static void play(final Episode episode, boolean withSubtitles)
 	{
 		new Thread(() ->
 		{
-			playEpisode(episode);
+			playEpisode(episode, withSubtitles);
 		}).start();
 	}
 
-	private static void playEpisode(final Episode episode)
+	private static void playEpisode(final Episode episode, boolean withSubtitles)
 	{
 		init();
 
 		currentEpisode = episode;
 		final THashMap<String, String> properties = episode.getProperties();
 		final String path = properties.get("path");
+
+		if (withSubtitles)
+			getSubtitles(properties);
 
 //		If the request is null, we must launch VLC and wait for it to be prepared
 		if (sendRequest("command=pl_empty") == null)
@@ -102,6 +106,22 @@ public class VLCController
 		timer = new Timer();
 		timerTask = new TimerTaskImpl(properties, filename);
 		timer.scheduleAtFixedRate(timerTask, 10000, 10000);
+	}
+
+	private static void getSubtitles(final THashMap<String, String> properties)
+	{
+		try
+		{
+			File file = new File(new URI("file:/" + properties.get("path").replace("\\", "/")));
+			String cmd = "C:\\Program Files (x86)\\Python\\Scripts\\subliminal.exe";
+			String directory = "\"" + file.getParent() + "\"";
+			String name = "\"" + file.getName() + "\"";
+			Process process = Runtime.getRuntime().exec(String.format("%s -l en -d %s %s", cmd, directory, name));
+			process.waitFor();
+		} catch (IOException | InterruptedException | URISyntaxException ex)
+		{
+			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
+		}
 	}
 
 	public static boolean cancelTimer(boolean checkStatus)
@@ -177,7 +197,21 @@ public class VLCController
 		return obj;
 	}
 
-	private static void runVLC(String file)
+	private static void runVLC(String uri)
+	{
+		File file = getEpisodeFile(uri);
+
+		Logger.getLogger(VLCController.class.getName()).log(Level.INFO, "Launching VLC and adding file to playlist.");
+		try
+		{
+			Desktop.getDesktop().open(file);
+		} catch (IOException ex)
+		{
+			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	private static File getEpisodeFile(String file)
 	{
 		URI uri;
 		try
@@ -186,17 +220,9 @@ public class VLCController
 		} catch (URISyntaxException ex)
 		{
 			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
-			return;
+			return null;
 		}
-
-		Logger.getLogger(VLCController.class.getName()).log(Level.INFO, "Launching VLC and adding file to playlist.");
-		try
-		{
-			Desktop.getDesktop().open(new File(uri));
-		} catch (IOException ex)
-		{
-			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
-		}
+		return new File(uri);
 	}
 
 	private static String sendRequest(String parameter)

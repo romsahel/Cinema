@@ -62,14 +62,6 @@ function onPageLoaded()
 		filterByCategory($(this).text());
 	});
 
-//	episodes.on('click', 'li > div > span', function (e) {
-//	});
-
-	if (mediaList.children.length > 1)
-		mediaList.children[1].click();
-	else
-		detail.style.opacity = 0;
-
 	if (navigator.vendor === "Google Inc.")
 		debug();
 }
@@ -85,7 +77,8 @@ $('html').click(hideSelectOptions);
 
 function hideSelectOptions()
 {
-	$("#listsContainer > .select").fadeOut(150);
+	$("#listsContainer > *").fadeOut(150);
+	$("#watchList").fadeOut(150);
 }
 
 function onEpisodesClick(elt)

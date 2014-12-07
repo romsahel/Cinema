@@ -7,3 +7,10 @@ Look into subliminal (to automatically download subtitles - execute python throu
 Loading icon (at launch, when starting VLC)
 Time of episode besides the Watch button
 Look into HPPC library to decrease memory usage
+
+
+====
+Requirements:
+if subtitle module:
+	- Python (download from website; install)
+	- Subliminal (download from GIT; python setup.py build; as admin: python setup install)

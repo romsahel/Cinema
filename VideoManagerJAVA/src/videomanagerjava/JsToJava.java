@@ -29,12 +29,12 @@ import videomanagerjava.files.Settings;
 public class JsToJava
 {
 
-	public void playMedia(String id, String currentSeason, String currentEpisode, String lastEpisode)
+	public void playMedia(String id, String currentSeason, String currentEpisode, String lastEpisode, boolean withSubtitles)
 	{
 		if (lastEpisode == null)
 		{
 			Episode episode = getEpisode(id, currentSeason, currentEpisode);
-			VLCController.play(episode);
+			VLCController.play(episode, withSubtitles);
 		}
 		else
 		{
@@ -42,7 +42,7 @@ public class JsToJava
 			final TreeMap<String, Episode> season = media.getSeasons().get(currentSeason);
 			SortedMap<String, Episode> subMap = season.subMap(currentEpisode, true, lastEpisode, true);
 			Episode[] array = new Episode[subMap.size()];
-			VLCController.playAllFollowing(subMap.values().toArray(array));
+			VLCController.playAllFollowing(subMap.values().toArray(array), withSubtitles);
 		}
 	}
 

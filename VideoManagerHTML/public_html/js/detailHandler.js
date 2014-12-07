@@ -80,7 +80,7 @@ function updateDetailGenres(genres)
 	if (genres.length > 1)
 	{
 		$("#detail-genres").click(function () {
-			dropDownClick(this, '#detailsGenreList', true);
+			dropDownClick(this, '#detailsGenreList', true, true);
 		});
 		$("#detail-genres").css({'cursor': 'pointer'});
 

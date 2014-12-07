@@ -414,7 +414,7 @@ header > .select, #detail-genres {
 	-webkit-user-select: none;
 }
 
-#files li, #watch-buttons > div {
+#files li, #watch-buttons > div > div {
 	padding: 0px 15px 9px 15px;
 	margin: 1px;
 	cursor: pointer;
@@ -432,12 +432,12 @@ header > .select, #detail-genres {
 	background: #1f2025;
 }
 
-#files li:hover, #watch-buttons > div:hover {
+#files li:hover, #watch-buttons > div > div:hover {
 	background: #26272d;
 	color: white;
 }
 
-#files li:active, #watch-buttons > div:active {
+#files li:active, #watch-buttons > div > div:active {
 	transition: background 0.75s, color 0.35s;
 	background: #9cb0ce;
 }
@@ -542,16 +542,26 @@ header > .select, #detail-genres {
 #watch-buttons {
 	display: none;
 }
-#watch-buttons > div {
+
+#watch-buttons > div > div, #watchList {
 	padding: 9px 15px 9px 15px;
 	color: white;
 	background: rgb(31, 32, 37);
 	transition: background 0.1s, color 0.35s;
-
-	margin-top: 15px;
-
-
 	text-align: center;
-	width: 25%;
 	display: inline-block;
+	width: 62%;
+}
+#watch-buttons > div {
+	margin-top: 15px;
+	display: inline-block;
+	width: 30%;
+}
+
+#watch-buttons div > div:not(.button) {
+	color: #C3C5C7;
+	 padding: 9px 6px 9px 6px;
+	width: 10%;
+	margin-left: -3px;
+	font-weight: 700;
 }
