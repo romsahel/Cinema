@@ -20,15 +20,22 @@ function updateDetails(media)
 
 	updateDetailGenres(info.genres);
 
-	updateDetailFiles();
+	var indexes = updateDetailFiles();
+	if (indexes === null)
+		indexes = {season: 1, episode: 1};
 
 	if (!selection.set)
-		onSeasonsClick($(seasons.children()[0]));
+	{
+		onSeasonsClick($(seasons.children()[indexes.season - 1]),
+				function () {
+					onEpisodesClick($(episodes.find(".selected > li")[indexes.episode - 1]), true);
+				});
+	}
 	else if (selection.episode)
 	{
 		onSeasonsClick(seasons.children(".tmp"),
 				function () {
-					onEpisodesClick(episodes.find(".tmp"));
+					onEpisodesClick(episodes.find(".tmp"), true);
 				});
 	}
 	selection = {"set": false};
@@ -41,31 +48,39 @@ function updateDetails(media)
 function updateDetailFiles()
 {
 	var currSeasons = currentMedia.seasons;
+	var sIndex = 1;
 	var seasonsToAppend = "";
 	var episodesToAppend = "";
 	var selectedTag = " class=\"selected\"";
+	var result = null;
 	for (var sKey in currSeasons)
 	{
 		var isCurrentSeason = (sKey === selection.season);
 		seasonsToAppend = seasonsToAppend + "<li class=\"" + (isCurrentSeason ? "tmp" : "") + "\">" + sKey + "</li>";
 		episodesToAppend = episodesToAppend + "<ul" + (isCurrentSeason ? selectedTag : "") + ">";
-		var i = 1;
+		var eIndex = 1;
 		for (var eKey in currSeasons[sKey])
 		{
-			var spanClass = (currSeasons[sKey][eKey].seen ? "seen" : "");
+			var spanClass = "";
+			if (currSeasons[sKey][eKey].seen)
+				spanClass = "seen"
+			else if (result === null)
+				result = {season: sIndex, episode: eIndex};
 			if (navigator.appVersion.indexOf("Mac") !== -1)
 				spanClass += " mac";
 
 			var span = "<span class=\"" + spanClass + "\"></span>";
 			var div = "<div>" + span + "<div>" + eKey + "</div></div>";
-			episodesToAppend = episodesToAppend + "<li class=\"" + ((eKey === selection.episode) ? "tmp" : "") + "\"><span>" + i + "</span>" + div + "</li>";
-			i = i + 1;
+			episodesToAppend = episodesToAppend + "<li class=\"" + ((eKey === selection.episode) ? "tmp" : "") + "\"><span>" + eIndex + "</span>" + div + "</li>";
+			eIndex++;
 		}
 		episodesToAppend = episodesToAppend + "</ul>";
+		sIndex++;
 	}
 
 	seasons.append(seasonsToAppend);
 	episodes.append(episodesToAppend);
+	return result;
 }
 
 function updateDetailGenres(genres)

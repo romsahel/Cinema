@@ -50,14 +50,16 @@ public class VLCController
 
 	public static void playAllFollowing(Episode[] array, boolean withSubtitles)
 	{
-		play(array[0], withSubtitles);
+		playEpisode(array[0], withSubtitles);
 		followingEpisodes = array;
 		final String command = "command=in_enqueue&input=";
 		for (int i = 1; i < array.length; i++)
 		{
 			final THashMap<String, String> properties = array[i].getProperties();
-			sendRequest(command + properties.get("path"));
-			getSubtitles(properties);
+			if (sendRequest(command + properties.get("path")) == null)
+				break;
+			if (withSubtitles)
+				getSubtitles(properties);
 		}
 	}
 

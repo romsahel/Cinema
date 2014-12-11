@@ -376,7 +376,7 @@ header > .select, #detail-genres {
 
 #detail-description {
 	overflow-y: auto;
-	height: 70%;
+	height: 55%;
 	padding-right: 15px;
 }
 
@@ -525,7 +525,7 @@ header > .select, #detail-genres {
 }
 
 #episodes li > div > span.mac:hover {
-     -webkit-animation: midOpacity 1s;
+	-webkit-animation: midOpacity 1s;
 	-webkit-animation-fill-mode: forwards;
 }
 
@@ -537,10 +537,6 @@ header > .select, #detail-genres {
     -webkit-animation: none !important;
     animation: none !important;
 	opacity: 1 !important;
-}
-
-#watch-buttons {
-	display: none;
 }
 
 #watch-buttons > div > div, #watchList {
@@ -560,7 +556,7 @@ header > .select, #detail-genres {
 
 #watch-buttons div > div:not(.button) {
 	color: #C3C5C7;
-	 padding: 9px 6px 9px 6px;
+	padding: 9px 6px 9px 6px;
 	width: 10%;
 	margin-left: -3px;
 	font-weight: 700;

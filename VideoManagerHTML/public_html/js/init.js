@@ -81,8 +81,15 @@ function hideSelectOptions()
 	$("#watchList").fadeOut(150);
 }
 
-function onEpisodesClick(elt)
+function onEpisodesClick(elt, shouldScroll)
 {
+	if (shouldScroll)
+	{
+		var offset = elt.offset().top - episodes.offset().top - 10;
+		if (offset > 10)
+			episodes.animate({scrollTop: offset}, 500);
+	}
+
 	if (elt.hasClass("selected"))
 		return;
 
@@ -91,16 +98,6 @@ function onEpisodesClick(elt)
 
 	var text = $(elt.children()[1]).text();
 	currentEpisode = {key: text, value: currentSeason.value[text]};
-
-	if (!$("#watch-buttons").is(":visible"))
-	{
-		detailsToUpdate.overview.animate({
-			height: detailsToUpdate.overview.height() - 50
-		}, 100, function () {
-			// Animation complete.
-		});
-		$("#watch-buttons").fadeIn(300);
-	}
 }
 
 function onSeasonsClick(elt, f)
@@ -110,8 +107,6 @@ function onSeasonsClick(elt, f)
 
 	var text = elt.text();
 	currentSeason = {key: text, value: currentMedia.seasons[text]};
-	$("#watch-buttons").fadeOut(100);
-	detailsToUpdate.overview.height("70%");
 	episodes.fadeTo(100, 0, function () {
 
 		elt.parent().children().removeClass("selected");
@@ -122,6 +117,7 @@ function onSeasonsClick(elt, f)
 		selected.addClass("selected");
 
 		episodes.fadeTo("fast", 1);
+
 		if (f)
 			f();
 	});
