@@ -223,6 +223,8 @@ header > .select, #detail-genres {
 
 	min-width: 666px;
 	display: table;
+
+	opacity: 0;
 }
 
 #split {

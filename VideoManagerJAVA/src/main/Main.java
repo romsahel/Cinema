@@ -22,6 +22,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
+import utils.ResizeHelper;
 import videomanagerjava.CContextMenu;
 import videomanagerjava.CWebEngine;
 import videomanagerjava.VLCController;
@@ -64,6 +65,7 @@ public class Main extends Application
 
 		stage.setOnCloseRequest((WindowEvent we) ->
 		{
+			stage.hide();
 			final THashMap<String, String> general = Settings.getInstance().getGeneral();
 
 			general.put("currentMedia", (String) webEngine.executeScript("getCurrentId()"));
@@ -88,7 +90,8 @@ public class Main extends Application
 
 		stage.setTitle("Video Manager");
 		stage.setScene(scene);
-
+		stage.setMinWidth(915);
+		ResizeHelper.addResizeListener(stage);
 		stage.show();
 	}
 

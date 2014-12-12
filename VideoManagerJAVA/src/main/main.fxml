@@ -8,7 +8,7 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="0.0" prefHeight="900.0" prefWidth="1300.0" style="-fx-background-color: #17181b;" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="0.0" minWidth="915.0" prefHeight="900.0" prefWidth="1300.0" style="-fx-background-color: #17181b;" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <StackPane prefHeight="1.0" prefWidth="1300.0" BorderPane.alignment="CENTER">
          <children>
@@ -24,7 +24,7 @@
                         <Font name="System Bold" size="16.0" />
                      </font>
                      <HBox.margin>
-                        <Insets />
+                        <Insets top="5.0" />
                      </HBox.margin>
                   </Label>
                </children>
@@ -33,6 +33,9 @@
       </StackPane>
    </top>
    <center>
-      <WebView fx:id="webView" prefHeight="861.0" prefWidth="1300.0" visible="false" BorderPane.alignment="CENTER" />
+      <WebView fx:id="webView" prefHeight="861.0" prefWidth="1300.0" visible="false" BorderPane.alignment="CENTER">
+         <BorderPane.margin>
+            <Insets bottom="5.0" left="5.0" right="5.0" />
+         </BorderPane.margin></WebView>
    </center>
 </fx:root>

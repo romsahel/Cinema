@@ -1,2 +1,37 @@
-@media screen and (max-width:1000px) {
+@media screen and (max-width:930px) {
+	header ul:last-of-type li:not(#search-bar) {
+		display: none;
+	}
 }
+
+@media screen and (max-height:600px) {
+	#banner {
+		height: 70px;
+	}
+
+	#banner-left, #detail-description, #banner-info > ul {
+		display: none;
+	}
+
+	#banner-right {
+		height: auto;
+	}
+
+	#banner-info {
+		display: inline-block;
+	}
+
+	#detail-title {
+		font-size: x-large;
+		max-width: 199px;
+	}
+
+	#watch-buttons {
+		padding-left: 3%;
+		display: inline;
+
+		position: relative;
+		top: -13px;
+	}
+}
+

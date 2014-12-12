@@ -9,6 +9,7 @@ import java.io.IOException;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Cursor;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
@@ -55,18 +56,27 @@ public class MainController extends BorderPane
 	@FXML
 	protected void onDrag(MouseEvent mouseEvent)
 	{
+		if (stage.getScene().getCursor() != Cursor.DEFAULT)
+			return;
 		stage.setX(stage.getX() + (mouseEvent.getScreenX() - dragDeltaX));
 		stage.setY(stage.getY() + (mouseEvent.getScreenY() - dragDeltaY));
-		onDragStarted(mouseEvent);
+		updateDelta(mouseEvent);
 	}
 
 	@FXML
 	protected void onDragStarted(MouseEvent mouseEvent)
 	{
-		dragDeltaX = mouseEvent.getScreenX();
-		dragDeltaY = mouseEvent.getScreenY();
+		if (stage.getScene().getCursor() != Cursor.DEFAULT)
+			return;
+		updateDelta(mouseEvent);
 		if (stage.maximizedProperty().getValue())
 			resizeWindow(dragDeltaX - this.getPrefWidth() / 2, dragDeltaY, this.getPrefWidth(), this.getPrefHeight(), false);
+	}
+
+	private void updateDelta(MouseEvent mouseEvent)
+	{
+		dragDeltaX = mouseEvent.getScreenX();
+		dragDeltaY = mouseEvent.getScreenY();
 	}
 
 	@FXML
