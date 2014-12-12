@@ -14,111 +14,112 @@
 		<script src="js/inputs.js"></script>
 	</head>
 	<body onload="onPageLoaded();" onresize="onResize()">
-		<header>
-			<ul>
-				<li class="category selected" onclick="filterByType($(this))"><a>All</a></li>
-				<li class="category" onclick="filterByType($(this), 'movie')"><a>Movies</a></li>
-				<li class="category" onclick="filterByType($(this), 'show')"><a>TV Series</a></li>
-				<li></li>
-				<li class="select" onclick="dropDownClick(this, '#sortList')">
-					<a>Sort by </a>
-					<a class="option" id="sortOption">Name</a>
-					<span class="caret"></span>
-				</li>
-				<li class="select" onclick="dropDownClick(this, '#genreList')">
-					<a>Genres </a>
-					<a class="option" id="genreOption">All</a>
-					<span class="caret"></span>
-				</li>
-			</ul>
-			<ul>
-				<li id="search-bar"><input type="text" oninput="updateSearch(this.value.toLowerCase());"
-										   onfocus="handleSearchFocus(true)" onblur="handleSearchFocus(false)"></li>
-				<li id="location-adder" onclick="addNewLocation()">+</li>
-				<li class="select" id="selectLocation" onclick="dropDownClick(this, '#locationsList')">
-					<a>Source </a>
-					<a class="option" id="locationOption">All</a>
-					<span class="caret"></span>
-				</li>
-			</ul>
-		</header>
-		<div id="listsContainer">
-			<ul class="select" id="sortList">
-				<li onclick="optionClick(this)">Name</li>
-				<li onclick="optionClick(this)">Rating</li>
-				<li onclick="optionClick(this)">Date</li>
-			</ul>
-			<ul class="select" id="genreList">
-				<li onclick="optionClick(this)">All</li>
-			</ul>
-			<ul class="select" id="locationsList">
-				<li onclick="optionClick(this)">All</li>
-			</ul>
-			<ul class="select" id="detailsGenreList">
-				<li onclick="optionClick(this)">All</li>
-			</ul>
-		</div>
-		<div id="split" onmousedown="down(this)"></div>
-		<div id="main">
-			<div id="media-list">
+		<div>
+			<header>
+				<ul>
+					<li class="category selected" onclick="filterByType($(this))"><a>All</a></li>
+					<li class="category" onclick="filterByType($(this), 'movie')"><a>Movies</a></li>
+					<li class="category" onclick="filterByType($(this), 'show')"><a>TV Series</a></li>
+					<li></li>
+					<li class="select" onclick="dropDownClick(this, '#sortList')">
+						<a>Sort by </a>
+						<a class="option" id="sortOption">Name</a>
+						<span class="caret"></span>
+					</li>
+					<li class="select" onclick="dropDownClick(this, '#genreList')">
+						<a>Genres </a>
+						<a class="option" id="genreOption">All</a>
+						<span class="caret"></span>
+					</li>
+				</ul>
+				<ul>
+					<li id="search-bar"><input type="text" oninput="updateSearch(this.value.toLowerCase());"
+											   onfocus="handleSearchFocus(true)" onblur="handleSearchFocus(false)"></li>
+					<li id="location-adder" onclick="addNewLocation()">+</li>
+					<li class="select" id="selectLocation" onclick="dropDownClick(this, '#locationsList')">
+						<a>Source </a>
+						<a class="option" id="locationOption">All</a>
+						<span class="caret"></span>
+					</li>
+				</ul>
+			</header>
+			<div id="listsContainer">
+				<ul class="select" id="sortList">
+					<li onclick="optionClick(this)">Name</li>
+					<li onclick="optionClick(this)">Rating</li>
+					<li onclick="optionClick(this)">Date</li>
+				</ul>
+				<ul class="select" id="genreList">
+					<li onclick="optionClick(this)">All</li>
+				</ul>
+				<ul class="select" id="locationsList">
+					<li onclick="optionClick(this)">All</li>
+				</ul>
+				<ul class="select" id="detailsGenreList">
+					<li onclick="optionClick(this)">All</li>
+				</ul>
 			</div>
-			<div id="detail">
-				<div id="banner">
-					<div id="banner-left">
-						<img id="detail-poster" width="239" height="352" src="" alt=""/>
-					</div>
-					<div id="banner-right">
-						<div id="banner-info">
-							<h1 id="detail-title"></h1>
-							<ul>
-								<li id="detail-year"></li>
-								<li id="detail-duration"></li>
-								<li id="detail-genres" class="select">
-									<a class="option" id="detailsGenreOption"></a>
-									<span class="caret"></span>
-								</li>
-								<li id="detail-imdb"><img onclick="goToLink(this);" src="media/imdb.png" width="27" height="16" alt="http://www.google.fr"/></li>
-								<li class="stars"><span class="full_star"></span><span class="full_star"></span><span class="half_star"></span><span class="empty_star"></span><span class="empty_star"></span></li>
-							</ul>
+			<div id="split" onmousedown="down(this)"></div>
+			<div id="main">
+				<div id="media-list">
+				</div>
+				<div id="detail">
+					<div id="banner">
+						<div id="banner-left">
+							<img id="detail-poster" width="239" height="352" src="" alt=""/>
 						</div>
-						<article id="detail-description">
-						</article>
-						<div id="watch-buttons">
-							<div>
-								<div class="button" onclick="playMedia(false, false)">
-									<strong>Watch</strong>
-								</div>
-								<div onclick="playMedia(false, true)">CC</div>
+						<div id="banner-right">
+							<div id="banner-info">
+								<h1 id="detail-title"></h1>
+								<ul>
+									<li id="detail-year"></li>
+									<li id="detail-duration"></li>
+									<li id="detail-genres" class="select">
+										<a class="option" id="detailsGenreOption"></a>
+										<span class="caret"></span>
+									</li>
+									<li id="detail-imdb"><img onclick="goToLink(this);" src="media/imdb.png" width="27" height="16" alt="http://www.google.fr"/></li>
+									<li class="stars"><span class="full_star"></span><span class="full_star"></span><span class="half_star"></span><span class="empty_star"></span><span class="empty_star"></span></li>
+								</ul>
 							</div>
-							<div>
-								<div class="button" onclick="playMedia(true, false)">
-									<strong>Watch from there</strong>
+							<article id="detail-description">
+							</article>
+							<div id="watch-buttons">
+								<div>
+									<div class="button" onclick="playMedia(false, false)">
+										<strong>Watch</strong>
+									</div>
+									<div onclick="playMedia(false, true)">CC</div>
 								</div>
-								<div onclick="playMedia(true, true)">CC</div>
+								<div>
+									<div class="button" onclick="playMedia(true, false)">
+										<strong>Watch from there</strong>
+									</div>
+									<div onclick="playMedia(true, true)">CC</div>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<div id="files">
-					<ul id="seasons" class="selected">
-					</ul>
-					<div id="episodes">
-					</div>
-				</div>
-			</div>
-			<div class="media" id="model" onclick="showDetail(this)">
-				<div class="poster" style="background-image: url(media/posters/01.jpg);">
-					<div class="overlay">
-						<div class="stars">
-							<span class="full_star"></span><span class="full_star"></span><span class="half_star"></span><span class="empty_star"></span><span class="empty_star"></span>
-							<p>7.1/10</p>
+					<div id="files">
+						<ul id="seasons" class="selected">
+						</ul>
+						<div id="episodes">
 						</div>
 					</div>
 				</div>
-				<h4>Once Upon A Time In a Fairy Castle</h4>
-				<h5>2014</h5>
+				<div class="media" id="model" onclick="showDetail(this)">
+					<div class="poster" style="background-image: url(media/posters/01.jpg);">
+						<div class="overlay">
+							<div class="stars">
+								<span class="full_star"></span><span class="full_star"></span><span class="half_star"></span><span class="empty_star"></span><span class="empty_star"></span>
+								<p>7.1/10</p>
+							</div>
+						</div>
+					</div>
+					<h4>Once Upon A Time In a Fairy Castle</h4>
+					<h5>2014</h5>
+				</div>
 			</div>
 		</div>
-
 	</body>
 </html>

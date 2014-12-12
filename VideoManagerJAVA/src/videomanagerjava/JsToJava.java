@@ -17,7 +17,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.DirectoryChooser;
-import main.VideoManagerJAVA;
+import main.Main;
 import utils.Utils;
 import videomanagerjava.files.Database;
 import videomanagerjava.files.Settings;
@@ -86,7 +86,7 @@ public class JsToJava
 		chooser.setTitle("Add new location");
 		File defaultDirectory = new File("/");
 		chooser.setInitialDirectory(defaultDirectory);
-		File selectedDirectory = chooser.showDialog(VideoManagerJAVA.getStage());
+		File selectedDirectory = chooser.showDialog(Main.getStage());
 		if (selectedDirectory != null)
 		{
 			final String folderPath = selectedDirectory.getAbsolutePath();

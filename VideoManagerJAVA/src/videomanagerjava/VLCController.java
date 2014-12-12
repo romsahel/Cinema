@@ -15,7 +15,6 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.VideoManagerJAVA;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -126,7 +125,7 @@ public class VLCController
 			process.waitFor();
 		} catch (IOException | InterruptedException | URISyntaxException ex)
 		{
-			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 

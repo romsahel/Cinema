@@ -32,7 +32,7 @@ public class EditDialog
 
 	public void show()
 	{
-		final Stage parentStage = main.VideoManagerJAVA.getStage();
+		final Stage parentStage = main.Main.getStage();
 
 		final EditDialogController fxml;
 		fxml = new EditDialogController(this, media);

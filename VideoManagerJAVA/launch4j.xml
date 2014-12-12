@@ -15,7 +15,7 @@
   <manifest></manifest>
   <icon>C:\Users\Romsahel\Desktop\saloute.ICO</icon>
   <classPath>
-    <mainClass>main.VideoManagerJAVA</mainClass>
+    <mainClass>main.Main</mainClass>
     <cp>lib/json-simple-1.1.1.jar</cp>
     <cp>lib/openjfx-dialogs-1.0.2.jar</cp>
     <cp>lib/trove-3.0.3.jar</cp>

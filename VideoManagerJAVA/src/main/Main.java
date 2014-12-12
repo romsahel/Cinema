@@ -17,7 +17,6 @@ import javafx.application.Application;
 import javafx.scene.Scene;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import javafx.stage.Stage;
@@ -33,7 +32,7 @@ import videomanagerjava.files.Settings;
  *
  * @author Romsahel
  */
-public class VideoManagerJAVA extends Application
+public class Main extends Application
 {
 
 	private static Stage stage;
@@ -50,23 +49,17 @@ public class VideoManagerJAVA extends Application
 	public void start(Stage primaryStage)
 	{
 		stage = primaryStage;
-		stage.initStyle(StageStyle.DECORATED);
-		WebView webView = new WebView();
+		stage.initStyle(StageStyle.UNDECORATED);
 
-		final AnchorPane anchorPane = new AnchorPane(webView);
+		final MainController fxml;
+		fxml = new MainController(stage);
 
-		//Set Layout Constraint
-		AnchorPane.setTopAnchor(webView, 0.0);
-		AnchorPane.setBottomAnchor(webView, 0.0);
-		AnchorPane.setLeftAnchor(webView, 0.0);
-		AnchorPane.setRightAnchor(webView, 0.0);
-
-		//Create Scene
-		final Scene scene = new Scene(anchorPane, 1300, 900);
+		final Scene scene = new Scene(fxml);
 		scene.getStylesheets().add("utils/main.css");
 
 		Settings.getInstance().readSettings();
 		Database.getInstance().readDatabase();
+		final WebView webView = fxml.getWebView();
 		final WebEngine webEngine = new CWebEngine(webView).getWebEngine();
 
 		stage.setOnCloseRequest((WindowEvent we) ->
@@ -121,7 +114,7 @@ public class VideoManagerJAVA extends Application
 			});
 		} catch (IOException | SecurityException ex)
 		{
-			Logger.getLogger(VideoManagerJAVA.class.getName()).log(Level.SEVERE, null, ex);
+			Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		if (handler != null)
 			Logger.getLogger("").addHandler(handler);
