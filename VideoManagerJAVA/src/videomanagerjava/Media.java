@@ -140,6 +140,13 @@ public class Media
 		return seasons.get(DEFAULT_KEY);
 	}
 
+	public TreeMap<String, Episode> getFirstSeason()
+	{
+		for (Map.Entry<String, TreeMap<String, Episode>> entrySet : seasons.entrySet())
+			return entrySet.getValue();
+		return null;
+	}
+
 	public void removeEmptySeasons()
 	{
 		for (Iterator<Map.Entry<String, TreeMap<String, Episode>>> it = seasons.entrySet().iterator(); it.hasNext();)

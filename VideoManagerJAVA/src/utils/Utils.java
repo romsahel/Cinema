@@ -93,12 +93,28 @@ public class Utils
 
 	public static String removeSeason(String toFormat, String folder)
 	{
+		final String season = getSeason(folder, toFormat);
+		if (season != null)
+			return toFormat.replace(season, "");
+		else
+			return toFormat;
+	}
+
+	public static String getSeason(String folder, String toFormat)
+	{
 		int index = folder.indexOf("Season");
 		if (index < 0)
 			index = folder.indexOf("S0");
 		if (index > 0)
-			return toFormat.replace(folder.substring(index), "");
-		return toFormat;
+			return folder.substring(index);
+		return null;
+	}
+
+	public static String getFormattedSeason(String folder, String toFormat)
+	{
+		String season = Utils.getSeason(folder, toFormat).replaceAll("[^\\d.]", "");
+		season = String.format("Season %02d", Integer.parseInt(season));
+		return season;
 	}
 
 	public static String getYear(String name)

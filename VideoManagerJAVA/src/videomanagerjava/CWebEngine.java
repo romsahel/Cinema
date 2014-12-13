@@ -9,6 +9,7 @@ import gnu.trove.map.hash.THashMap;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
@@ -28,7 +29,7 @@ public final class CWebEngine
 {
 
 	private static final ArrayList<Media> medias = new ArrayList<>();
-	private static ExecutorService executor;
+	private static ExecutorService executor = null;
 	private static WebEngine webEngine;
 
 	public CWebEngine(WebView webBrowser)
@@ -40,7 +41,6 @@ public final class CWebEngine
 		((JSObject) webEngine.executeScript("window")).setMember("app", new JsToJava());
 
 		walkFiles();
-
 	}
 
 	private static String[] getLocations()
@@ -58,9 +58,9 @@ public final class CWebEngine
 			if (location != null)
 				medias.addAll(FileWalker.getInstance().walk(location));
 
-		medias.addAll(Database.getInstance().getDatabase().values());
-
 		getImages();
+
+		medias.addAll(Database.getInstance().getDatabase().values());
 	}
 
 	public static void refreshList()
@@ -68,7 +68,7 @@ public final class CWebEngine
 		Utils.callFuncJS(webEngine, "emptyMediaList");
 
 		//	wait for the info-getting job to be terminated
-		while (!executor.isTerminated());
+		while (executor == null && !executor.isTerminated());
 
 		for (Media o : medias)
 		{
@@ -110,6 +110,43 @@ public final class CWebEngine
 		executor.shutdown();
 	}
 
+	private static void mergeByPoster()
+	{
+		ArrayList<Media> toDelete = new ArrayList<>();
+		for (Media outer : medias)
+		{
+			if (outer == null || toDelete.contains(outer))
+				continue;
+			final TreeMap<String, TreeMap<String, Episode>> seasons = outer.getSeasons();
+			final THashMap<String, String> outInfo = outer.getInfo();
+			String outSeason = null;
+			for (Media inner : medias)
+				if (inner != null && !toDelete.contains(inner) && outer != inner)
+				{
+					final THashMap<String, String> inInfo = inner.getInfo();
+					if (outInfo.get("img").equals(inInfo.get("img")))
+					{
+						if (outSeason == null)
+							if (seasons.size() == 1)
+							{
+								final String outName = outInfo.get("name");
+								outSeason = Utils.getFormattedSeason(outName, outName);
+								final TreeMap<String, Episode> firstSeason = outer.getFirstSeason();
+								seasons.clear();
+								seasons.put(outSeason, firstSeason);
+							}
+
+						final String inName = inInfo.get("name");
+						String inSeason = Utils.getFormattedSeason(inName, inName);
+						final TreeMap<String, Episode> firstSeason = inner.getFirstSeason();
+						seasons.put(inSeason, firstSeason);
+						toDelete.add(inner);
+					}
+				}
+		}
+		medias.removeAll(toDelete);
+	}
+
 	/**
 	 * @return the webEngine
 	 */
@@ -134,6 +171,7 @@ public final class CWebEngine
 
 			(new Thread(() ->
 			 {
+				 mergeByPoster();
 				 refreshList();
 			})).start();
 		}
