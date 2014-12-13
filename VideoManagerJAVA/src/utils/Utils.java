@@ -21,7 +21,7 @@ public class Utils
 	public static final String[] DUMP_KEYWORDS =
 	{
 		"[", "1080p", "720p", "x264", "HDTV", "FASTSUB", "VOSTFR", "MULTI",
-		"FINAL", "REPACK", "FRENCH", "COMPLETE", "PROPER", "EXTENDED", "UNRATED"
+		"FINAL", "REPACK", "FRENCH", "COMPLETE", "PROPER", "EXTENDED", "UNRATED", "BrRip", "720."
 	};
 	public static final String[] EXTENSIONS =
 	{

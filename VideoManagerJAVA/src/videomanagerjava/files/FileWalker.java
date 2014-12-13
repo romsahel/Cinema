@@ -7,6 +7,8 @@ package videomanagerjava.files;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.TreeMap;
 import utils.Utils;
 import videomanagerjava.Episode;
 import videomanagerjava.Location;
@@ -18,7 +20,9 @@ import videomanagerjava.Media;
  */
 public class FileWalker
 {
+
 	String location = null;
+
 	private FileWalker()
 	{
 	}
@@ -34,10 +38,30 @@ public class FileWalker
 			{
 				final Media subWalk = walkRoot(file);
 				if (subWalk != null)
-				{
-					subWalk.getInfo().put("location", name);
-					result.add(subWalk);
-				}
+					if (location.isSpecial())
+					{
+						Database.getInstance().getDatabase().put(subWalk.getId(), null);
+						final TreeMap<String, TreeMap<String, Episode>> seasons = subWalk.getSeasons();
+						for (Map.Entry<String, TreeMap<String, Episode>> entrySet : seasons.entrySet())
+						{
+							TreeMap<String, Episode> episodes = entrySet.getValue();
+							for (Map.Entry<String, Episode> set : episodes.entrySet())
+							{
+								String key = set.getKey();
+								Episode value = set.getValue();
+								final String path = value.getProperties().get("path");
+								Media media = new Media(getCleanName(Utils.getSuffix(path, Utils.getSeparator())), path.hashCode());
+								media.getDefaultSeason().put(key, value);
+								media.setInfo("location", name);
+								result.add(media);
+							}
+						}
+					}
+					else
+					{
+						subWalk.setInfo("location", name);
+						result.add(subWalk);
+					}
 			}
 
 		return result;

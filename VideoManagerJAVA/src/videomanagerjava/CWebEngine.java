@@ -48,40 +48,22 @@ public final class CWebEngine
 
 	public static void walkFiles()
 	{
-		walkFiles(null, null);
-	}
-
-	public static void walkFiles(String name, Location path)
-	{
 		medias.clear();
-		THashMap<String, Location> locations = null;
-		if (name != null && path != null)
-			medias.addAll(FileWalker.getInstance().walk(name, path));
-		else
+		THashMap<String, Location> locations = Settings.getInstance().getLocations();
+		for (Map.Entry<String, Location> entrySet : locations.entrySet())
 		{
-			locations = Settings.getInstance().getLocations();
-			for (Map.Entry<String, Location> entrySet : locations.entrySet())
-			{
-				String key = entrySet.getKey();
-				Location value = entrySet.getValue();
-				medias.addAll(FileWalker.getInstance().walk(key, value));
-			}
+			String key = entrySet.getKey();
+			Location value = entrySet.getValue();
+			medias.addAll(FileWalker.getInstance().walk(key, value));
 		}
 
 		newItems = medias.size();
 		getImages();
 
 		final Collection<Media> values = Database.getInstance().getDatabase().values();
-		if (name != null && path != null)
-		{
-			for (Media value : values)
-				if (value != null && name.equals(value.getInfo().get("location")))
-					medias.add(value);
-		}
-		else if (locations != null)
-			for (Media value : values)
-				if (value != null && locations.contains(value.getInfo().get("location")))
-					medias.add(value);
+		for (Media value : values)
+			if (value != null && locations.contains(value.getInfo().get("location")))
+				medias.add(value);
 	}
 
 	public static void refreshList()
@@ -115,6 +97,7 @@ public final class CWebEngine
 		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
 		Utils.callFuncJS(webEngine, "setToggles", general.get("playList"), general.get("withSubtitles"));
 		Utils.callFuncJS(webEngine, "sortMediaList");
+		Utils.callFuncJS(webEngine, "$(\"#locationsList > li\")[0].click");
 	}
 
 	private static void getImages()

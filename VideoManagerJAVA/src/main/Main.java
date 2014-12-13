@@ -114,7 +114,7 @@ public class Main extends Application
 					if (record.getLevel() == Level.INFO)
 						return record.getMessage() + "\r\n";
 					else
-						return this.format(record);
+						return record.toString();
 				}
 			});
 		} catch (IOException | SecurityException ex)

@@ -15,7 +15,9 @@ import java.util.SortedMap;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import main.Main;
 import utils.Utils;
@@ -97,13 +99,19 @@ public class JsToJava
 			dialog.setTitle("Add new location");
 			dialog.setContentText("Name of the location: ");
 
+			GridPane grid = (GridPane) dialog.getDialogPane().getContent();
+			CheckBox box = new CheckBox("Add each file as media");
+			box.setPadding(new javafx.geometry.Insets(10, 10, 0, 10));
+			grid.add(box, 1, 3);
+
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent())
 			{
-				final Location location = new Location(folderPath, false);
+
+				final Location location = new Location(folderPath, box.isSelected());
 				Settings.getInstance().getLocations().put(result.get(), location);
 				Settings.getInstance().writeSettings();
-				CWebEngine.walkFiles(result.get(), location);
+				CWebEngine.walkFiles();
 				CWebEngine.refreshList();
 				return result.get();
 			}
