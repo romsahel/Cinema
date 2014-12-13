@@ -70,6 +70,9 @@ public class Main extends Application
 			general.put("currentMedia", (String) webEngine.executeScript("getCurrentId()"));
 			general.put("currentSeason", (String) webEngine.executeScript("$(\"#seasons .selected\").text()"));
 			general.put("currentEpisode", (String) webEngine.executeScript("$(\"#episodes > .selected > .selected > div\").text()"));
+			general.put("playList", '\\' + (String) webEngine.executeScript("playList.toString()"));
+			general.put("withSubtitles", '\\' + (String) webEngine.executeScript("withSubtitles.toString()"));
+
 			Settings.getInstance().writeSettings();
 
 			if (!VLCController.cancelTimer(true))
@@ -102,7 +105,7 @@ public class Main extends Application
 		Handler handler = null;
 		try
 		{
-			handler = new FileHandler("cinema-log.xml");
+			handler = new FileHandler("log/cinema-log.xml");
 			handler.setFormatter(new Formatter()
 			{
 				@Override

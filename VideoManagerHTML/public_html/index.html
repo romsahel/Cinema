@@ -89,13 +89,13 @@
 									<div class="button" onclick="playMedia(false, false)">
 										<strong>Watch</strong>
 									</div>
-									<div onclick="playMedia(false, true)">CC</div>
-								</div>
-								<div>
-									<div class="button" onclick="playMedia(true, false)">
-										<strong>Watch from there</strong>
+									
+									<div class="button" onclick="$(this).toggleClass('on'); playList = !(playList === true);">
+										<strong>All Following</strong>
 									</div>
-									<div onclick="playMedia(true, true)">CC</div>
+									<div class="button" onclick="$(this).toggleClass('on'); withSubtitles = !(withSubtitles === true);">
+										CC
+									</div>
 								</div>
 							</div>
 						</div>

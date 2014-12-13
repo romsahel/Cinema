@@ -20,6 +20,9 @@ var searchBar;
 var split;
 var resizingTimeout;
 
+var playList = false;
+var withSubtitles = false;
+
 function onPageLoaded()
 {
 	mediaList = document.getElementById("media-list");

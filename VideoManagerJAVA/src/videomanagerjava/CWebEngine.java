@@ -79,9 +79,10 @@ public final class CWebEngine
 			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), o.toJSArray());
 		}
 		Database.getInstance().writeDatabase();
-		
+
 		final THashMap<String, String> general = Settings.getInstance().getGeneral();
 		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
+		Utils.callFuncJS(webEngine, "setToggles", general.get("playList"), general.get("withSubtitles"));
 		Utils.callFuncJS(webEngine, "sortMediaList");
 	}
 
