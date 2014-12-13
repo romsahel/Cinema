@@ -112,9 +112,15 @@ public class Utils
 
 	public static String getFormattedSeason(String folder, String toFormat)
 	{
-		String season = Utils.getSeason(folder, toFormat).replaceAll("[^\\d.]", "");
-		season = String.format("Season %02d", Integer.parseInt(season));
-		return season;
+		String season = Utils.getSeason(folder, toFormat);
+		if (season != null)
+		{
+			season = season.replaceAll("[^\\d.]", "");
+			season = String.format("Season %02d", Integer.parseInt(season));
+			return season;
+		}
+		else
+			return toFormat;
 	}
 
 	public static String getYear(String name)

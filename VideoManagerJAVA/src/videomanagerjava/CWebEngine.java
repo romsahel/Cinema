@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
@@ -32,6 +33,7 @@ public final class CWebEngine
 	private static final ArrayList<Media> medias = new ArrayList<>();
 	private static ExecutorService executor = null;
 	private static WebEngine webEngine;
+	private static int newItems;
 
 	public CWebEngine(WebView webBrowser)
 	{	// Obtain the webEngine to navigate
@@ -66,6 +68,7 @@ public final class CWebEngine
 			}
 		}
 
+		newItems = medias.size();
 		getImages();
 
 		final Collection<Media> values = Database.getInstance().getDatabase().values();
@@ -86,7 +89,17 @@ public final class CWebEngine
 		Utils.callFuncJS(webEngine, "emptyMediaList");
 
 		//	wait for the info-getting job to be terminated
-		while (executor == null && !executor.isTerminated());
+		while (executor == null);
+		try
+		{
+			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+		} catch (InterruptedException e)
+		{
+		}
+
+		if (newItems > 0)
+			mergeByPoster();
+		newItems = 0;
 
 		for (Media o : medias)
 		{
@@ -130,6 +143,7 @@ public final class CWebEngine
 
 	private static void mergeByPoster()
 	{
+		final THashMap<Long, Media> database = Database.getInstance().getDatabase();
 		ArrayList<Media> toDelete = new ArrayList<>();
 		for (Media outer : medias)
 		{
@@ -159,6 +173,7 @@ public final class CWebEngine
 						final TreeMap<String, Episode> firstSeason = inner.getFirstSeason();
 						seasons.put(inSeason, firstSeason);
 						toDelete.add(inner);
+						database.put(inner.getId(), null);
 					}
 				}
 		}
@@ -189,7 +204,6 @@ public final class CWebEngine
 
 			(new Thread(() ->
 			 {
-				 mergeByPoster();
 				 refreshList();
 			})).start();
 		}

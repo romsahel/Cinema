@@ -15,12 +15,9 @@ function preventEnter(e)
 	return;
 }
 
-var timeout = null
+var timeout = null;
 function updateSearch(search)
 {
-	console.log("coucou")
-	console.log(search !== "")
-	console.log("coucou")
 	if (timeout !== null)
 		clearTimeout(timeout);
 
@@ -43,12 +40,7 @@ function updateSearch(search)
 	}
 	if (search !== "")
 		timeout = setTimeout(function () {
-			var visible = $("#media-list > div:visible");
-			console.log(visible.size());
-			if (visible.size() > 0)
-			{
-				visible[0].click();
-			}
+			selectFirstVisibleMedia();
 		}, 250);
 }
 
@@ -83,6 +75,7 @@ $(document).keyup(function (e) {
 		{
 			searchBar.val("");
 			updateSearch("");
+			selectFirstVisibleMedia();
 		}
 	}   // esc
 });

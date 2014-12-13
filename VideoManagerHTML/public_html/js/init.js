@@ -65,6 +65,10 @@ function onPageLoaded()
 		filterByCategory($(this).text());
 	});
 
+	$("#locationsList").on('click', 'li', function () {
+		filterByLocation($(this).text());
+	});
+
 	if (navigator.vendor === "Google Inc.")
 		debug();
 }
