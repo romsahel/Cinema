@@ -14,6 +14,10 @@
   <restartOnCrash>false</restartOnCrash>
   <manifest></manifest>
   <icon>C:\Users\Romsahel\Desktop\saloute.ICO</icon>
+  <singleInstance>
+    <mutexName>Cinema</mutexName>
+    <windowTitle>Video Manager</windowTitle>
+  </singleInstance>
   <classPath>
     <mainClass>main.Main</mainClass>
     <cp>lib/json-simple-1.1.1.jar</cp>

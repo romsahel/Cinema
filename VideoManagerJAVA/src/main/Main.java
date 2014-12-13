@@ -22,7 +22,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import utils.ResizeHelper;
 import videomanagerjava.CContextMenu;
 import videomanagerjava.CWebEngine;
 import videomanagerjava.VLCController;

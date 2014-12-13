@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package utils;
+package main;
 
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -16,7 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 
 //created by Alexander Berg
-public class ResizeHelper
+class ResizeHelper
 {
 
 	public static void addResizeListener(Stage stage)

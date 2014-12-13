@@ -3,10 +3,11 @@ User must be able to edit details in order to change description, title, etc.
 User must be able to hide banner info details
 Sort by date, etc.
 Add options to "Locations" to analyze files by looking just at files and not folders (useful for popcorn folder)
+State (unavailable, available)
 Loading icon (at launch, when starting VLC)
 Progress bar representing time of episode
 Look into HPPC library to decrease memory usage
-
+Auto-merge medias with same poster
 
 ====
 Requirements:

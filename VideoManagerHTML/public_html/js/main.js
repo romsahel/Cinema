@@ -10,7 +10,11 @@ function playMedia(playFollowing, withSubtitles)
 function seenNextEpisode(name, index)
 {
 	if (playing.season === currentSeason)
-		toggleSeen($(playing.element.nextAll()[index]).find("div > span"), true, true);
+	{
+		var element = $(playing.element.nextAll()[index]);
+		toggleSeen(element.find("div > span"), true, true);
+		element.click();
+	}
 	else
 		playing.season.value[name].seen = true;
 }
