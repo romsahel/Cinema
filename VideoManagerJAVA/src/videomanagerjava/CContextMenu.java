@@ -10,6 +10,7 @@ import com.sun.webkit.dom.HTMLElementImpl;
 import com.sun.webkit.dom.HTMLLIElementImpl;
 import editdialog.EditDialog;
 import gnu.trove.map.hash.THashMap;
+import java.util.Map;
 import java.util.Optional;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -164,7 +165,7 @@ public class CContextMenu
 		renameItem.setOnAction((ActionEvent event) ->
 		{
 			final String toRename = hovered.getInnerText();
-			final String location = Settings.getInstance().getLocations().get(toRename);
+			final Location location = Settings.getInstance().getLocations().get(toRename);
 
 			TextInputDialog dialog = new TextInputDialog(toRename);
 			dialog.setHeaderText(null);
@@ -177,8 +178,18 @@ public class CContextMenu
 				Settings.getInstance().getLocations().remove(toRename);
 				Settings.getInstance().getLocations().put(result.get(), location);
 				hovered.setTextContent(result.get());
+				hide();
+
+				final THashMap<Long, Media> database = Database.getInstance().getDatabase();
+				for (Map.Entry<Long, Media> entrySet : database.entrySet())
+				{
+					Media value = entrySet.getValue();
+					if (value != null && value.getInfo().get("location").equals(toRename))
+						value.getInfo().put("location", result.get());
+				}
+				Database.getInstance().writeDatabase();
+				Settings.getInstance().writeSettings();
 			}
-			hide();
 		});
 
 		locationItems.add(labelItem);

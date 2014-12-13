@@ -100,9 +100,10 @@ public class JsToJava
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent())
 			{
-				Settings.getInstance().getLocations().put(result.get(), folderPath);
+				final Location location = new Location(folderPath, false);
+				Settings.getInstance().getLocations().put(result.get(), location);
 				Settings.getInstance().writeSettings();
-				CWebEngine.walkFiles(result.get(), folderPath);
+				CWebEngine.walkFiles(result.get(), location);
 				CWebEngine.refreshList();
 				return result.get();
 			}

@@ -51,19 +51,19 @@ public final class CWebEngine
 		walkFiles(null, null);
 	}
 
-	public static void walkFiles(String name, String path)
+	public static void walkFiles(String name, Location path)
 	{
 		medias.clear();
-		THashMap<String, String> locations = null;
+		THashMap<String, Location> locations = null;
 		if (name != null && path != null)
 			medias.addAll(FileWalker.getInstance().walk(name, path));
 		else
 		{
 			locations = Settings.getInstance().getLocations();
-			for (Map.Entry<String, String> entrySet : locations.entrySet())
+			for (Map.Entry<String, Location> entrySet : locations.entrySet())
 			{
 				String key = entrySet.getKey();
-				String value = entrySet.getValue();
+				Location value = entrySet.getValue();
 				medias.addAll(FileWalker.getInstance().walk(key, value));
 			}
 		}
@@ -199,7 +199,7 @@ public final class CWebEngine
 			if (newValue != Worker.State.SUCCEEDED)
 				return;
 
-			for (Map.Entry<String, String> next : Settings.getInstance().getLocations().entrySet())
+			for (Map.Entry<String, Location> next : Settings.getInstance().getLocations().entrySet())
 				Utils.callFuncJS(webEngine, "addLocation", next.getKey());
 
 			(new Thread(() ->

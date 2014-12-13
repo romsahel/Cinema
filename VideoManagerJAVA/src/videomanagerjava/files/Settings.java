@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import videomanagerjava.Location;
 
 /**
  *
@@ -25,7 +26,7 @@ import org.json.simple.parser.ParseException;
 public class Settings
 {
 
-	private final THashMap<String, String> locations;
+	private final THashMap<String, Location> locations;
 	private final THashMap<String, String> general;
 
 	private Settings()
@@ -51,7 +52,7 @@ public class Settings
 		}
 	}
 
-	private void writeMap(String name, final THashMap<String, String> map, HashMap<String, JSONObject> elt)
+	private void writeMap(String name, final THashMap<String, ?> map, HashMap<String, JSONObject> elt)
 	{
 		if (map.size() > 0)
 			elt.put(name, new JSONObject(map));
@@ -67,7 +68,7 @@ public class Settings
 
 			JSONObject jsonObject = (JSONObject) obj;
 
-			readMap((JSONObject) jsonObject.get("locations"), locations);
+			readLocationsMap((JSONObject) jsonObject.get("locations"), locations);
 			readMap((JSONObject) jsonObject.get("general"), general);
 
 		} catch (IOException | ParseException ex)
@@ -75,7 +76,7 @@ public class Settings
 			Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
-		for (Map.Entry<String, String> next : getLocations().entrySet())
+		for (Map.Entry<String, Location> next : getLocations().entrySet())
 			System.out.println(next.getKey() + ": " + next.getValue());
 	}
 
@@ -93,6 +94,20 @@ public class Settings
 				}
 			}
 	}
+	private void readLocationsMap(JSONObject obj, final THashMap<String, Location> map)
+	{
+		if (obj != null)
+			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
+			{
+				final String key = (String) it.next();
+				final Object get = obj.get(key);
+				if (get != null)
+				{
+					final JSONObject value = (JSONObject) get;
+					map.put(key, new Location((String) value.get("path"), (Boolean) value.get("special")));
+				}
+			}
+	}
 
 	// <editor-fold defaultstate="collapsed" desc="Singleton">
 	public static Settings getInstance()
@@ -103,7 +118,7 @@ public class Settings
 	/**
 	 * @return the locations
 	 */
-	public THashMap<String, String> getLocations()
+	public THashMap<String, Location> getLocations()
 	{
 		return locations;
 	}

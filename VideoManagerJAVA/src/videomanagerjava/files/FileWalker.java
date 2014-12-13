@@ -9,6 +9,7 @@ import java.io.File;
 import java.util.ArrayList;
 import utils.Utils;
 import videomanagerjava.Episode;
+import videomanagerjava.Location;
 import videomanagerjava.Media;
 
 /**
@@ -22,9 +23,9 @@ public class FileWalker
 	{
 	}
 
-	public ArrayList<Media> walk(String location, String path)
+	public ArrayList<Media> walk(String name, Location location)
 	{
-		File[] files = listFiles(new File(path));
+		File[] files = listFiles(new File(location.getPath()));
 		ArrayList<Media> result = new ArrayList<>();
 
 		if (files != null)
@@ -34,7 +35,7 @@ public class FileWalker
 				final Media subWalk = walkRoot(file);
 				if (subWalk != null)
 				{
-					subWalk.getInfo().put("location", location);
+					subWalk.getInfo().put("location", name);
 					result.add(subWalk);
 				}
 			}
