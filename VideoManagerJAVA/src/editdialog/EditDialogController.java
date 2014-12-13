@@ -124,21 +124,13 @@ public class EditDialogController extends AnchorPane
 	@FXML
 	protected void onOKandForce()
 	{
-		System.out.println("force");
-		onOK(false);
+		onOK(true);
 	}
 
 	@FXML
 	protected void onOK()
 	{
-		System.out.println("ok");
 		onOK(false);
-	}
-
-	@FXML
-	protected void test()
-	{
-		System.out.println("test");
 	}
 
 	private void onOK(boolean force)

@@ -145,7 +145,7 @@ public class Utils
 				else if (str.charAt(0) == '\\')
 					js += str.substring(1);
 				else
-					js += "'" + str + "'";
+					js += "\"" + str + "\"";
 
 				if (i != args.length - 1)
 					js += ", ";
