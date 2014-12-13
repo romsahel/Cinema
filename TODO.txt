@@ -7,7 +7,6 @@ State (unavailable, available)
 Loading icon (at launch, when starting VLC)
 Progress bar representing time of episode
 Look into HPPC library to decrease memory usage
-Auto-merge medias with same poster
 
 ====
 Requirements:

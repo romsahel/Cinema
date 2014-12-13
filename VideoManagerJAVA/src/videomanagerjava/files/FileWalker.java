@@ -17,12 +17,12 @@ import videomanagerjava.Media;
  */
 public class FileWalker
 {
-
+	String location = null;
 	private FileWalker()
 	{
 	}
 
-	public ArrayList<Media> walk(String path)
+	public ArrayList<Media> walk(String location, String path)
 	{
 		File[] files = listFiles(new File(path));
 		ArrayList<Media> result = new ArrayList<>();
@@ -33,7 +33,10 @@ public class FileWalker
 			{
 				final Media subWalk = walkRoot(file);
 				if (subWalk != null)
+				{
+					subWalk.getInfo().put("location", location);
 					result.add(subWalk);
+				}
 			}
 
 		return result;

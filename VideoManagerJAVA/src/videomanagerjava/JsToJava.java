@@ -102,7 +102,7 @@ public class JsToJava
 			{
 				Settings.getInstance().getLocations().put(result.get(), folderPath);
 				Settings.getInstance().writeSettings();
-				CWebEngine.walkFiles(folderPath);
+				CWebEngine.walkFiles(result.get(), folderPath);
 				CWebEngine.refreshList();
 				return result.get();
 			}

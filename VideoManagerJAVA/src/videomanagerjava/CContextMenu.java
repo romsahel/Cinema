@@ -153,11 +153,11 @@ public class CContextMenu
 		MenuItem removeItem = new MenuItem("Remove");
 		removeItem.setOnAction((ActionEvent event) ->
 		{
-			hide();
 			final String toRemove = (String) webEngine.executeScript("removeLocation()");
 			Settings.getInstance().getLocations().remove(toRemove);
 			CWebEngine.walkFiles();
 			CWebEngine.refreshList();
+			hide();
 		});
 
 		MenuItem renameItem = new MenuItem("Rename");

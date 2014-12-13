@@ -8,6 +8,7 @@ package videomanagerjava;
 import gnu.trove.map.hash.THashMap;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
@@ -43,24 +44,41 @@ public final class CWebEngine
 		walkFiles();
 	}
 
-	private static String[] getLocations()
+	public static void walkFiles()
 	{
-		final THashMap<String, String> locations = Settings.getInstance().getLocations();
-		String[] array = new String[locations.size()];
-		return locations.values().toArray(array);
+		walkFiles(null, null);
 	}
 
-	public static void walkFiles(String... locations)
+	public static void walkFiles(String name, String path)
 	{
-		locations = locations.length == 0 ? getLocations() : locations;
 		medias.clear();
-		for (String location : locations)
-			if (location != null)
-				medias.addAll(FileWalker.getInstance().walk(location));
+		THashMap<String, String> locations = null;
+		if (name != null && path != null)
+			medias.addAll(FileWalker.getInstance().walk(name, path));
+		else
+		{
+			locations = Settings.getInstance().getLocations();
+			for (Map.Entry<String, String> entrySet : locations.entrySet())
+			{
+				String key = entrySet.getKey();
+				String value = entrySet.getValue();
+				medias.addAll(FileWalker.getInstance().walk(key, value));
+			}
+		}
 
 		getImages();
 
-		medias.addAll(Database.getInstance().getDatabase().values());
+		final Collection<Media> values = Database.getInstance().getDatabase().values();
+		if (name != null && path != null)
+		{
+			for (Media value : values)
+				if (value != null && name.equals(value.getInfo().get("location")))
+					medias.add(value);
+		}
+		else if (locations != null)
+			for (Media value : values)
+				if (value != null && locations.contains(value.getInfo().get("location")))
+					medias.add(value);
 	}
 
 	public static void refreshList()
