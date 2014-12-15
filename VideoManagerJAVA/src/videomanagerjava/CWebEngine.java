@@ -17,6 +17,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
+import main.MainController;
 import netscape.javascript.JSObject;
 import utils.Utils;
 import videomanagerjava.files.Database;
@@ -32,11 +33,13 @@ public final class CWebEngine
 
 	private static final ArrayList<Media> medias = new ArrayList<>();
 	private static ExecutorService executor = null;
+	private static WebView webView;
 	private static WebEngine webEngine;
 	private static int newItems;
 
 	public CWebEngine(WebView webBrowser)
 	{	// Obtain the webEngine to navigate
+		webView = webBrowser;
 		webEngine = webBrowser.getEngine();
 		webEngine.load("file:///" + new File("public_html/index.html").getAbsolutePath().replace('\\', '/'));
 		webEngine.getLoadWorker().stateProperty().addListener(new CChangeListener());
@@ -68,6 +71,7 @@ public final class CWebEngine
 
 	public static void refreshList()
 	{
+//		webView.setVisible(false);
 		Utils.callFuncJS(webEngine, "emptyMediaList");
 
 		//	wait for the info-getting job to be terminated
@@ -98,6 +102,8 @@ public final class CWebEngine
 		Utils.callFuncJS(webEngine, "setToggles", general.get("playList"), general.get("withSubtitles"));
 		Utils.callFuncJS(webEngine, "sortMediaList");
 		Utils.callFuncJS(webEngine, "$(\"#locationsList > li\")[0].click");
+
+		MainController.stopLoading();
 	}
 
 	private static void getImages()

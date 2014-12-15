@@ -6,6 +6,9 @@
 package main;
 
 import java.io.IOException;
+import javafx.animation.FadeTransition;
+import javafx.application.Platform;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
@@ -15,6 +18,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
+import javafx.util.Duration;
 
 /**
  * FXML Controller class
@@ -26,6 +30,11 @@ public class MainController extends BorderPane
 
 	@FXML
 	private WebView webView;
+	private static WebView staticWebView;
+	@FXML
+	private WebView loadingScreen;
+	private static WebView staticLoadingScreen;
+
 	private double dragDeltaX;
 	private double dragDeltaY;
 	private final Stage stage;
@@ -33,7 +42,13 @@ public class MainController extends BorderPane
 	public MainController(Stage stage)
 	{
 		load();
-		webView.setVisible(true);
+		staticLoadingScreen = loadingScreen;
+		staticWebView = webView;
+
+		staticLoadingScreen.setVisible(true);
+		staticWebView.setVisible(false);
+
+		loadingScreen.getEngine().load(getClass().getResource("loadingScreen.html").toExternalForm());
 		this.stage = stage;
 	}
 
@@ -105,6 +120,52 @@ public class MainController extends BorderPane
 		stage.setY(y);
 		stage.setWidth(w);
 		stage.setHeight(h);
+	}
+
+	public static void startLoading()
+	{
+		if (staticWebView.isVisible())
+			Platform.runLater(() ->
+			{
+				staticWebView.setVisible(true);
+				FadeTransition ftOut = new FadeTransition(Duration.millis(500), staticWebView);
+				ftOut.setFromValue(1.0);
+				ftOut.setToValue(0.0);
+				ftOut.play();
+
+				FadeTransition ftIn = new FadeTransition(Duration.millis(500), staticLoadingScreen);
+				ftIn.setFromValue(0.0);
+				ftIn.setToValue(1);
+				ftIn.play();
+				staticLoadingScreen.setVisible(true);
+				ftOut.setOnFinished((ActionEvent event) ->
+				{
+					staticWebView.setVisible(false);
+				});
+			});
+	}
+
+	public static void stopLoading()
+	{
+		if (staticLoadingScreen.isVisible())
+			Platform.runLater(() ->
+			{
+				staticLoadingScreen.setVisible(true);
+				FadeTransition ftOut = new FadeTransition(Duration.millis(1000), staticLoadingScreen);
+				ftOut.setFromValue(1.0);
+				ftOut.setToValue(0.0);
+				ftOut.play();
+
+				FadeTransition ftIn = new FadeTransition(Duration.millis(1000), staticWebView);
+				ftIn.setFromValue(0.0);
+				ftIn.setToValue(1);
+				ftIn.play();
+				staticWebView.setVisible(true);
+				ftOut.setOnFinished((ActionEvent event) ->
+				{
+					staticLoadingScreen.setVisible(false);
+				});
+			});
 	}
 
 	/**

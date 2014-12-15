@@ -15,6 +15,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.MainController;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -64,10 +65,12 @@ public class VLCController
 
 	public static void play(final Episode episode, boolean withSubtitles)
 	{
-		new Thread(() ->
+		final Thread thread = new Thread(() ->
 		{
 			playEpisode(episode, withSubtitles);
-		}).start();
+		});
+		MainController.startLoading();
+		thread.start();
 	}
 
 	private static void playEpisode(final Episode episode, boolean withSubtitles)
@@ -111,6 +114,8 @@ public class VLCController
 		timer = new Timer();
 		timerTask = new TimerTaskImpl(properties, filename);
 		timer.scheduleAtFixedRate(timerTask, 10000, 10000);
+
+		MainController.stopLoading();
 	}
 
 	private static void getSubtitles(final THashMap<String, String> properties)
