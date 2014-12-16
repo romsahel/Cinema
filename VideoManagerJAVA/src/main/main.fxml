@@ -42,7 +42,19 @@
                   <Insets bottom="5.0" left="5.0" right="5.0" />
                </BorderPane.margin>
             </WebView>
-            <WebView fx:id="loadingScreen" prefHeight="200.0" prefWidth="200.0" />
+            <StackPane fx:id="loadingPane">
+               <children>
+                  <WebView fx:id="loadingScreen" prefHeight="200.0" prefWidth="200.0" />
+                  <Label fx:id="loadingLabel" alignment="CENTER" contentDisplay="CENTER" text="Starting application..." textAlignment="CENTER" textFill="#c3c5c7">
+                     <font>
+                        <Font name="Segoe UI Semibold" size="15.0" />
+                     </font>
+                     <StackPane.margin>
+                        <Insets bottom="100.0" />
+                     </StackPane.margin>
+                  </Label>
+               </children>
+            </StackPane>
          </children>
       </StackPane>
    </center>

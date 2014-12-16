@@ -50,29 +50,29 @@
 			*:focus { border: 0; outline: 0; }
 			.wrapper {
 				margin: 50px auto;
-				margin-top: 200px;
-				width: 100px;
+				position: fixed;
+				bottom: 0;
+				width: 100%;
 			}
 			.button-block {
 				cursor: pointer;
-				width: 70px;
+				width: 230px;
 				height: 70px;
-				border-radius: 100%; /* TODO: prefix */
 				margin: 0 auto;
 				position: relative;
 				display: block;
-				position: relative;
 				border: 35px solid rgba(200, 88, 83, 0.9);
 				-webkit-box-sizing: border-box;
 				-moz-box-sizing: border-box;
-				-webkit-border-radius: 100%;
-				-moz-border-radius: 100%;
 				box-sizing: border-box;
-				-webkit-transition: border 600ms ease-in-out;
-				-moz-transition: border 600ms ease-in-out;
-				-ms-transition: border 600ms ease-in-out;
-				-o-transition: border 600ms ease-in-out;
-				transition: border 600ms ease-in-out;
+				border-radius: 30px;
+				-webkit-border-radius: 30px;
+				-moz-border-radius: 30px;
+				-webkit-transition: none;
+				-moz-transition: none;
+				-ms-transition:	none;
+				-o-transition: none;
+				transition:	none;
 			}
 			.button-block button {
 				cursor: pointer;
@@ -111,6 +111,11 @@
 			.button-block.canceled  {
 				border-width: 4px;
 				border-color: #1ABC9C;
+				-webkit-transition: border 600ms ease-in-out;
+				-moz-transition: border 600ms ease-in-out;
+				-ms-transition: border 600ms ease-in-out;
+				-o-transition: border 600ms ease-in-out;
+				transition: border 600ms ease-in-out;
 			}
 			.button-block.canceled .mark { background-color: #1ABC9C; }
 			.button-block.canceled .mark.x {
@@ -130,14 +135,11 @@
 			<div class="double-bounce1"></div>
 			<div class="double-bounce2"></div>
 		</div>
-
 		<div class="wrapper">
 			<div class="button-block"
 				 onclick="
-//						 if (this.classList.contains('canceled'))
-//							 this.classList.remove('canceled');
-//						 else
-							 this.classList.add('canceled');
+						 this.classList.add('canceled');
+						 app.cancelThread();
 				 ">
 				<button type="button">
 					<i class="mark x"></i>

@@ -13,12 +13,15 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.web.WebView;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import netscape.javascript.JSObject;
 
 /**
  * FXML Controller class
@@ -32,8 +35,16 @@ public class MainController extends BorderPane
 	private WebView webView;
 	private static WebView staticWebView;
 	@FXML
+	private StackPane loadingPane;
+	private static StackPane staticLoadingPane;
+
+	@FXML
 	private WebView loadingScreen;
 	private static WebView staticLoadingScreen;
+	private static LoadingScreenInterface loadingScreenInterface;
+	@FXML
+	private Label loadingLabel;
+	private static Label staticLoadingLabel;
 
 	private double dragDeltaX;
 	private double dragDeltaY;
@@ -44,8 +55,14 @@ public class MainController extends BorderPane
 		load();
 		staticLoadingScreen = loadingScreen;
 		staticWebView = webView;
+		staticLoadingLabel = loadingLabel;
+		staticLoadingPane = loadingPane;
 
-		staticLoadingScreen.setVisible(true);
+
+		loadingScreenInterface = new LoadingScreenInterface();
+		((JSObject) loadingScreen.getEngine().executeScript("window")).setMember("app", loadingScreenInterface);
+
+		staticLoadingPane.setVisible(true);
 		staticWebView.setVisible(false);
 
 		loadingScreen.getEngine().load(getClass().getResource("loadingScreen.html").toExternalForm());
@@ -122,22 +139,42 @@ public class MainController extends BorderPane
 		stage.setHeight(h);
 	}
 
+	public static void logLoadingScreen(String message)
+	{
+		if (staticLoadingScreen.isVisible())
+			Platform.runLater(() ->
+			{
+				staticLoadingLabel.setText(message + "...");
+			});
+	}
+
 	public static void startLoading()
+	{
+		startLoading(null, "Loading");
+	}
+
+	public static void startLoading(Thread thread, String log)
 	{
 		if (staticWebView.isVisible())
 			Platform.runLater(() ->
 			{
 				staticWebView.setVisible(true);
+				staticLoadingScreen.getEngine().executeScript(
+						LoadingScreenInterface.HTML_CANCEL + ".classList.remove('canceled');"
+				);
 				FadeTransition ftOut = new FadeTransition(Duration.millis(500), staticWebView);
 				ftOut.setFromValue(1.0);
 				ftOut.setToValue(0.0);
 				ftOut.play();
 
-				FadeTransition ftIn = new FadeTransition(Duration.millis(500), staticLoadingScreen);
+				FadeTransition ftIn = new FadeTransition(Duration.millis(500), staticLoadingPane);
 				ftIn.setFromValue(0.0);
 				ftIn.setToValue(1);
 				ftIn.play();
-				staticLoadingScreen.setVisible(true);
+				staticLoadingPane.setVisible(true);
+
+				staticLoadingLabel.setText(log + "...");
+				loadingScreenInterface.setThread(thread);
 				ftOut.setOnFinished((ActionEvent event) ->
 				{
 					staticWebView.setVisible(false);
@@ -147,11 +184,14 @@ public class MainController extends BorderPane
 
 	public static void stopLoading()
 	{
-		if (staticLoadingScreen.isVisible())
+		if (staticLoadingPane.isVisible())
 			Platform.runLater(() ->
 			{
-				staticLoadingScreen.setVisible(true);
-				FadeTransition ftOut = new FadeTransition(Duration.millis(1000), staticLoadingScreen);
+				staticLoadingScreen.getEngine().executeScript(
+						LoadingScreenInterface.HTML_CANCEL + ".classList.add('canceled');"
+				);
+				staticLoadingPane.setVisible(true);
+				FadeTransition ftOut = new FadeTransition(Duration.millis(1000), staticLoadingPane);
 				ftOut.setFromValue(1.0);
 				ftOut.setToValue(0.0);
 				ftOut.play();
@@ -163,7 +203,7 @@ public class MainController extends BorderPane
 				staticWebView.setVisible(true);
 				ftOut.setOnFinished((ActionEvent event) ->
 				{
-					staticLoadingScreen.setVisible(false);
+					staticLoadingPane.setVisible(false);
 				});
 			});
 	}

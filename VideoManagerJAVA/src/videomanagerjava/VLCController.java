@@ -50,17 +50,24 @@ public class VLCController
 
 	public static void playAllFollowing(Episode[] array, boolean withSubtitles)
 	{
-		playEpisode(array[0], withSubtitles);
-		followingEpisodes = array;
-		final String command = "command=in_enqueue&input=";
-		for (int i = 1; i < array.length; i++)
+		final Thread thread = new Thread(() ->
 		{
-			final THashMap<String, String> properties = array[i].getProperties();
-			if (sendRequest(command + properties.get("path")) == null)
-				break;
-			if (withSubtitles)
-				getSubtitles(properties);
-		}
+			playEpisode(array[0], withSubtitles);
+			followingEpisodes = array;
+			final String command = "command=in_enqueue&input=";
+			for (int i = 1; i < array.length; i++)
+			{
+				final THashMap<String, String> properties = array[i].getProperties();
+				if (sendRequest(command + properties.get("path")) == null)
+					break;
+				if (withSubtitles)
+					getSubtitles(properties);
+			}
+		});
+
+		MainController.startLoading(thread, "Launching media");
+		thread.start();
+
 	}
 
 	public static void play(final Episode episode, boolean withSubtitles)
@@ -69,7 +76,8 @@ public class VLCController
 		{
 			playEpisode(episode, withSubtitles);
 		});
-		MainController.startLoading();
+
+		MainController.startLoading(thread, "Launching media");
 		thread.start();
 	}
 
@@ -82,17 +90,33 @@ public class VLCController
 		final String path = properties.get("path");
 
 		if (withSubtitles)
-			getSubtitles(properties);
+		{
+			MainController.logLoadingScreen("Searching for subtitles");
+			Process process = getSubtitles(properties);
+			if (process != null)
+				try
+				{
+					MainController.logLoadingScreen("Downloading subtitles");
+					process.waitFor();
+				} catch (InterruptedException ex)
+				{
+					return;
+				}
+			else
+				return;
+		}
 
 //		If the request is null, we must launch VLC and wait for it to be prepared
 		if (sendRequest("command=pl_empty") == null)
+		{
+			MainController.logLoadingScreen("Starting VLC");
 			runVLC(path);
+		}
 		else
 			sendRequest("command=in_play&input=" + path);
 
-		Logger.getLogger(VLCController.class.getName()).log(Level.INFO, "Waiting for VLC and getting filename");
-
 		String sendRequest = null;
+		MainController.logLoadingScreen("Waiting for VLC");
 		while (currentId == -1)
 		{
 			sendRequest = sendRequest("command=seek&val=" + properties.get("time"));
@@ -118,7 +142,7 @@ public class VLCController
 		MainController.stopLoading();
 	}
 
-	private static void getSubtitles(final THashMap<String, String> properties)
+	private static Process getSubtitles(final THashMap<String, String> properties)
 	{
 		try
 		{
@@ -127,10 +151,11 @@ public class VLCController
 			String directory = "\"" + file.getParent() + "\"";
 			String name = "\"" + file.getName() + "\"";
 			Process process = Runtime.getRuntime().exec(String.format("%s -l en -d %s %s", cmd, directory, name));
-			process.waitFor();
-		} catch (IOException | InterruptedException | URISyntaxException ex)
+			return process;
+		} catch (IOException | URISyntaxException ex)
 		{
 			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
+			return null;
 		}
 	}
 
