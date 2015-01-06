@@ -61,6 +61,13 @@ public class Media
 		setInfo("img", img);
 	}
 
+	private String infoToString(JSONObject jobj, String key)
+	{
+		Object newInfo = jobj.get(key);
+		newInfo = (newInfo == null) ? "Unknown" : newInfo.toString();
+		return (String) newInfo;
+	}
+
 	public void downloadInfos()
 	{
 		final String formattedName = Utils.removeSeason(info.get("name"));
@@ -90,27 +97,45 @@ public class Media
 			for (Object obj : array)
 			{
 				JSONObject jobj = (JSONObject) obj;
-				String newYear = (String) jobj.get("year");
-				newYear = (newYear == null) ? "Unknown" : newYear;
+				String newYear = infoToString(jobj, "year");
 				if (infoList.get("year") == null || newYear.equals(infoList.get("year")))
 					try
 					{
 						setInfo("year", newYear);
-						setInfo("overview", jobj.get("overview").toString());
-						setInfo("genres", jobj.get("genres").toString());
-						setInfo("imdb", jobj.get("imdb_id").toString());
-						setInfo("duration", jobj.get("runtime").toString());
+						setInfo("overview", infoToString(jobj, "overview"));
+						setInfo("genres", infoToString(jobj, "genres"));
+						setInfo("imdb", infoToString(jobj, "imdb_id"));
+						setInfo("duration", infoToString(jobj, "runtime"));
 
 						final String imdbJson = Downloader.downloadString("http://www.omdbapi.com/?i="
 																		  + infoList.get("imdb")
 																		  + "&plot=short&r=json");
 						JSONObject jobjImdb = (JSONObject) parser.parse(imdbJson);
-						setInfo("imdbRating", jobjImdb.get("imdbRating").toString());
+						setInfo("imdbRating", infoToString(jobjImdb, "imdbRating"));
 
-						String imgURL = (String) ((JSONObject) jobj.get("images")).get("poster");
-						imgURL = imgURL.replace(".jpg", "-300.jpg");
-
-						setInfo("img", Downloader.downloadImage(imgURL));
+						final JSONObject images = (JSONObject) jobj.get("images");
+						if (images != null)
+						{
+							String imgURL = (String) images.get("poster");
+							if (imgURL != null)
+							{
+								// We first try and download the medium quality poster
+								imgURL = imgURL.replace(".jpg", "-300.jpg");
+								String downloadedImage = Downloader.downloadImage(imgURL);
+								// If there is no error, we set the image
+								if (downloadedImage != null)
+									setInfo("img", downloadedImage);
+								// If there was an error, we retry with the normal poster
+								else
+								{
+									imgURL = imgURL.replace("-300.jpg", ".jpg");
+									downloadedImage = Downloader.downloadImage(imgURL);
+									// If there is no error, we set the image
+									if (downloadedImage != null)
+										setInfo("img", downloadedImage);
+								}
+							}
+						}
 						break;
 					} catch (Exception ex)
 					{
