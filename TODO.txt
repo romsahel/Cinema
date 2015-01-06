@@ -4,8 +4,13 @@ User must be able to hide banner info details
 Sort by date, etc.
 State (unavailable, available)
 Loading icon (at launch, when starting VLC)
+Loading screen for OK and Fetch in edit dialog,
+Loading screen status when downloading info
+In edit dialog, instead of link to image, add link to traktv
+Timer to shutdoxn
 Progress bar representing time of episode
 Look into HPPC library to decrease memory usage
+Bug: added two medias that could not be identified on traktv, they merged together
 
 ====
 Requirements:
