@@ -90,7 +90,8 @@ public class Media
 			for (Object obj : array)
 			{
 				JSONObject jobj = (JSONObject) obj;
-				final String newYear = jobj.get("year").toString();
+				String newYear = (String) jobj.get("year");
+				newYear = (newYear == null) ? "Unknown" : newYear;
 				if (infoList.get("year") == null || newYear.equals(infoList.get("year")))
 					try
 					{
@@ -111,10 +112,11 @@ public class Media
 
 						setInfo("img", Downloader.downloadImage(imgURL));
 						break;
-					} catch (Exception e)
+					} catch (Exception ex)
 					{
 						System.err.println("====");
 						System.err.println(url);
+						Logger.getLogger(Media.class.getName()).log(Level.SEVERE, url, ex);
 					}
 			}
 		} catch (ParseException ex)

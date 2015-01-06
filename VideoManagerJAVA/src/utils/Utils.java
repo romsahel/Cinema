@@ -83,7 +83,7 @@ public class Utils
 		toFormat = toFormat.replaceAll("_", " ");
 		toFormat = toFormat.replaceAll("[(]?(19|20)[0-9]{2}[)]?", "");
 
-		return new String(toFormat.trim());
+		return toFormat.trim();
 	}
 
 	public static String removeSeason(String toFormat)
