@@ -13,7 +13,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
@@ -63,95 +62,70 @@ public class Media
 
 	private String infoToString(JSONObject jobj, String key)
 	{
+		return infoToString(jobj, key, "Unknown");
+	}
+
+	private String infoToString(JSONObject jobj, String key, String defaultAnswer)
+	{
 		Object newInfo = jobj.get(key);
-		newInfo = (newInfo == null) ? "Unknown" : newInfo.toString();
+		newInfo = (newInfo == null) ? defaultAnswer : newInfo.toString();
 		return (String) newInfo;
 	}
 
-	public void downloadInfos()
+	public String downloadInfos()
 	{
 		final String formattedName = Utils.removeSeason(info.get("name"));
 		final THashMap<String, String> infoList = getInfo();
-		final int limit = infoList.get("year") == null ? 1 : 3;
-		String url = "http://api.trakt.tv/search/movies.json/5921de65414d60b220c6296761061a3b?query="
+		final String year = (infoList.get("year") == null) ? "" : "&y=" + infoList.get("year");
+
+		String url = "http://www.omdbapi.com/?t="
 					 + formattedName.replace(" ", "+")
-					 + "&limit=" + limit;
+					 + year + "&plot=full&r=json";
+
 		String type = infoList.get("type");
-		if ((type == null && !formattedName.equals(info.get("name")))
-			|| (type != null && type.equals("show")))
+		if (type == null)
 		{
-			setInfo("type", "show");
-			url = url.replace("movies.json", "shows.json");
+			if (!formattedName.equals(info.get("name")))
+				url += "&type=series";
+			else if (year.length() > 0)
+				url += "&type=movie";
 		}
+		else if (type.equals("show"))
+			url += "&type=series";
 		else
-			setInfo("type", "movie");
+			url += "&type=movie";
 
 		Logger.getLogger(Media.class.getName()).log(Level.INFO, formattedName.replace(" ", "+"));
 		Logger.getLogger(Media.class.getName()).log(Level.INFO, url);
 
 		JSONParser parser = new JSONParser();
+		final String json = Downloader.downloadString(url);
+		JSONObject jobj;
 		try
 		{
-			final String json = Downloader.downloadString(url);
-			JSONArray array = (JSONArray) parser.parse(json);
-			for (Object obj : array)
-			{
-				JSONObject jobj = (JSONObject) obj;
-				String newYear = infoToString(jobj, "year");
-				if (infoList.get("year") == null || newYear.equals(infoList.get("year")))
-					try
-					{
-						setInfo("year", newYear);
-						setInfo("overview", infoToString(jobj, "overview"));
-						setInfo("genres", infoToString(jobj, "genres"));
-						setInfo("imdb", infoToString(jobj, "imdb_id"));
-						setInfo("duration", infoToString(jobj, "runtime"));
+			jobj = (JSONObject) parser.parse(json);
+			setInfo("year", infoToString(jobj, "Year", "2999"));
+			setInfo("overview", infoToString(jobj, "Plot", "There is no plot description."));
+			setInfo("imdb", infoToString(jobj, "imdbID", ""));
+			setInfo("duration", infoToString(jobj, "Runtime", "0 min"));
+			setInfo("imdbRating", infoToString(jobj, "imdbRating", "0.0"));
+			setInfo("type", infoToString(jobj, "imdbRating", null).replace("series", "show"));
+			String genres = infoToString(jobj, "Genre");
+			if (!genres.equals("Unknown"))
+				genres = '"' + genres.replace(",", "\", \"") + '"';
+			setInfo("genres", '[' + genres + ']');
 
-						final String imdbJson = Downloader.downloadString("http://www.omdbapi.com/?i="
-																		  + infoList.get("imdb")
-																		  + "&plot=short&r=json");
-						JSONObject jobjImdb = (JSONObject) parser.parse(imdbJson);
-						setInfo("imdbRating", infoToString(jobjImdb, "imdbRating"));
-
-						final JSONObject images = (JSONObject) jobj.get("images");
-						if (images != null)
-						{
-							String imgURL = (String) images.get("poster");
-							if (imgURL != null)
-							{
-								// We first try and download the medium quality poster
-								imgURL = imgURL.replace(".jpg", "-300.jpg");
-								String downloadedImage = Downloader.downloadImage(imgURL);
-								// If there is no error, we set the image
-								if (downloadedImage != null)
-									setInfo("img", downloadedImage);
-								// If there was an error, we retry with the normal poster
-								else
-								{
-									imgURL = imgURL.replace("-300.jpg", ".jpg");
-									downloadedImage = Downloader.downloadImage(imgURL);
-									// If there is no error, we set the image
-									if (downloadedImage != null)
-										setInfo("img", downloadedImage);
-								}
-							}
-						}
-						break;
-					} catch (Exception ex)
-					{
-						System.err.println("====");
-						System.err.println(url);
-						Logger.getLogger(Media.class.getName()).log(Level.SEVERE, url, ex);
-					}
-			}
+			String downloadedImage = Downloader.downloadImage(infoToString(jobj, "Poster", null));
+			if (downloadedImage != null)
+				setInfo("img", downloadedImage);
+			return downloadedImage;
 		} catch (ParseException ex)
 		{
+			System.err.println("====");
+			System.err.println(url);
 			Logger.getLogger(Media.class.getName()).log(Level.SEVERE, url, ex);
-		} finally
-		{
-			if (infoList.get("img") == null)
-				setInfo("img", "unknown.jpg");
 		}
+		return null;
 	}
 
 	/**

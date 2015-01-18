@@ -50,11 +50,16 @@
     nbproject/build-impl.xml and nbproject/jfx-impl.xml.
 
 	-->
+	<condition property="add_path" value="/Documents" else="">
+		<os family="windows" />
+	</condition>
 	<target name="-pre-init">
-		<copy todir="./public_html">
+		<echo message="Copying to this path: ${user.home}${add_path}/.cinema/public_html"/>
+		<copy todir="${user.home}${add_path}/.cinema/public_html" >
 			<fileset dir="../VideoManagerHTML/public_html"/>
 		</copy>
 	</target>
+
 	<target name="package-for-windows" depends="clean,compile,jar">
 		<property name="launch4jexe.dir" location="C:\Program Files (x86)\Launch4j" />
 		<taskdef name="launch4j"
@@ -82,7 +87,7 @@
 		<launch4j configFile="launch4j.xml" />
 	</target>
 
-<!--	<taskdef name="bundleapp"
+	<!--	<taskdef name="bundleapp"
 			  classname="com.oracle.appbundler.AppBundlerTask"
 			  classpath="lib/appbundler-1.0.jar" />
 	<target name="package-for-osx">

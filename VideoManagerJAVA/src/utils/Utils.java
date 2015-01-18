@@ -30,6 +30,9 @@ public class Utils
 
 	private static String fileSeparator = null;
 
+	private static final String sub = (System.getProperty("os.name").contains("Windows")) ? "/Documents/" : "";
+	public static final String APPDATA = System.getProperty("user.home") + sub + "/.cinema/";
+
 	public static String getPrefix(String src, String... delimiter)
 	{
 		int i = findIndex(src, delimiter);

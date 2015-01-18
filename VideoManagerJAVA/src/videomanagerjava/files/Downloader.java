@@ -25,7 +25,7 @@ import utils.Utils;
 public class Downloader
 {
 
-	public static final String POSTER_PATH = "public_html/media/posters/";
+	public static final String POSTER_PATH = Utils.APPDATA + "public_html/media/posters/";
 
 	public static String downloadString(String urlString)
 	{
@@ -58,6 +58,9 @@ public class Downloader
 
 	public static String downloadImage(String urlString)
 	{
+		if (urlString == null)
+			return null;
+
 		final String hash = String.valueOf(urlString.hashCode());
 		final String filename = POSTER_PATH + hash;
 		File f = new File(filename);

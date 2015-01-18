@@ -12,7 +12,8 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
 import javafx.concurrent.Worker;
 import javafx.scene.web.WebEngine;
@@ -33,15 +34,13 @@ public final class CWebEngine
 
 	private static final ArrayList<Media> medias = new ArrayList<>();
 	private static ExecutorService executor = null;
-	private static WebView webView;
 	private static WebEngine webEngine;
 	private static int newItems;
 
 	public CWebEngine(WebView webBrowser)
 	{	// Obtain the webEngine to navigate
-		webView = webBrowser;
 		webEngine = webBrowser.getEngine();
-		webEngine.load("file:///" + new File("public_html/index.html").getAbsolutePath().replace('\\', '/'));
+		webEngine.load("file:///" + new File(Utils.APPDATA + "public_html/index.html").getAbsolutePath().replace('\\', '/'));
 		webEngine.getLoadWorker().stateProperty().addListener(new CChangeListener());
 
 		((JSObject) webEngine.executeScript("window")).setMember("app", new JsToJava());
@@ -71,22 +70,11 @@ public final class CWebEngine
 
 	public static void refreshList()
 	{
-//		webView.setVisible(false);
 		Utils.callFuncJS(webEngine, "emptyMediaList");
 
-		//	wait for the info-getting job to be terminated
-		while (executor == null);
-		try
-		{
-			executor.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-		} catch (InterruptedException e)
-		{
-		}
-
-		if (newItems > 0)
-			mergeByPoster();
-		newItems = 0;
-
+//		if (newItems > 0)
+//			mergeByPoster();
+//		newItems = 0;
 		for (Media o : medias)
 		{
 			if (o == null)
@@ -108,7 +96,9 @@ public final class CWebEngine
 
 	private static void getImages()
 	{
-		executor = java.util.concurrent.Executors.newFixedThreadPool(4);
+		int cores = Runtime.getRuntime().availableProcessors();
+		System.out.println(cores + " cores available!");
+		executor = java.util.concurrent.Executors.newFixedThreadPool(cores);
 		if (medias == null)
 			return;
 
@@ -121,8 +111,15 @@ public final class CWebEngine
 				@Override
 				public void run()
 				{
-					if (o.getInfo().get("img") == null)
-						o.downloadInfos();
+					final String previousImg = o.getInfo().get("img");
+					if (previousImg == null)
+					{
+						final String newImg = o.downloadInfos();
+						if (newImg != null && Database.getInstance().getDatabase().containsKey(o.getId()))
+							Utils.callFuncJS(webEngine, "updateMedia", Long.toString(o.getId()), o.toJSArray());
+
+						Logger.getLogger(CWebEngine.class.getName()).log(Level.INFO, "Img downloaded: {0}", o.getInfo().get("name"));
+					}
 				}
 			};
 			executor.execute(t);
@@ -188,6 +185,7 @@ public final class CWebEngine
 			if (newValue != Worker.State.SUCCEEDED)
 				return;
 
+			main.Main.setReady(true);
 			for (Map.Entry<String, Location> next : Settings.getInstance().getLocations().entrySet())
 				Utils.callFuncJS(webEngine, "addLocation", next.getKey());
 

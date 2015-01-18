@@ -320,7 +320,7 @@ header > .select, #detail-genres {
 	height:14px;
 	background-size: contain;
 	position: relative;
-	top: 2px;
+	top: 1px;
 }
 
 .full_star {

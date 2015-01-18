@@ -12,7 +12,7 @@ function updateDetails(media)
 	for (var key in detailsToUpdate)
 		detailsToUpdate[key].text(info[key]);
 
-	detailsToUpdate.duration.text(detailsToUpdate.duration.text() + " min");
+	detailsToUpdate.duration.text(detailsToUpdate.duration.text());
 
 	$("#detail-imdb img").attr("alt", "http://www.imdb.com/title/" + info.imdb + "/");
 	$(banner).find(".stars").empty();
@@ -42,7 +42,8 @@ function updateDetails(media)
 
 	$("#detail").fadeTo(200, 1);
 
-	$('#detail-poster').attr('src', 'media/posters/' + info.img);
+	var img = (info.img === null) ? "unknown.jpg" : info.img;
+	$('#detail-poster').attr('src', 'media/posters/' + img);
 }
 
 function updateDetailFiles()

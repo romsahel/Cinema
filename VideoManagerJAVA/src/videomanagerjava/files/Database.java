@@ -19,6 +19,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.Utils;
 import videomanagerjava.Episode;
 import videomanagerjava.Media;
 
@@ -43,7 +44,7 @@ public class Database
 		for (Map.Entry<Long, Media> media : getDatabase().entrySet())
 			db.add(writeMedia(media.getKey(), media.getValue()));
 
-		try (FileWriter file = new FileWriter("db.json"))
+		try (FileWriter file = new FileWriter(Utils.APPDATA + "db.json"))
 		{
 			file.write(JSONArray.toJSONString(db));
 			file.flush();
@@ -80,7 +81,7 @@ public class Database
 		{
 			JSONParser parser = new JSONParser();
 
-			Object obj = parser.parse(new FileReader("db.json"));
+			Object obj = parser.parse(new FileReader(Utils.APPDATA + "db.json"));
 
 			JSONArray db = (JSONArray) obj;
 
@@ -96,9 +97,6 @@ public class Database
 			System.err.println("Could not read database");
 			Logger.getLogger(Database.class.getName()).log(Level.INFO, null, ex);
 		}
-
-		for (Map.Entry<Long, Media> next : getDatabase().entrySet())
-			System.out.println(next.getKey() + ": " + next.getValue());
 	}
 
 	private Media readMedia(long id, JSONObject elt)

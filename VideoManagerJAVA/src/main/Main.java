@@ -36,6 +36,7 @@ public class Main extends Application
 {
 
 	private static Stage stage;
+	private static boolean isReady;
 
 	/**
 	 * @return the stage
@@ -43,6 +44,14 @@ public class Main extends Application
 	public static Stage getStage()
 	{
 		return stage;
+	}
+
+	/**
+	 * @param ready the isReady to set
+	 */
+	public static void setReady(boolean ready)
+	{
+		isReady = ready;
 	}
 
 	@Override
@@ -65,18 +74,21 @@ public class Main extends Application
 		stage.setOnCloseRequest((WindowEvent we) ->
 		{
 			stage.hide();
-			final THashMap<String, String> general = Settings.getInstance().getGeneral();
 
-			general.put("currentMedia", (String) webEngine.executeScript("getCurrentId()"));
-			general.put("currentSeason", (String) webEngine.executeScript("$(\"#seasons .selected\").text()"));
-			general.put("currentEpisode", (String) webEngine.executeScript("$(\"#episodes > .selected > .selected > div\").text()"));
-			general.put("playList", '\\' + (String) webEngine.executeScript("playList.toString()"));
-			general.put("withSubtitles", '\\' + (String) webEngine.executeScript("withSubtitles.toString()"));
+			if (isReady)
+			{
+				final THashMap<String, String> general = Settings.getInstance().getGeneral();
+				general.put("currentMedia", (String) webEngine.executeScript("getCurrentId()"));
+				general.put("currentSeason", (String) webEngine.executeScript("$(\"#seasons .selected\").text()"));
+				general.put("currentEpisode", (String) webEngine.executeScript("$(\"#episodes > .selected > .selected > div\").text()"));
+				general.put("playList", '\\' + (String) webEngine.executeScript("playList.toString()"));
+				general.put("withSubtitles", '\\' + (String) webEngine.executeScript("withSubtitles.toString()"));
+				Settings.getInstance().writeSettings();
 
-			Settings.getInstance().writeSettings();
+				if (!VLCController.cancelTimer(true))
+					Database.getInstance().writeDatabase();
+			}
 
-			if (!VLCController.cancelTimer(true))
-				Database.getInstance().writeDatabase();
 		});
 
 //		adding context menu

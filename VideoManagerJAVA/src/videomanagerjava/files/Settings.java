@@ -17,6 +17,7 @@ import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.Utils;
 import videomanagerjava.Location;
 
 /**
@@ -42,7 +43,7 @@ public class Settings
 		writeMap("locations", locations, obj);
 		writeMap("general", general, obj);
 
-		try (FileWriter file = new FileWriter("config.json"))
+		try (FileWriter file = new FileWriter(Utils.APPDATA + "config.json"))
 		{
 			file.write(JSONObject.toJSONString(obj));
 			file.flush();
@@ -64,7 +65,7 @@ public class Settings
 		{
 			JSONParser parser = new JSONParser();
 
-			Object obj = parser.parse(new FileReader("config.json"));
+			Object obj = parser.parse(new FileReader(Utils.APPDATA + "config.json"));
 
 			JSONObject jsonObject = (JSONObject) obj;
 
