@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.beans.value.ObservableValue;
@@ -72,9 +73,6 @@ public final class CWebEngine
 	{
 		Utils.callFuncJS(webEngine, "emptyMediaList");
 
-//		if (newItems > 0)
-//			mergeByPoster();
-//		newItems = 0;
 		for (Media o : medias)
 		{
 			if (o == null)
@@ -92,6 +90,18 @@ public final class CWebEngine
 		Utils.callFuncJS(webEngine, "$(\"#locationsList > li\")[0].click");
 
 		MainController.stopLoading();
+		if (newItems > 0)
+		{
+			try
+			{
+				executor.awaitTermination(1, TimeUnit.DAYS);
+			} catch (InterruptedException ex)
+			{
+				Logger.getLogger(CWebEngine.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			mergeByPoster();
+			newItems = 0;
+		}
 	}
 
 	private static void getImages()
@@ -127,7 +137,7 @@ public final class CWebEngine
 		executor.shutdown();
 	}
 
-	private static void mergeByPoster()
+	public static void mergeByPoster()
 	{
 		final THashMap<Long, Media> database = Database.getInstance().getDatabase();
 		ArrayList<Media> toDelete = new ArrayList<>();

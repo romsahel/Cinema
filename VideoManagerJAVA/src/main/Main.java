@@ -58,7 +58,7 @@ public class Main extends Application
 	public void start(Stage primaryStage)
 	{
 		stage = primaryStage;
-		stage.initStyle(StageStyle.UNDECORATED);
+		stage.initStyle(StageStyle.TRANSPARENT);
 
 		final MainController fxml;
 		fxml = new MainController(stage);
@@ -104,7 +104,7 @@ public class Main extends Application
 
 		stage.setTitle("Video Manager");
 		stage.setScene(scene);
-		stage.setMinWidth(915);
+
 		ResizeHelper.addResizeListener(stage);
 		stage.show();
 	}
@@ -117,7 +117,7 @@ public class Main extends Application
 		Handler handler = null;
 		try
 		{
-			handler = new FileHandler("log/cinema-log.xml");
+			handler = new FileHandler(utils.Utils.APPDATA + "log/cinema-log.xml");
 			handler.setFormatter(new Formatter()
 			{
 				@Override

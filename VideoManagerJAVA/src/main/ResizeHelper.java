@@ -49,7 +49,7 @@ class ResizeHelper
 
 		private final Stage stage;
 		private Cursor cursorEvent = Cursor.DEFAULT;
-		private final int border = 4;
+		private final int border = 5;
 		private double startX = 0;
 		private double startY = 0;
 

@@ -110,6 +110,7 @@ public final class EditableTreeCell extends TreeCell<String>
 					seasons.put(text, seasons.get(string));
 					seasons.remove(string);
 				}
+				media.setInfo("edited", "true");
 				commitEdit(text);
 			}
 			else if (t.getCode() == KeyCode.ESCAPE)

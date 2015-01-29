@@ -26,6 +26,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import videomanagerjava.CWebEngine;
 import videomanagerjava.Episode;
 import videomanagerjava.Media;
 import videomanagerjava.files.Database;
@@ -56,6 +57,7 @@ public class EditDialogController extends AnchorPane
 	private final Stage stage;
 	private final Delta dragDelta = new Delta();
 	private final Media media;
+	private String newImg;
 
 	public EditDialogController(EditDialog parent, Media media)
 	{
@@ -65,9 +67,11 @@ public class EditDialogController extends AnchorPane
 		final String text = info.get("name");
 		titleField.setText(text);
 		windowTitle.setText(text);
-		typeCombo.getSelectionModel().select(info.get("type").equals("show") ? 1 : 0);
+		boolean isShow = (info.get("type") != null && info.get("type").equals("show"));
+		typeCombo.getSelectionModel().select(isShow ? 1 : 0);
 
-		File f = new File(Downloader.POSTER_PATH + info.get("img"));
+		final String img = info.get("img");
+		File f = new File(Downloader.POSTER_PATH + ((img == null) ? "unknown.jpg" : img));
 		imageView.setImage(new Image(f.toURI().toString()));
 
 		initTree(media);
@@ -139,16 +143,31 @@ public class EditDialogController extends AnchorPane
 
 		final String title = titleField.getText().trim();
 		final String type = typeCombo.getSelectionModel().getSelectedItem().toLowerCase();
-		if (force || (!info.get("name").equals(title) || !info.get("type").equals(type)))
+
+		if (force)
 		{
-			media.setInfo("type", type);
-			media.setInfo("name", title);
-			if (force)
-				media.downloadInfos();
+			media.downloadInfos(true);
+			CWebEngine.mergeByPoster();
+		}
+		else
+		{
+			boolean shouldUpdate;
+			if ((shouldUpdate = info.containsKey("edited")))
+				info.remove("edited");
+
+			if (!info.get("name").equals(title) || !info.get("type").equals(type) || newImg != null)
+			{
+				media.setInfo("type", type);
+				media.setInfo("name", title);
+				media.setInfo("img", newImg);
+				shouldUpdate = true;
+			}
+
+			if (shouldUpdate)
+				utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
+									   "updateMedia", Long.toString(media.getId()), media.toJSArray());
 		}
 
-		utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
-							   "updateMedia", Long.toString(media.getId()), media.toJSArray());
 		Database.getInstance().writeDatabase();
 		parent.hide();
 	}
@@ -162,11 +181,23 @@ public class EditDialogController extends AnchorPane
 	@FXML
 	protected void onRefresh()
 	{
-		final THashMap<String, String> info = media.getInfo();
-		final String image = Downloader.downloadImage(urlField.getText());
-		info.put("img", image);
-
-		File f = new File(Downloader.POSTER_PATH + image);
+		File f;
+		final String field = urlField.getText();
+		if (field.contains("imdb.com") || field.startsWith("tt"))
+		{
+			String id = field.replace("http://", "");
+			id = id.replace("www.imdb.com/title/", "");
+			final int index = id.indexOf("/");
+			if (index > 0)
+				id = id.substring(0, index);
+			media.downloadInfos("http://www.omdbapi.com/?i=" + id + "&plot=full&r=json");
+			f = new File(Downloader.POSTER_PATH + media.getInfo().get("img"));
+		}
+		else
+		{
+			newImg = Downloader.downloadImage(field);
+			f = new File(Downloader.POSTER_PATH + newImg);
+		}
 		imageView.setImage(new Image(f.toURI().toString()));
 	}
 

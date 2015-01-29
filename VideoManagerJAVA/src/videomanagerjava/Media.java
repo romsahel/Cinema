@@ -74,16 +74,23 @@ public class Media
 
 	public String downloadInfos()
 	{
+		return downloadInfos(false);
+	}
+
+	public String downloadInfos(boolean ignoreOldInfos)
+	{
+		setInfo("loading", "true");
 		final String formattedName = Utils.removeSeason(info.get("name"));
 		final THashMap<String, String> infoList = getInfo();
-		final String year = (infoList.get("year") == null) ? "" : "&y=" + infoList.get("year");
+		final String year = (infoList.get("year") == null
+							 || ignoreOldInfos) ? "" : "&y=" + infoList.get("year");
 
 		String url = "http://www.omdbapi.com/?t="
 					 + formattedName.replace(" ", "+")
 					 + year + "&plot=full&r=json";
 
 		String type = infoList.get("type");
-		if (type == null)
+		if (type == null || ignoreOldInfos)
 		{
 			if (!formattedName.equals(info.get("name")))
 				url += "&type=series";
@@ -95,36 +102,43 @@ public class Media
 		else
 			url += "&type=movie";
 
-		Logger.getLogger(Media.class.getName()).log(Level.INFO, formattedName.replace(" ", "+"));
-		Logger.getLogger(Media.class.getName()).log(Level.INFO, url);
+		return downloadInfos(url);
+	}
 
+	public String downloadInfos(String url)
+	{
+		Logger.getLogger(Media.class.getName()).log(Level.INFO, url);
 		JSONParser parser = new JSONParser();
 		final String json = Downloader.downloadString(url);
 		JSONObject jobj;
 		try
 		{
 			jobj = (JSONObject) parser.parse(json);
-			setInfo("year", infoToString(jobj, "Year", "2999"));
-			setInfo("overview", infoToString(jobj, "Plot", "There is no plot description."));
-			setInfo("imdb", infoToString(jobj, "imdbID", ""));
-			setInfo("duration", infoToString(jobj, "Runtime", "0 min"));
-			setInfo("imdbRating", infoToString(jobj, "imdbRating", "0.0"));
-			setInfo("type", infoToString(jobj, "imdbRating", null).replace("series", "show"));
-			String genres = infoToString(jobj, "Genre");
-			if (!genres.equals("Unknown"))
-				genres = '"' + genres.replace(",", "\", \"") + '"';
-			setInfo("genres", '[' + genres + ']');
+			if (jobj.get("Title") != null)
+			{
+				setInfo("year", infoToString(jobj, "Year", null));
+				setInfo("overview", infoToString(jobj, "Plot", "There is no plot description."));
+				setInfo("imdb", infoToString(jobj, "imdbID", ""));
+				setInfo("duration", infoToString(jobj, "Runtime", "0 min"));
+				setInfo("imdbRating", infoToString(jobj, "imdbRating", "0.0"));
+				setInfo("type", infoToString(jobj, "Type").replace("series", "show"));
+				String genres = '"' + infoToString(jobj, "Genre").replace(",", "\", \"") + '"';
+				setInfo("genres", '[' + genres + ']');
+				String downloadedImage = Downloader.downloadImage(infoToString(jobj, "Poster", null));
+				if (downloadedImage != null)
+					setInfo("img", downloadedImage);
 
-			String downloadedImage = Downloader.downloadImage(infoToString(jobj, "Poster", null));
-			if (downloadedImage != null)
-				setInfo("img", downloadedImage);
-			return downloadedImage;
+				info.remove("loading");
+				return downloadedImage;
+			}
 		} catch (ParseException ex)
 		{
 			System.err.println("====");
 			System.err.println(url);
 			Logger.getLogger(Media.class.getName()).log(Level.SEVERE, url, ex);
 		}
+		
+		info.remove("loading");
 		return null;
 	}
 

@@ -21,7 +21,9 @@ function seenNextEpisode(name, index)
 
 function updateMedia(id, array)
 {
-	$("#" + id).fadeTo(200, 0, function ()
+	var elt = $("#" + id);
+	var selected = elt.hasClass("selected");
+	elt.fadeTo(200, 0, function ()
 	{
 		$(this).remove();
 		currentMedia = null;
@@ -29,7 +31,8 @@ function updateMedia(id, array)
 		newMedia.style.opacity = 0;
 		$(newMedia).fadeTo(600, 1);
 		sortMediaList();
-		newMedia.click();
+		if (selected)
+			newMedia.click();
 	});
 }
 

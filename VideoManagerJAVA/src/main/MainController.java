@@ -49,15 +49,18 @@ public class MainController extends BorderPane
 	private double dragDeltaX;
 	private double dragDeltaY;
 	private final Stage stage;
+	private final Screen screen;
 
 	public MainController(Stage stage)
 	{
 		load();
+
+		screen = Screen.getPrimary();
+
 		staticLoadingScreen = loadingScreen;
 		staticWebView = webView;
 		staticLoadingLabel = loadingLabel;
 		staticLoadingPane = loadingPane;
-
 
 		loadingScreenInterface = new LoadingScreenInterface();
 		((JSObject) loadingScreen.getEngine().executeScript("window")).setMember("app", loadingScreenInterface);
@@ -67,6 +70,22 @@ public class MainController extends BorderPane
 
 		loadingScreen.getEngine().load(getClass().getResource("loadingScreen.html").toExternalForm());
 		this.stage = stage;
+
+		int width = 940;
+		int height = 640;
+		this.setMinWidth(width);
+		this.setMinHeight(height);
+
+		Rectangle2D bounds = screen.getVisualBounds();
+		final double maxY = bounds.getMaxY() * 0.85;
+		final double maxX = bounds.getMaxX() * 0.85;
+		while (width < maxX && height < maxY)
+		{
+			width *= 1.1;
+			height *= 1.1;
+		}
+		this.setPrefWidth(width);
+		this.setPrefHeight(height);
 	}
 
 	private void load() throws RuntimeException
@@ -84,6 +103,7 @@ public class MainController extends BorderPane
 		}
 
 	}
+
 
 	@FXML
 	protected void onDrag(MouseEvent mouseEvent)
@@ -117,7 +137,6 @@ public class MainController extends BorderPane
 		double x = stage.getX();
 		final double width = stage.getWidth();
 
-		Screen screen = Screen.getPrimary();
 		Rectangle2D bounds = screen.getVisualBounds();
 		final double minX = bounds.getMinX();
 		final double minY = bounds.getMinY();
