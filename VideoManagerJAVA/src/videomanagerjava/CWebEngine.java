@@ -77,6 +77,7 @@ public final class CWebEngine
 		{
 			if (o == null)
 				continue;
+			o.getInfo().remove("loading");
 			//	adds the media to the database
 			Database.getInstance().getDatabase().put(o.getId(), o);
 			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), o.toJSArray());
@@ -152,7 +153,8 @@ public final class CWebEngine
 				if (inner != null && !toDelete.contains(inner) && outer != inner)
 				{
 					final THashMap<String, String> inInfo = inner.getInfo();
-					if (outInfo.get("img").equals(inInfo.get("img")))
+					final String outImg = outInfo.get("img");
+					if (outImg != null && outImg.equals(inInfo.get("img")))
 					{
 						if (outSeason == null)
 							if (seasons.size() == 1)

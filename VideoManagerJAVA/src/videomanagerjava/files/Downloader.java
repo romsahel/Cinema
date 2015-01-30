@@ -58,7 +58,7 @@ public class Downloader
 
 	public static String downloadImage(String urlString)
 	{
-		if (urlString == null)
+		if (urlString == null || urlString.equals("N/A"))
 			return null;
 
 		final String hash = String.valueOf(urlString.hashCode());
@@ -87,6 +87,7 @@ public class Downloader
 			return hash;
 		} catch (IOException ex)
 		{
+			Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, urlString);
 			Logger.getLogger(Downloader.class.getName()).log(Level.SEVERE, null, ex);
 			return null;
 		}

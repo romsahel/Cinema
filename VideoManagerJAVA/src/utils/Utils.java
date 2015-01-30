@@ -154,7 +154,7 @@ public class Utils
 					js += ", ";
 			}
 
-			js += ")";
+			js += ");";
 			Logger.getLogger("").info(js);
 			webEngine.executeScript(js);
 		});

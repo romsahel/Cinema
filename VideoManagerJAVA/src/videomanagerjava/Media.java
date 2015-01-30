@@ -77,20 +77,20 @@ public class Media
 		return downloadInfos(false);
 	}
 
-	public String downloadInfos(boolean ignoreOldInfos)
+	public String downloadInfos(boolean ignoreYear)
 	{
 		setInfo("loading", "true");
 		final String formattedName = Utils.removeSeason(info.get("name"));
 		final THashMap<String, String> infoList = getInfo();
 		final String year = (infoList.get("year") == null
-							 || ignoreOldInfos) ? "" : "&y=" + infoList.get("year");
+							 || ignoreYear) ? "" : "&y=" + infoList.get("year");
 
 		String url = "http://www.omdbapi.com/?t="
 					 + formattedName.replace(" ", "+")
 					 + year + "&plot=full&r=json";
 
 		String type = infoList.get("type");
-		if (type == null || ignoreOldInfos)
+		if (type == null)
 		{
 			if (!formattedName.equals(info.get("name")))
 				url += "&type=series";
@@ -137,7 +137,7 @@ public class Media
 			System.err.println(url);
 			Logger.getLogger(Media.class.getName()).log(Level.SEVERE, url, ex);
 		}
-		
+
 		info.remove("loading");
 		return null;
 	}

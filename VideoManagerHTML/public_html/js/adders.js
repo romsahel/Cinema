@@ -5,12 +5,19 @@ function addMedia(id, array)
 	media.id = id;
 	media.getElementsByTagName("h4")[0].innerText = array.info.name;
 	var img = (array.info.img === null) ? "unknown.jpg" : array.info.img;
-	media.children[0].style.backgroundImage = "url('media/posters/" + img + "')";
+	img = (array.info.loading) ? "media/loading.gif" : "media/posters/" + img;
+	media.children[0].style.backgroundImage = "url('" + img + "')";
 
-	console.log(array.info.imdbRating)
-	var rating = (array.info.imdbRating == null) ? "0.0" : array.info.imdbRating;
-	var rateToAppend = createStars(rating);
-	rateToAppend = rateToAppend + '\n<p>' + rating + "/10" + '</p>';
+	var rateToAppend = "";
+	if (array.info.loading)
+		rateToAppend = '\n<p>Fetching data...</p>';
+	else
+	{
+		var rating = (array.info.imdbRating == null) ? "0.0" : array.info.imdbRating;
+		rateToAppend = createStars(rating);
+		rateToAppend = rateToAppend + '\n<p>' + rating + "/10" + '</p>';
+	}
+
 	media.getElementsByClassName("stars")[0].innerHTML = rateToAppend;
 
 	updateGenres(array.info.genres);

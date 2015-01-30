@@ -144,29 +144,27 @@ public class EditDialogController extends AnchorPane
 		final String title = titleField.getText().trim();
 		final String type = typeCombo.getSelectionModel().getSelectedItem().toLowerCase();
 
+		boolean shouldUpdate;
+		if ((shouldUpdate = info.containsKey("edited")))
+			info.remove("edited");
+
+		if (!info.get("name").equals(title) || !info.get("type").equals(type) || newImg != null)
+		{
+			media.setInfo("type", type);
+			media.setInfo("name", title);
+			media.setInfo("img", newImg);
+			shouldUpdate = true;
+		}
+
 		if (force)
 		{
 			media.downloadInfos(true);
 			CWebEngine.mergeByPoster();
 		}
-		else
-		{
-			boolean shouldUpdate;
-			if ((shouldUpdate = info.containsKey("edited")))
-				info.remove("edited");
 
-			if (!info.get("name").equals(title) || !info.get("type").equals(type) || newImg != null)
-			{
-				media.setInfo("type", type);
-				media.setInfo("name", title);
-				media.setInfo("img", newImg);
-				shouldUpdate = true;
-			}
-
-			if (shouldUpdate)
-				utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
-									   "updateMedia", Long.toString(media.getId()), media.toJSArray());
-		}
+		if (force || shouldUpdate)
+			utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
+								   "updateMedia", Long.toString(media.getId()), media.toJSArray());
 
 		Database.getInstance().writeDatabase();
 		parent.hide();
