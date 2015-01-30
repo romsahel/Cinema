@@ -10,7 +10,10 @@ function updateDetails(media)
 	episodes.empty();
 
 	for (var key in detailsToUpdate)
-		detailsToUpdate[key].text(info[key]);
+	{
+		var data = (info[key]) ? info[key] : "N/A";
+		detailsToUpdate[key].text(data);
+	}
 
 	detailsToUpdate.duration.text(detailsToUpdate.duration.text());
 
@@ -86,14 +89,14 @@ function updateDetailFiles()
 
 function updateDetailGenres(genres)
 {
-	if (!genres || genres.length <= 0)
-		return;
+	if (genres && genres.length > 0)
+		$("#detail-genres a").text(genres[0]);
+	else
+		$("#detail-genres a").text("N/A");
 
-	$("#detail-genres a").text(genres[0]);
 	$("#detailsGenreList").empty();
-
 	$("#detail-genres").unbind("click");
-	if (genres.length > 1)
+	if (genres && genres.length > 1)
 	{
 		$("#detail-genres").click(function () {
 			dropDownClick(this, '#detailsGenreList', true, true);

@@ -13,9 +13,11 @@ function addMedia(id, array)
 		rateToAppend = '\n<p>Fetching data...</p>';
 	else
 	{
-		var rating = (array.info.imdbRating == null) ? "0.0" : array.info.imdbRating;
-		rateToAppend = createStars(rating);
-		rateToAppend = rateToAppend + '\n<p>' + rating + "/10" + '</p>';
+		var rating = array.info.imdbRating;
+		if (rating)
+			rateToAppend = createStars(rating) + '\n<p>' + rating + "/10" + '</p>';
+		else
+			rateToAppend = "<p>No rating found...</p>";
 	}
 
 	media.getElementsByClassName("stars")[0].innerHTML = rateToAppend;
@@ -30,6 +32,8 @@ function addMedia(id, array)
 
 function createStars(imdbRating)
 {
+	if (!imdbRating)
+		return "<p>N/A</p>";
 	var remainingStars = 5;
 	var rateToAppend = "";
 	var rating = parseFloat(imdbRating) / 2;

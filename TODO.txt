@@ -13,6 +13,8 @@ Bug: added two medias that could not be identified on traktv, they merged togeth
 Ajouter choisir langage sous-titre
 Ajouter ouvrir dossier de fichier
 Entrée pour jouer
+Texte "Add a location" si vide
+Tuto
 ====
 Requirements:
 if subtitle module:
