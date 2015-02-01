@@ -22,7 +22,7 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import videomanagerjava.CContextMenu;
+import contextmenu.CContextMenu;
 import videomanagerjava.CWebEngine;
 import videomanagerjava.VLCController;
 import videomanagerjava.files.Database;

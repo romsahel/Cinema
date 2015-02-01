@@ -22,6 +22,7 @@ import org.json.simple.parser.ParseException;
 import utils.RequestUtils;
 import utils.Utils;
 import videomanagerjava.files.Database;
+import videomanagerjava.files.Settings;
 
 /**
  *
@@ -144,13 +145,20 @@ public class VLCController
 
 	private static Process getSubtitles(final THashMap<String, String> properties)
 	{
+		String language = Settings.getInstance().getGeneral().get("language");
+		if (language == null)
+			language = "en";
+		else
+			language = language.substring(0, 2).replace("G", "d").toLowerCase();
 		try
 		{
 			File file = new File(new URI("file:/" + properties.get("path").replace("\\", "/")));
 			String cmd = "C:\\Program Files (x86)\\Python\\Scripts\\subliminal.exe";
 			String directory = "\"" + file.getParent() + "\"";
 			String name = "\"" + file.getName() + "\"";
-			Process process = Runtime.getRuntime().exec(String.format("%s -l en -d %s %s", cmd, directory, name));
+			cmd = String.format("%s -l %s -d %s %s", cmd, language, directory, name);
+			Logger.getLogger(VLCController.class.getName()).log(Level.INFO, cmd);
+			Process process = Runtime.getRuntime().exec(cmd);
 			return process;
 		} catch (IOException | URISyntaxException ex)
 		{
