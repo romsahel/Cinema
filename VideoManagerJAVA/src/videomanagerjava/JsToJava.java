@@ -84,6 +84,7 @@ public class JsToJava
 
 	public void reload()
 	{
+		System.out.println("Reload");
 		CWebEngine.getWebEngine().reload();
 	}
 
@@ -136,5 +137,10 @@ public class JsToJava
 		}
 
 		return "";
+	}
+
+	public void debug(String message)
+	{
+		System.out.println(message);
 	}
 }

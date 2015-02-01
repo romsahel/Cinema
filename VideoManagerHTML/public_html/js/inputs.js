@@ -10,9 +10,9 @@ function goToLink(elt)
 
 function preventEnter(e)
 {
-	if (e.keyCode === 13)
-		return cancelEvent(e);
-	return;
+//	if (e.keyCode === 13)
+//		return cancelEvent(e);
+//	return;
 }
 
 var timeout = null;
@@ -38,10 +38,10 @@ function updateSearch(search)
 		else
 			div.stop().fadeIn(200);
 	}
-	if (search !== "")
-		timeout = setTimeout(function () {
-			selectFirstVisibleMedia();
-		}, 250);
+//	if (search !== "")
+	timeout = setTimeout(function () {
+		selectFirstVisibleMedia();
+	}, 250);
 }
 
 $(document).keypress(function (e) {
@@ -62,12 +62,14 @@ $(document).keypress(function (e) {
 });
 
 $(document).keyup(function (e) {
-	if (e.keyCode === 13)
+	if (e.keyCode === 13)    // enter
 	{
 		if (searchBar.is(":focus"))
 			searchBar.blur();
-	}     // enter
-	if (e.keyCode === 27)
+		else
+			playMedia();
+	}
+	else if (e.keyCode === 27)   // esc
 	{
 		if (searchBar.is(":focus"))
 			searchBar.blur();
@@ -77,7 +79,43 @@ $(document).keyup(function (e) {
 			updateSearch("");
 			selectFirstVisibleMedia();
 		}
-	}   // esc
+	}
+});
+
+repeatRateTimeout = null;
+$(document).keydown(function (e)
+{
+	var down = null;
+	if (e.keyCode === 38) // up
+		down = false;
+	else if (e.keyCode === 40) // down
+		down = true;
+
+	if (!searchBar.is(":focus") && repeatRateTimeout === null && down !== null)
+	{
+		repeatRateTimeout = setTimeout(function () {
+			repeatRateTimeout = null;
+		}, 150);
+
+		$("#files").focus();
+		var selection = $("#episodes > ul.selected > li.selected");
+		selection = (down) ? selection.next() : selection.prev();
+		if (selection.length > 0)
+		{
+			var topPos = selection.offset().top - selection.parent().offset().top;
+			var height = selection.height() * ((down) ? 1 : 0);
+
+			var scrollTop = episodes.scrollTop();
+			var areaHeight = episodes.height();
+
+			selection.click();
+			if (topPos < scrollTop || (topPos + height > areaHeight + scrollTop))
+				episodes.scrollTop(topPos + height);
+		}
+	}
+
+	if (down !== null)
+		return cancelEvent(e);
 });
 
 function handleSearchFocus(onFocus)
