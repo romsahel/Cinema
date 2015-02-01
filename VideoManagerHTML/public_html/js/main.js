@@ -5,6 +5,7 @@ function playMedia()
 	var lastEpisode = playList ? $("#episodes ul.selected li").last().find("div > div").text() : null;
 	playing = {"season": currentSeason, "episode": currentEpisode, "element": $("#episodes ul.selected li.selected")};
 	app.playMedia(currentMedia.id, currentSeason.key, currentEpisode.key, lastEpisode, withSubtitles);
+	setToggles(playList, withSubtitles);
 }
 
 function seenNextEpisode(name, index)

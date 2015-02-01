@@ -86,7 +86,7 @@ public final class CWebEngine
 
 		final THashMap<String, String> general = Settings.getInstance().getGeneral();
 		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
-		Utils.callFuncJS(webEngine, "setToggles", general.get("playList"), general.get("withSubtitles"));
+//		Utils.callFuncJS(webEngine, "setToggles", general.get("playList"), general.get("withSubtitles"));
 		Utils.callFuncJS(webEngine, "sortMediaList");
 		Utils.callFuncJS(webEngine, "$(\"#locationsList > li\")[0].click");
 

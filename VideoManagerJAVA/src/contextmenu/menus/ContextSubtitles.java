@@ -8,6 +8,7 @@ package contextmenu.menus;
 import contextmenu.CContextMenu;
 import contextmenu.ComboBoxMenuItem;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.web.WebEngine;
@@ -34,11 +35,14 @@ public class ContextSubtitles extends IContextMenu
 		items.add(labelItem);
 
 		final ComboBox<String> combo = new ComboBox<>();
-		combo.getItems().add("English");
-		combo.getItems().add("French");
-		combo.getItems().add("German");
-		combo.getItems().add("Italian");
-		combo.getSelectionModel().select(0);
+		final ObservableList<String> comboItems = combo.getItems();
+		comboItems.add("English");
+		comboItems.add("French");
+		comboItems.add("German");
+		comboItems.add("Italian");
+
+		String language = Settings.getInstance().getGeneral().get("language");
+		combo.getSelectionModel().select(language);
 
 		combo.valueProperty().addListener((ObservableValue<? extends String> obs, String old, String newValue) ->
 		{

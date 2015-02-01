@@ -5,6 +5,7 @@
  */
 package main;
 
+import contextmenu.CContextMenu;
 import gnu.trove.map.hash.THashMap;
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -22,7 +23,6 @@ import javafx.scene.web.WebView;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
-import contextmenu.CContextMenu;
 import videomanagerjava.CWebEngine;
 import videomanagerjava.VLCController;
 import videomanagerjava.files.Database;
@@ -81,8 +81,8 @@ public class Main extends Application
 				general.put("currentMedia", (String) webEngine.executeScript("getCurrentId()"));
 				general.put("currentSeason", (String) webEngine.executeScript("$(\"#seasons .selected\").text()"));
 				general.put("currentEpisode", (String) webEngine.executeScript("$(\"#episodes > .selected > .selected > div\").text()"));
-				general.put("playList", '\\' + (String) webEngine.executeScript("playList.toString()"));
-				general.put("withSubtitles", '\\' + (String) webEngine.executeScript("withSubtitles.toString()"));
+//				general.put("playList", '\\' + (String) webEngine.executeScript("playList.toString()"));
+//				general.put("withSubtitles", '\\' + (String) webEngine.executeScript("withSubtitles.toString()"));
 				Settings.getInstance().writeSettings();
 
 				if (!VLCController.cancelTimer(true))
