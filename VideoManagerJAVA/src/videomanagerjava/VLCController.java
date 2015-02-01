@@ -9,10 +9,9 @@ import gnu.trove.map.hash.THashMap;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.MainController;
@@ -32,7 +31,7 @@ public class VLCController
 {
 
 	static Timer timer = null;
-	static TimerTask timerTask = null;
+	static TimerTaskImpl timerTask = null;
 	static Episode currentEpisode;
 	static long firstId = -1;
 	static long currentId = -1;
@@ -61,14 +60,24 @@ public class VLCController
 				final THashMap<String, String> properties = array[i].getProperties();
 				if (sendRequest(command + properties.get("path")) == null)
 					break;
+
+				String path = getPath(properties);
 				if (withSubtitles)
-					getSubtitles(properties);
+					getSubtitles(path);
 			}
 		});
 
 		MainController.startLoading(thread, "Launching media");
 		thread.start();
 
+	}
+
+	private static String getPath(final THashMap<String, String> properties)
+	{
+		String path = properties.get("path");
+		if (utils.Utils.isWindows)
+			path = path.replace("/", "\\");
+		return path;
 	}
 
 	public static void play(final Episode episode, boolean withSubtitles)
@@ -88,23 +97,12 @@ public class VLCController
 
 		currentEpisode = episode;
 		final THashMap<String, String> properties = episode.getProperties();
-		final String path = properties.get("path");
+		String path = getPath(properties);
 
 		if (withSubtitles)
 		{
-			MainController.logLoadingScreen("Searching for subtitles");
-			Process process = getSubtitles(properties);
-			if (process != null)
-				try
-				{
-					MainController.logLoadingScreen("Downloading subtitles");
-					process.waitFor();
-				} catch (InterruptedException ex)
-				{
-					return;
-				}
-			else
-				return;
+			MainController.logLoadingScreen("Downloading subtitles");
+			getSubtitles(path);
 		}
 
 //		If the request is null, we must launch VLC and wait for it to be prepared
@@ -118,7 +116,7 @@ public class VLCController
 
 		String sendRequest = null;
 		MainController.logLoadingScreen("Waiting for VLC");
-		while (currentId == -1)
+		while (currentId == -1 && !Thread.currentThread().isInterrupted())
 		{
 			sendRequest = sendRequest("command=seek&val=" + properties.get("time"));
 			final JSONObject jsonObject = getJSONObject(sendRequest);
@@ -133,9 +131,14 @@ public class VLCController
 			}
 		}
 
+		if (Thread.currentThread().isInterrupted())
+			return;
+
 		properties.put("seen", "true");
 
 		String filename = (String) getNestedObject(sendRequest, "information", "category", "meta", "filename");
+		System.out.println(filename);
+
 		timer = new Timer();
 		timerTask = new TimerTaskImpl(properties, filename);
 		timer.scheduleAtFixedRate(timerTask, 10000, 10000);
@@ -143,8 +146,9 @@ public class VLCController
 		MainController.stopLoading();
 	}
 
-	private static Process getSubtitles(final THashMap<String, String> properties)
+	private static void getSubtitles(String path)
 	{
+
 		String language = Settings.getInstance().getGeneral().get("language");
 		if (language == null)
 			language = "en";
@@ -152,18 +156,17 @@ public class VLCController
 			language = language.substring(0, 2).replace("G", "d").toLowerCase();
 		try
 		{
-			File file = new File(new URI("file:/" + properties.get("path").replace("\\", "/")));
+			File file = new File(path);
 			String cmd = "C:\\Program Files (x86)\\Python\\Scripts\\subliminal.exe";
 			String directory = "\"" + file.getParent() + "\"";
 			String name = "\"" + file.getName() + "\"";
 			cmd = String.format("%s -l %s -d %s %s", cmd, language, directory, name);
 			Logger.getLogger(VLCController.class.getName()).log(Level.INFO, cmd);
 			Process process = Runtime.getRuntime().exec(cmd);
-			return process;
-		} catch (IOException | URISyntaxException ex)
+			process.waitFor(2, TimeUnit.MINUTES);
+		} catch (IOException | InterruptedException ex)
 		{
 			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
-			return null;
 		}
 	}
 
@@ -242,7 +245,7 @@ public class VLCController
 
 	private static void runVLC(String uri)
 	{
-		File file = getEpisodeFile(uri);
+		File file = new File(uri);
 
 		Logger.getLogger(VLCController.class.getName()).log(Level.INFO, "Launching VLC and adding file to playlist.");
 		try
@@ -252,20 +255,6 @@ public class VLCController
 		{
 			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
 		}
-	}
-
-	private static File getEpisodeFile(String file)
-	{
-		URI uri;
-		try
-		{
-			uri = new URI("file:/" + file.replace("\\", "/"));
-		} catch (URISyntaxException ex)
-		{
-			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
-			return null;
-		}
-		return new File(uri);
 	}
 
 	private static String sendRequest(String parameter)
@@ -290,10 +279,12 @@ public class VLCController
 		public void run()
 		{
 			Logger.getLogger(VLCController.class.getName()).log(Level.INFO, "Timer");
+
 			final String status = sendRequest(null);
 //			In case VLC has been closed, we cancel the timer
 			if (status == null)
 			{
+				Logger.getLogger(VLCController.class.getName()).log(Level.INFO, "VLC was closed");
 				cancelTimer(false, properties);
 				return;
 			}

@@ -5,7 +5,6 @@
  */
 package contextmenu;
 
-import com.sun.webkit.dom.HTMLElementImpl;
 import contextmenu.menus.ContextFiles;
 import contextmenu.menus.ContextLocations;
 import contextmenu.menus.ContextMedias;
@@ -27,7 +26,6 @@ public class CContextMenu
 	private static WebView webView;
 
 	private static IContextMenu currentMenu;
-	private static HTMLElementImpl hovered;
 	private static final ArrayList<IContextMenu> menus = new ArrayList<>();
 
 	public CContextMenu(WebEngine engine, WebView view)
@@ -54,13 +52,8 @@ public class CContextMenu
 	public static void hide()
 	{
 		if (currentMenu != null)
-		{
 			currentMenu.getMenu().hide();
-			if (currentMenu.getClass() == ContextLocations.class)
-				hovered.setClassName("");
-		}
 
-		hovered = null;
 		currentMenu = null;
 	}
 
@@ -70,21 +63,5 @@ public class CContextMenu
 	public void setCurrentMenu(IContextMenu aCurrentMenu)
 	{
 		currentMenu = aCurrentMenu;
-	}
-
-	/**
-	 * @return the hovered
-	 */
-	public HTMLElementImpl getHovered()
-	{
-		return hovered;
-	}
-
-	/**
-	 * @param aHovered the hovered to set
-	 */
-	public void setHovered(HTMLElementImpl aHovered)
-	{
-		hovered = aHovered;
 	}
 }

@@ -5,11 +5,13 @@
  */
 package videomanagerjava;
 
+import gnu.trove.map.hash.THashMap;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
@@ -54,6 +56,22 @@ public class JsToJava
 		episode.setSeen(value);
 		if (reset)
 			episode.getProperties().put("time", "0");
+	}
+
+	public void resetMedia(String id)
+	{
+		final Media media = Database.getInstance().getDatabase().get(Long.parseLong(id, 10));
+		final TreeMap<String, TreeMap<String, Episode>> seasons = media.getSeasons();
+		for (Map.Entry<String, TreeMap<String, Episode>> season : seasons.entrySet())
+		{
+			TreeMap<String, Episode> episodes = season.getValue();
+			for (Map.Entry<String, Episode> episode : episodes.entrySet())
+			{
+				final THashMap<String, String> properties = episode.getValue().getProperties();
+				properties.put("time", "0");
+				properties.put("seen", "false");
+			}
+		}
 	}
 
 	private Episode getEpisode(String id, String currentSeason, String currentEpisode) throws NumberFormatException

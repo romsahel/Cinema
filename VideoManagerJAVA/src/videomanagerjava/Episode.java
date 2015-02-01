@@ -39,7 +39,7 @@ public class Episode
 	{
 		properties = new THashMap<>();
 		setProperty("name", Utils.getSuffix(file.getAbsolutePath(), Utils.getSeparator()));
-		setProperty("path", file.toURI().toString().replace('/', '\\').replace("file:\\", ""));
+		setProperty("path", file.getAbsolutePath().replace("\\", "/"));
 		setProperty("seen", "false");
 		setProperty("time", "0");
 	}

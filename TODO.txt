@@ -10,7 +10,6 @@ Timer to shutdoxn
 Progress bar representing time of episode
 Look into HPPC library to decrease memory usage
 Bug: added two medias that could not be identified on traktv, they merged together
-Ajouter choisir langage sous-titre
 Ajouter ouvrir dossier de fichier
 Entrée pour jouer
 Texte "Add a location" si vide

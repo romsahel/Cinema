@@ -31,6 +31,8 @@ import netscape.javascript.JSObject;
 public class MainController extends BorderPane
 {
 
+	private static boolean shouldBeLoading;
+
 	@FXML
 	private WebView webView;
 	private static WebView staticWebView;
@@ -104,7 +106,6 @@ public class MainController extends BorderPane
 
 	}
 
-
 	@FXML
 	protected void onDrag(MouseEvent mouseEvent)
 	{
@@ -174,6 +175,7 @@ public class MainController extends BorderPane
 
 	public static void startLoading(Thread thread, String log)
 	{
+		shouldBeLoading = true;
 		if (staticWebView.isVisible())
 			Platform.runLater(() ->
 			{
@@ -196,13 +198,18 @@ public class MainController extends BorderPane
 				loadingScreenInterface.setThread(thread);
 				ftOut.setOnFinished((ActionEvent event) ->
 				{
-					staticWebView.setVisible(false);
+					if (shouldBeLoading)
+					{
+						shouldBeLoading = false;
+						staticWebView.setVisible(false);
+					}
 				});
 			});
 	}
 
 	public static void stopLoading()
 	{
+		shouldBeLoading = false;
 		if (staticLoadingPane.isVisible())
 			Platform.runLater(() ->
 			{

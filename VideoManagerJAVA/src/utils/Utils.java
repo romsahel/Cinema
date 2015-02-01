@@ -28,9 +28,9 @@ public class Utils
 		".avi", ".mkv", ".mp4", ".m4v"
 	};
 
-	private static String fileSeparator = null;
-
-	private static final String sub = (System.getProperty("os.name").contains("Windows")) ? "/Documents/" : "";
+	public static final boolean isWindows = System.getProperty("os.name").contains("Windows");
+	private static String fileSeparator = (isWindows) ? "\\" : "/";
+	private static final String sub = (isWindows) ? "/Documents/" : "";
 	public static final String APPDATA = System.getProperty("user.home") + sub + "/.cinema/";
 
 	public static String getPrefix(String src, String... delimiter)
@@ -171,12 +171,6 @@ public class Utils
 	 */
 	public static String getSeparator()
 	{
-		if (fileSeparator == null)
-			if (!System.getProperty("os.name").contains("Windows"))
-				fileSeparator = "/";
-			else
-				fileSeparator = "\\";
-
 		return fileSeparator;
 	}
 }

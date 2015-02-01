@@ -26,6 +26,7 @@ import videomanagerjava.files.Settings;
  */
 public class ContextLocations extends IContextMenu
 {
+	private HTMLLIElementImpl hovered;
 
 	public ContextLocations(CContextMenu parent, WebEngine webEngine)
 	{
@@ -52,7 +53,7 @@ public class ContextLocations extends IContextMenu
 		// <editor-fold defaultstate="collapsed" desc="Rename">
 		this.addItem("Rename", (ActionEvent event) ->
 			 {
-				 final String toRename = parent.getHovered().getInnerText();
+				 final String toRename = hovered.getInnerText();
 				 final Location location = Settings.getInstance().getLocations().get(toRename);
 
 				 TextInputDialog dialog = new TextInputDialog(toRename);
@@ -71,7 +72,7 @@ public class ContextLocations extends IContextMenu
 	{
 		Settings.getInstance().getLocations().remove(toRename);
 		Settings.getInstance().getLocations().put(result.get(), location);
-		parent.getHovered().setTextContent(result.get());
+		hovered.setTextContent(result.get());
 		hide();
 
 		final THashMap<Long, Media> database = Database.getInstance().getDatabase();
@@ -91,8 +92,7 @@ public class ContextLocations extends IContextMenu
 		final Object object = webEngine.executeScript("$(\"#locationsList li:hover\")[0]");
 		if (object.getClass() == HTMLLIElementImpl.class)
 		{
-			final HTMLLIElementImpl hovered = (HTMLLIElementImpl) object;
-			parent.setHovered(hovered);
+			hovered = (HTMLLIElementImpl) object;
 			final String currentText = hovered.getInnerText();
 			System.out.println(currentText);
 			if (!currentText.equals("All"))

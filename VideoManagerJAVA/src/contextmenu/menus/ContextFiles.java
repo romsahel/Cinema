@@ -10,7 +10,13 @@ import com.sun.webkit.dom.HTMLElementImpl;
 import com.sun.webkit.dom.HTMLLIElementImpl;
 import contextmenu.CContextMenu;
 import static contextmenu.CContextMenu.hide;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.web.WebEngine;
 import org.w3c.dom.Element;
 
@@ -20,7 +26,9 @@ import org.w3c.dom.Element;
  */
 public class ContextFiles extends IContextMenu
 {
+
 	private static boolean isSeason;
+	private HTMLLIElementImpl hovered;
 
 	public ContextFiles(CContextMenu parent, WebEngine webEngine)
 	{
@@ -32,8 +40,6 @@ public class ContextFiles extends IContextMenu
 	public final void init()
 	{
 		super.init();
-
-		final HTMLElementImpl hovered = parent.getHovered();
 
 		// <editor-fold defaultstate="collapsed" desc="Toggle Seen">
 		this.addItem("Toggle seen", (ActionEvent event) ->
@@ -54,18 +60,33 @@ public class ContextFiles extends IContextMenu
 		});
 		// </editor-fold>
 
-		// <editor-fold defaultstate="collapsed" desc="Toggle Season">
+		items.add(new SeparatorMenuItem());
+
+		// <editor-fold defaultstate="collapsed" desc="Show in explorer">
+		this.addItem("Show in Explorer", (ActionEvent event) ->
+			 {
+				 String path = (String) webEngine.executeScript("currentEpisode.value.path");
+				 try
+				 {
+					 if (utils.Utils.isWindows)
+						 Runtime.getRuntime().exec("explorer.exe /select," + path.replace("/", "\\"));
+					 else
+						 Desktop.getDesktop().open(new File(path).getParentFile());
+				 } catch (IOException ex)
+				 {
+					 Logger.getLogger(ContextFiles.class.getName()).log(Level.SEVERE, null, ex);
+				 }
+				 hide();
+		});
+		// </editor-fold>
+
+		// <editor-fold defaultstate="collapsed" desc="Reset">
 		this.addItem("Reset", (ActionEvent event) ->
 			 {
 				 if (isSeason)
 					 webEngine.executeScript("toggleSeenSeason(true)");
 				 else
-				 {
-					 final HTMLDivElementImpl div = (HTMLDivElementImpl) hovered.getElementsByTagName("div").item(0);
-					 final HTMLElementImpl item = (HTMLElementImpl) div.getElementsByTagName("span").item(0);
-
 					 webEngine.executeScript("toggleSeen(null, false, false, true)");
-				 }
 				 hide();
 		});
 		// </editor-fold>
@@ -92,15 +113,14 @@ public class ContextFiles extends IContextMenu
 		final Object object = webEngine.executeScript("$(\"#files li:hover\")[0]");
 		if (object.getClass() == HTMLLIElementImpl.class)
 		{
-			HTMLLIElementImpl hovered = (HTMLLIElementImpl) object;
-			parent.setHovered(hovered);
+			hovered = (HTMLLIElementImpl) object;
 			hovered.click();
 
 			String currentText = hovered.getInnerText();
 			final int indexOf = currentText.indexOf("\n");
 			currentText = currentText.substring(indexOf > 0 ? indexOf : 0).trim();
 
-			items.get(2).setVisible(!isSeason(parent.getHovered()));
+			items.get(2).setVisible(!isSeason(hovered));
 
 			parent.setCurrentMenu(this);
 			items.get(0).setText(currentText);

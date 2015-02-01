@@ -10,7 +10,13 @@ import contextmenu.CContextMenu;
 import static contextmenu.CContextMenu.hide;
 import editdialog.EditDialog;
 import gnu.trove.map.hash.THashMap;
+import java.awt.Desktop;
+import java.io.File;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.event.ActionEvent;
+import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.web.WebEngine;
 import videomanagerjava.Media;
 import videomanagerjava.files.Database;
@@ -21,6 +27,8 @@ import videomanagerjava.files.Database;
  */
 public class ContextMedias extends IContextMenu
 {
+
+	private HTMLDivElementImpl hovered;
 
 	public ContextMedias(CContextMenu parent, WebEngine webEngine)
 	{
@@ -37,7 +45,7 @@ public class ContextMedias extends IContextMenu
 		// <editor-fold defaultstate="collapsed" desc="Edit">
 		this.addItem("Edit", (ActionEvent event) ->
 			 {
-				 final String id = parent.getHovered().getParentElement().getAttribute("id");
+				 final String id = hovered.getParentElement().getAttribute("id");
 				 hide();
 				 final Media media = database.get(Long.parseLong(id, 10));
 				 new EditDialog(media).show();
@@ -47,11 +55,39 @@ public class ContextMedias extends IContextMenu
 		// <editor-fold defaultstate="collapsed" desc="Remove">
 		this.addItem("Remove", (ActionEvent event) ->
 			 {
-				 final String id = parent.getHovered().getParentElement().getAttribute("id");
+				 final String id = hovered.getParentElement().getAttribute("id");
 				 hide();
 				 database.put(Long.valueOf(id), null);
 				 webEngine.executeScript("$('#" + id + "').fadeOut(200)");
 				 Database.getInstance().writeDatabase();
+		});
+		// </editor-fold>
+
+		items.add(new SeparatorMenuItem());
+
+		// <editor-fold defaultstate="collapsed" desc="Show in explorer">
+		this.addItem("Show in Explorer", (ActionEvent event) ->
+			 {
+				 String path = (String) webEngine.executeScript("currentEpisode.value.path");
+				 try
+				 {
+					 if (utils.Utils.isWindows)
+						 Runtime.getRuntime().exec("explorer.exe /select," + path.replace("/", "\\"));
+					 else
+						 Desktop.getDesktop().open(new File(path).getParentFile());
+				 } catch (IOException ex)
+				 {
+					 Logger.getLogger(ContextFiles.class.getName()).log(Level.SEVERE, null, ex);
+				 }
+				 hide();
+		});
+		// </editor-fold>
+
+		// <editor-fold defaultstate="collapsed" desc="Reset">
+		this.addItem("Reset", (ActionEvent event) ->
+			 {
+				 webEngine.executeScript("toggleSeenSeason(true, $(\"#episodes li > div > span\"))");
+				 hide();
 		});
 		// </editor-fold>
 	}
@@ -62,8 +98,7 @@ public class ContextMedias extends IContextMenu
 		final Object object = webEngine.executeScript("$(\".poster:hover\")[0]");
 		if (object.getClass() == HTMLDivElementImpl.class)
 		{
-			final HTMLDivElementImpl hovered = (HTMLDivElementImpl) object;
-			parent.setHovered(hovered);
+			hovered = (HTMLDivElementImpl) object;
 			hovered.click();
 			String currentText = hovered.getNextElementSibling().getTextContent();
 			parent.setCurrentMenu(this);

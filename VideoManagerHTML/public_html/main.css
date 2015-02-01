@@ -566,7 +566,15 @@ header > .select, #detail-genres {
 	transition: background 0.1s, color 0.35s;
 	text-align: center;
 	display: inline-block;
+	height: 15px;
 	width: 40%;
+}
+
+#watch-buttons > div > div:first-child {
+	font-variant: small-caps;
+	font-weight: bold;
+	font-size: 16px;
+	line-height: 14px;
 }
 
 #watch-buttons > div > div:nth-child(n + 2) {
