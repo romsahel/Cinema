@@ -17,8 +17,8 @@ import javafx.scene.web.WebEngine;
 import videomanagerjava.CWebEngine;
 import videomanagerjava.Location;
 import videomanagerjava.Media;
-import videomanagerjava.files.Database;
-import videomanagerjava.files.Settings;
+import files.Database;
+import files.Settings;
 
 /**
  *

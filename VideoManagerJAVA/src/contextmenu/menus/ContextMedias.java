@@ -19,7 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.web.WebEngine;
 import videomanagerjava.Media;
-import videomanagerjava.files.Database;
+import files.Database;
 
 /**
  *

@@ -84,6 +84,8 @@ function updateGenres(genres)
 function sortMediaList()
 {
 	var list = document.getElementById('media-list');
+	if (!list)
+		return;
 	var toSort = list.children;
 	toSort = Array.prototype.slice.call(toSort, 0);
 

@@ -115,7 +115,6 @@ function onSeasonsClick(elt, f)
 	var text = elt.text();
 	currentSeason = {key: text, value: currentMedia.seasons[text]};
 	episodes.fadeTo(100, 0, function () {
-
 		elt.parent().children().removeClass("selected");
 		elt.addClass("selected");
 		episodes.children().removeClass("selected");
@@ -127,6 +126,8 @@ function onSeasonsClick(elt, f)
 
 		if (f)
 			f();
+		else
+			episodes.find(".selected > li").first().click();
 	});
 }
 

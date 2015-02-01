@@ -1,10 +1,6 @@
 function updateDetails(media)
 {
-	var info;
-	if (media)
-		info = media.info;
-	else
-		info = currentMedia.info;
+	var info = (media) ? media.info : currentMedia.info;
 
 	seasons.empty();
 	episodes.empty();
@@ -121,7 +117,8 @@ function showDetail(elt, refresh)
 {
 	var newMedia = medias[elt.id];
 	currentId = elt.id;
-	if (!refresh && newMedia === currentMedia)
+
+	if (!refresh && (newMedia === currentMedia))
 		return;
 
 	$(elt).parent().children().removeClass("selected");

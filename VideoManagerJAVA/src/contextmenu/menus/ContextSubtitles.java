@@ -12,7 +12,7 @@ import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.web.WebEngine;
-import videomanagerjava.files.Settings;
+import files.Settings;
 
 /**
  *

@@ -20,8 +20,9 @@ import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import utils.RequestUtils;
 import utils.Utils;
-import videomanagerjava.files.Database;
-import videomanagerjava.files.Settings;
+import files.Database;
+import files.Settings;
+import utils.Formatter;
 
 /**
  *
@@ -313,7 +314,7 @@ public class VLCController
 //							we update the timer's data
 							final Episode tmpEpisode = followingEpisodes[index];
 							final THashMap<String, String> newProperties = tmpEpisode.getProperties();
-							final String uriName = Utils.getSuffix(new File(name).toURI().toString(), "/");
+							final String uriName = Formatter.getSuffix(new File(name).toURI().toString(), "/");
 							if (newProperties.get("path").endsWith(uriName))
 							{
 								this.properties = newProperties;

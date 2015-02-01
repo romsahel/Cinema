@@ -23,8 +23,9 @@ import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import main.Main;
 import utils.Utils;
-import videomanagerjava.files.Database;
-import videomanagerjava.files.Settings;
+import files.Database;
+import files.Settings;
+import utils.Formatter;
 
 /**
  *
@@ -111,7 +112,7 @@ public class JsToJava
 		if (selectedDirectory != null)
 		{
 			final String folderPath = selectedDirectory.getAbsolutePath();
-			final String name = Utils.getSuffix(folderPath, Utils.getSeparator());
+			final String name = Formatter.getSuffix(folderPath, Utils.getSeparator());
 
 			TextInputDialog dialog = new TextInputDialog(name);
 			dialog.setHeaderText(null);

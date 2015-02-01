@@ -3,12 +3,17 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package videomanagerjava.files;
+package files;
 
 import gnu.trove.map.hash.THashMap;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
@@ -19,6 +24,7 @@ import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.Formatter;
 import utils.Utils;
 import videomanagerjava.Episode;
 import videomanagerjava.Media;
@@ -31,6 +37,7 @@ public class Database
 {
 
 	private final THashMap<Long, Media> database;
+	final String filename = Utils.APPDATA + "db.json";
 
 	private Database()
 	{
@@ -44,13 +51,29 @@ public class Database
 		for (Map.Entry<Long, Media> media : getDatabase().entrySet())
 			db.add(writeMedia(media.getKey(), media.getValue()));
 
-		try (FileWriter file = new FileWriter(Utils.APPDATA + "db.json"))
+		try (FileWriter file = new FileWriter(filename))
 		{
 			file.write(JSONArray.toJSONString(db));
 			file.flush();
 		} catch (IOException ex)
 		{
 			Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+		}
+	}
+
+	public void backupDatabase()
+	{
+		try
+		{
+			Path file = Paths.get(filename).toRealPath(); //toRealPath() follows symlinks to their ends
+			File backFile = new File(filename + ".backup");
+			if (!backFile.exists())
+				backFile.createNewFile(); // ensure the backup file exists so we can write to it later
+			Path back = Paths.get(filename + ".backup").toRealPath();
+			Files.copy(file, back, StandardCopyOption.REPLACE_EXISTING);
+		} catch (IOException ex)
+		{
+			Logger.getLogger(Formatter.class.getName()).log(Level.SEVERE, null, ex);
 		}
 	}
 
@@ -81,7 +104,7 @@ public class Database
 		{
 			JSONParser parser = new JSONParser();
 
-			Object obj = parser.parse(new FileReader(Utils.APPDATA + "db.json"));
+			Object obj = parser.parse(new FileReader(filename));
 
 			JSONArray db = (JSONArray) obj;
 

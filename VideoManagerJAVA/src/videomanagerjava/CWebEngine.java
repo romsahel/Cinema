@@ -5,6 +5,9 @@
  */
 package videomanagerjava;
 
+import files.Database;
+import files.FileWalker;
+import files.Settings;
 import gnu.trove.map.hash.THashMap;
 import java.io.File;
 import java.util.ArrayList;
@@ -21,10 +24,8 @@ import javafx.scene.web.WebEngine;
 import javafx.scene.web.WebView;
 import main.MainController;
 import netscape.javascript.JSObject;
+import utils.Formatter;
 import utils.Utils;
-import videomanagerjava.files.Database;
-import videomanagerjava.files.FileWalker;
-import videomanagerjava.files.Settings;
 
 /**
  *
@@ -39,7 +40,11 @@ public final class CWebEngine
 	private static int newItems;
 
 	public CWebEngine(WebView webBrowser)
-	{	// Obtain the webEngine to navigate
+	{
+		int cores = Runtime.getRuntime().availableProcessors();
+		System.out.println(cores + " cores available!");
+		executor = java.util.concurrent.Executors.newFixedThreadPool(cores);
+		// Obtain the webEngine to navigate
 		webEngine = webBrowser.getEngine();
 		webEngine.load("file:///" + new File(Utils.APPDATA + "public_html/index.html").getAbsolutePath().replace('\\', '/'));
 		webEngine.getLoadWorker().stateProperty().addListener(new CChangeListener());
@@ -61,12 +66,22 @@ public final class CWebEngine
 		}
 
 		newItems = medias.size();
-		getImages();
+		if (medias != null && newItems > 0)
+			getImages(medias);
 
 		final Collection<Media> values = Database.getInstance().getDatabase().values();
 		for (Media value : values)
-			if (value != null && locations.contains(value.getInfo().get("location")))
-				medias.add(value);
+			if (value != null)
+			{
+				final THashMap<String, String> info = value.getInfo();
+				info.remove("loading");
+				if (info.remove("error") != null)
+					threadedGetImage(value);
+				if (locations.contains(info.get("location")))
+					medias.add(value);
+			}
+
+		executor.shutdown();
 	}
 
 	public static void refreshList()
@@ -77,7 +92,6 @@ public final class CWebEngine
 		{
 			if (o == null)
 				continue;
-			o.getInfo().remove("loading");
 			//	adds the media to the database
 			Database.getInstance().getDatabase().put(o.getId(), o);
 			Utils.callFuncJS(webEngine, "addMedia", Long.toString(o.getId()), o.toJSArray());
@@ -102,40 +116,40 @@ public final class CWebEngine
 			}
 			mergeByPoster();
 			newItems = 0;
+			Database.getInstance().writeDatabase();
 		}
 	}
 
-	private static void getImages()
+	private static void getImages(ArrayList<Media> list)
 	{
-		int cores = Runtime.getRuntime().availableProcessors();
-		System.out.println(cores + " cores available!");
-		executor = java.util.concurrent.Executors.newFixedThreadPool(cores);
-		if (medias == null)
-			return;
-
-		for (Media o : medias)
+		for (Media o : list)
 		{
 			if (o == null)
 				continue;
-			Thread t = new Thread()
-			{
-				@Override
-				public void run()
-				{
-					final String previousImg = o.getInfo().get("img");
-					if (previousImg == null)
-					{
-						final String newImg = o.downloadInfos();
-						if (newImg != null && Database.getInstance().getDatabase().containsKey(o.getId()))
-							Utils.callFuncJS(webEngine, "updateMedia", Long.toString(o.getId()), o.toJSArray());
-
-						Logger.getLogger(CWebEngine.class.getName()).log(Level.INFO, "Img downloaded: {0}", o.getInfo().get("name"));
-					}
-				}
-			};
-			executor.execute(t);
+			threadedGetImage(o);
 		}
-		executor.shutdown();
+	}
+
+	private static void threadedGetImage(Media o)
+	{
+		Thread t = new Thread()
+		{
+			@Override
+			public void run()
+			{
+				final String previousImg = o.getInfo().get("img");
+				if (previousImg == null)
+				{
+					Logger.getLogger(CWebEngine.class.getName()).log(Level.INFO, "Downloading info for: " + o.getInfo().get("name"));
+					final String newImg = o.downloadInfos();
+					if (newImg != null && Database.getInstance().getDatabase().containsKey(o.getId()))
+						Utils.callFuncJS(webEngine, "updateMedia", Long.toString(o.getId()), o.toJSArray());
+
+					Logger.getLogger(CWebEngine.class.getName()).log(Level.INFO, "Img downloaded: " + o.getInfo().get("name"));
+				}
+			}
+		};
+		executor.execute(t);
 	}
 
 	public static void mergeByPoster()
@@ -160,22 +174,41 @@ public final class CWebEngine
 							if (seasons.size() == 1)
 							{
 								final String outName = outInfo.get("name");
-								outSeason = Utils.getFormattedSeason(outName, outName);
+								outSeason = Formatter.getFormattedSeason(outName, outName);
+								outInfo.put("name", Formatter.removeSeason(outName));
 								final TreeMap<String, Episode> firstSeason = outer.getFirstSeason();
 								seasons.clear();
 								seasons.put(outSeason, firstSeason);
 							}
 
 						final String inName = inInfo.get("name");
-						String inSeason = Utils.getFormattedSeason(inName, inName);
+						String inSeason = Formatter.getFormattedSeason(inName, inName);
 						final TreeMap<String, Episode> firstSeason = inner.getFirstSeason();
 						seasons.put(inSeason, firstSeason);
 						toDelete.add(inner);
 						database.put(inner.getId(), null);
+						Utils.callFuncJS(webEngine, "updateMedia", Long.toString(outer.getId()), outer.toJSArray(), Long.toString(inner.getId()));
 					}
 				}
 		}
 		medias.removeAll(toDelete);
+	}
+
+	public static String longestCommonPrefix(String... strings)
+	{
+		if (strings.length == 0)
+			return ""; // Or maybe return null?
+
+		for (int prefixLen = 0; prefixLen < strings[0].length(); prefixLen++)
+		{
+			char c = strings[0].charAt(prefixLen);
+			for (int i = 1; i < strings.length; i++)
+				if (prefixLen >= strings[i].length()
+					|| strings[i].charAt(prefixLen) != c)
+					// Mismatch found
+					return strings[i].substring(0, prefixLen);
+		}
+		return strings[0];
 	}
 
 	/**

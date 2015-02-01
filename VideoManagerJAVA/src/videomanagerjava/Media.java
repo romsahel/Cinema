@@ -5,6 +5,7 @@
  */
 package videomanagerjava;
 
+import files.Downloader;
 import gnu.trove.map.hash.THashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -17,8 +18,8 @@ import org.json.simple.JSONObject;
 import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.Formatter;
 import utils.Utils;
-import videomanagerjava.files.Downloader;
 
 /**
  *
@@ -54,8 +55,8 @@ public class Media
 		this.id = id;
 		if (name != null)
 		{
-			setInfo("year", Utils.getYear(name));
-			setInfo("name", Utils.formatName(name));
+			setInfo("year", Formatter.getYear(name));
+			setInfo("name", Formatter.formatName(name));
 		}
 		setInfo("img", img);
 	}
@@ -80,7 +81,7 @@ public class Media
 	public String downloadInfos(boolean ignoreYear)
 	{
 		setInfo("loading", "true");
-		final String formattedName = Utils.removeSeason(info.get("name"));
+		final String formattedName = Formatter.removeSeason(info.get("name"));
 		final THashMap<String, String> infoList = getInfo();
 		final String year = (infoList.get("year") == null
 							 || ignoreYear) ? "" : "&y=" + infoList.get("year");
@@ -127,7 +128,6 @@ public class Media
 				String downloadedImage = Downloader.downloadImage(infoToString(jobj, "Poster", null));
 				if (downloadedImage != null)
 					setInfo("img", downloadedImage);
-
 				info.remove("loading");
 				return downloadedImage;
 			}
@@ -136,6 +136,7 @@ public class Media
 			System.err.println("====");
 			System.err.println(url);
 			Logger.getLogger(Media.class.getName()).log(Level.SEVERE, url, ex);
+			setInfo("error", "true");
 		}
 
 		info.remove("loading");

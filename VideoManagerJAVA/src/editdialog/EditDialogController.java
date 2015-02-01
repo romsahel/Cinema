@@ -29,8 +29,8 @@ import javafx.util.Callback;
 import videomanagerjava.CWebEngine;
 import videomanagerjava.Episode;
 import videomanagerjava.Media;
-import videomanagerjava.files.Database;
-import videomanagerjava.files.Downloader;
+import files.Database;
+import files.Downloader;
 
 /**
  * FXML Controller class

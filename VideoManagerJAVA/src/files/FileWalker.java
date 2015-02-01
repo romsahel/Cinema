@@ -3,12 +3,13 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package videomanagerjava.files;
+package files;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
+import utils.Formatter;
 import utils.Utils;
 import videomanagerjava.Episode;
 import videomanagerjava.Location;
@@ -50,7 +51,7 @@ public class FileWalker
 								String key = set.getKey();
 								Episode value = set.getValue();
 								final String path = value.getProperties().get("path");
-								Media media = new Media(getCleanName(Utils.getSuffix(path, Utils.getSeparator())), path.hashCode());
+								Media media = new Media(getCleanName(Formatter.getSuffix(path, Utils.getSeparator())), path.hashCode());
 								media.getDefaultSeason().put(key, value);
 								media.setInfo("location", name);
 								result.add(media);
@@ -76,7 +77,7 @@ public class FileWalker
 		if (Database.getInstance().getDatabase().containsKey(hashCode))
 			return null;
 //		We create the media with a proper name and its id
-		Media media = new Media(getCleanName(Utils.getSuffix(path, Utils.getSeparator())), hashCode);
+		Media media = new Media(getCleanName(Formatter.getSuffix(path, Utils.getSeparator())), hashCode);
 
 		if (f.isDirectory())
 			walkMedia(f, media);
@@ -139,8 +140,8 @@ public class FileWalker
 	{
 		if (string == null)
 			return null;
-		String file = Utils.getSuffix(string, Utils.getSeparator());
-		file = Utils.getPrefix(file, Utils.DUMP_KEYWORDS);
+		String file = Formatter.getSuffix(string, Utils.getSeparator());
+		file = Formatter.getPrefix(file, Utils.DUMP_KEYWORDS);
 		file = file.replace('.', ' ').trim();
 		return file;
 	}

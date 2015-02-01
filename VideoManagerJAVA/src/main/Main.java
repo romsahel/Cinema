@@ -6,6 +6,8 @@
 package main;
 
 import contextmenu.CContextMenu;
+import files.Database;
+import files.Settings;
 import gnu.trove.map.hash.THashMap;
 import java.io.IOException;
 import java.util.logging.FileHandler;
@@ -25,8 +27,6 @@ import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import videomanagerjava.CWebEngine;
 import videomanagerjava.VLCController;
-import videomanagerjava.files.Database;
-import videomanagerjava.files.Settings;
 
 /**
  *
@@ -68,6 +68,8 @@ public class Main extends Application
 
 		Settings.getInstance().readSettings();
 		Database.getInstance().readDatabase();
+		Database.getInstance().backupDatabase();
+		
 		final WebView webView = fxml.getWebView();
 		final WebEngine webEngine = new CWebEngine(webView).getWebEngine();
 

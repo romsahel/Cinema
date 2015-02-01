@@ -8,6 +8,7 @@ package videomanagerjava;
 import gnu.trove.map.hash.THashMap;
 import java.io.File;
 import java.util.Map;
+import utils.Formatter;
 import utils.Utils;
 
 /**
@@ -38,7 +39,7 @@ public class Episode
 	public Episode(File file)
 	{
 		properties = new THashMap<>();
-		setProperty("name", Utils.getSuffix(file.getAbsolutePath(), Utils.getSeparator()));
+		setProperty("name", Formatter.getSuffix(file.getAbsolutePath(), Utils.getSeparator()));
 		setProperty("path", file.getAbsolutePath().replace("\\", "/"));
 		setProperty("seen", "false");
 		setProperty("time", "0");
