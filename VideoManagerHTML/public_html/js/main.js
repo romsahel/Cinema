@@ -69,6 +69,13 @@ function updateMedia(id, array, idToRemove)
 	});
 }
 
+function setMediaLoading(id)
+{
+	var elt = $("#" + id + " > .poster");
+	if (elt.length > 0)
+		elt.css({"background-image": "url(media/loading.gif)"});
+}
+
 function removeLocation()
 {
 	var locToRemove = $($("#locationsList li.hover")[0]);

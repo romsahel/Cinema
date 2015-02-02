@@ -26,8 +26,9 @@ public final class EditableTreeCell extends TreeCell<String>
 
 	private TextField textField;
 	private final Media media;
+	private final TreeMap<String, TreeMap<String, Episode>> newSeasons;
 
-	public EditableTreeCell(Media media)
+	public EditableTreeCell(Media media, TreeMap<String, TreeMap<String, Episode>> newSeasons)
 	{
 		MenuItem addMenuItem = new MenuItem("Rename");
 		addMenuItem.setOnAction((ActionEvent event) ->
@@ -36,6 +37,7 @@ public final class EditableTreeCell extends TreeCell<String>
 		});
 		setContextMenu(new ContextMenu(addMenuItem));
 		this.media = media;
+		this.newSeasons = newSeasons;
 	}
 
 	@Override
@@ -98,19 +100,19 @@ public final class EditableTreeCell extends TreeCell<String>
 				final TreeItem<String> treeItem = this.getTreeItem();
 				if (treeItem.isLeaf())
 				{
-					TreeMap<String, Episode> season = media.getSeasons().get(treeItem.getParent().getValue());
+					TreeMap<String, Episode> season = newSeasons.get(treeItem.getParent().getValue());
 					final Episode get = season.get(string);
 					season.put(text, get);
+					if (get.getProperties().get("name").equals(text))
+						return;
 					get.setProperty("name", text);
 					season.remove(string);
 				}
 				else
 				{
-					TreeMap<String, TreeMap<String, Episode>> seasons = media.getSeasons();
-					seasons.put(text, seasons.get(string));
-					seasons.remove(string);
+					newSeasons.put(text, newSeasons.get(string));
+					newSeasons.remove(string);
 				}
-				media.setInfo("edited", "true");
 				commitEdit(text);
 			}
 			else if (t.getCode() == KeyCode.ESCAPE)

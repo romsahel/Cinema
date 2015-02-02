@@ -19,7 +19,6 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import utils.Formatter;
-import utils.Utils;
 
 /**
  *
@@ -29,7 +28,7 @@ public class Media
 {
 
 	private final static String DEFAULT_KEY = "Files";
-	private final TreeMap<String, TreeMap<String, Episode>> seasons;
+	private TreeMap<String, TreeMap<String, Episode>> seasons;
 	private final long id;
 	private final THashMap<String, String> info;
 
@@ -149,6 +148,14 @@ public class Media
 	public TreeMap<String, TreeMap<String, Episode>> getSeasons()
 	{
 		return seasons;
+	}
+
+	/**
+	 * @param seasons the seasons to set
+	 */
+	public void setSeasons(TreeMap<String, TreeMap<String, Episode>> seasons)
+	{
+		this.seasons = seasons;
 	}
 
 	public TreeMap<String, Episode> getDefaultSeason()

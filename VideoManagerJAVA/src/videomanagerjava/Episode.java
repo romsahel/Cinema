@@ -45,6 +45,11 @@ public class Episode
 		setProperty("time", "0");
 	}
 
+	public Episode(THashMap<String, String> properties)
+	{
+		this.properties = properties;
+	}
+
 	@Override
 	public String toString()
 	{
@@ -76,4 +81,17 @@ public class Episode
 	{
 		setProperty("seen", Boolean.toString(seen));
 	}
+
+	@Override
+	@SuppressWarnings({"RedundantStringConstructorCall", "CloneDoesntCallSuperClone"})
+	protected Object clone() throws CloneNotSupportedException
+	{
+		THashMap<String, String> newProperties = new THashMap<>();
+		properties.forEach((String t, String u) ->
+		{
+			newProperties.put(new String(t), new String(u));
+		});
+		return new Episode(newProperties);
+	}
+
 }

@@ -5,6 +5,8 @@
  */
 package editdialog;
 
+import files.Database;
+import files.Downloader;
 import gnu.trove.map.hash.THashMap;
 import java.io.File;
 import java.io.IOException;
@@ -15,7 +17,6 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
-import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
@@ -25,12 +26,9 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import videomanagerjava.CWebEngine;
 import videomanagerjava.Episode;
 import videomanagerjava.Media;
-import files.Database;
-import files.Downloader;
 
 /**
  * FXML Controller class
@@ -58,6 +56,7 @@ public class EditDialogController extends AnchorPane
 	private final Delta dragDelta = new Delta();
 	private final Media media;
 	private String newImg;
+	private TreeMap<String, TreeMap<String, Episode>> newSeasons;
 
 	public EditDialogController(EditDialog parent, Media media)
 	{
@@ -74,6 +73,7 @@ public class EditDialogController extends AnchorPane
 		File f = new File(Downloader.POSTER_PATH + ((img == null) ? "unknown.jpg" : img));
 		imageView.setImage(new Image(f.toURI().toString()));
 
+		this.newSeasons = new TreeMap<>();
 		initTree(media);
 
 		this.parent = parent;
@@ -85,27 +85,29 @@ public class EditDialogController extends AnchorPane
 	{
 		tree.setShowRoot(false);
 		tree.setEditable(true);
-		tree.setCellFactory(new Callback<TreeView<String>, TreeCell<String>>()
-		{
-			@Override
-			public TreeCell<String> call(TreeView<String> p)
-			{
-				return new EditableTreeCell(media);
-			}
-		});
+
 		TreeItem<String> root = new TreeItem<>("Root Node");
+
 		final TreeMap<String, TreeMap<String, Episode>> seasons = media.getSeasons();
 		final boolean shouldExpand = seasons.size() == 1;
+
 		for (Map.Entry<String, TreeMap<String, Episode>> seasonsSet : seasons.entrySet())
 		{
-			TreeItem<String> season = new TreeItem<>(seasonsSet.getKey());
+			final String key = seasonsSet.getKey();
+			final TreeMap<String, Episode> value = seasonsSet.getValue();
+
+			newSeasons.put(key, (TreeMap<String, Episode>) value.clone());
+
+			TreeItem<String> season = new TreeItem<>(key);
 			season.setExpanded(shouldExpand);
 
-			for (Map.Entry<String, Episode> episodesSet : seasonsSet.getValue().entrySet())
+			for (Map.Entry<String, Episode> episodesSet : value.entrySet())
 				season.getChildren().add(new TreeItem<>(episodesSet.getKey()));
 
 			root.getChildren().add(season);
 		}
+
+		tree.setCellFactory((TreeView<String> p) -> new EditableTreeCell(media, newSeasons));
 		tree.setRoot(root);
 	}
 
@@ -145,8 +147,8 @@ public class EditDialogController extends AnchorPane
 		final String type = typeCombo.getSelectionModel().getSelectedItem().toLowerCase();
 
 		boolean shouldUpdate;
-		if ((shouldUpdate = info.containsKey("edited")))
-			info.remove("edited");
+		if ((shouldUpdate = !newSeasons.equals(media.getSeasons())))
+			media.setSeasons(newSeasons);
 
 		if (!info.get("name").equals(title) || !info.get("type").equals(type) || newImg != null)
 		{
@@ -158,11 +160,21 @@ public class EditDialogController extends AnchorPane
 
 		if (force)
 		{
-			media.downloadInfos(true);
-			CWebEngine.mergeByPoster();
+			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "setMediaLoading", Long.toString(media.getId()));
+			parent.hide();
+			Thread t = new Thread(() ->
+			{
+				media.downloadInfos(true);
+				CWebEngine.mergeByPoster();
+				utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
+									   "updateMedia", Long.toString(media.getId()), media.toJSArray());
+				Database.getInstance().writeDatabase();
+			});
+			t.start();
+			return;
 		}
 
-		if (force || shouldUpdate)
+		if (shouldUpdate && !force)
 			utils.Utils.callFuncJS(videomanagerjava.CWebEngine.getWebEngine(),
 								   "updateMedia", Long.toString(media.getId()), media.toJSArray());
 
@@ -179,7 +191,6 @@ public class EditDialogController extends AnchorPane
 	@FXML
 	protected void onRefresh()
 	{
-		File f;
 		final String field = urlField.getText();
 		if (field.contains("imdb.com") || field.startsWith("tt"))
 		{
@@ -188,15 +199,16 @@ public class EditDialogController extends AnchorPane
 			final int index = id.indexOf("/");
 			if (index > 0)
 				id = id.substring(0, index);
-			media.downloadInfos("http://www.omdbapi.com/?i=" + id + "&plot=full&r=json");
-			f = new File(Downloader.POSTER_PATH + media.getInfo().get("img"));
+			newImg = media.downloadInfos("http://www.omdbapi.com/?i=" + id + "&plot=full&r=json");
+			if (newImg != null)
+				onOK(false);
 		}
 		else
 		{
 			newImg = Downloader.downloadImage(field);
-			f = new File(Downloader.POSTER_PATH + newImg);
+			if (newImg != null)
+				imageView.setImage(new Image(new File(Downloader.POSTER_PATH + newImg).toURI().toString()));
 		}
-		imageView.setImage(new Image(f.toURI().toString()));
 	}
 
 	@FXML
