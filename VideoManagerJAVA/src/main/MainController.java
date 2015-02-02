@@ -107,6 +107,24 @@ public class MainController extends BorderPane
 	}
 
 	@FXML
+	protected void onMinimize(ActionEvent event)
+	{
+		stage.setIconified(true);
+	}
+
+	@FXML
+	protected void onMaximize(ActionEvent event)
+	{
+		stage.setMaximized(!stage.maximizedProperty().getValue());
+	}
+
+	@FXML
+	protected void onClose(ActionEvent event)
+	{
+		Main.closeApplication();
+	}
+
+	@FXML
 	protected void onDrag(MouseEvent mouseEvent)
 	{
 		if (stage.getScene().getCursor() != Cursor.DEFAULT)

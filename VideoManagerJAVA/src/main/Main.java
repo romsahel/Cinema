@@ -57,40 +57,27 @@ public class Main extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
+
 		stage = primaryStage;
-		stage.initStyle(StageStyle.TRANSPARENT);
+		stage.initStyle(StageStyle.UNDECORATED);
 
-		final MainController fxml;
-		fxml = new MainController(stage);
+		MainController fxml = new MainController(stage); // load an fxml
+		stage.initStyle(StageStyle.TRANSPARENT); //undecorated/transparent
+		final Scene scene = new Scene(fxml); // create a scene from new CustomDecorator
+		scene.setFill(null);
 
-		final Scene scene = new Scene(fxml);
 		scene.getStylesheets().add("utils/main.css");
 
 		Settings.getInstance().readSettings();
 		Database.getInstance().readDatabase();
 		Database.getInstance().backupDatabase();
-		
+
 		final WebView webView = fxml.getWebView();
 		final WebEngine webEngine = new CWebEngine(webView).getWebEngine();
 
 		stage.setOnCloseRequest((WindowEvent we) ->
 		{
-			stage.hide();
-
-			if (isReady)
-			{
-				final THashMap<String, String> general = Settings.getInstance().getGeneral();
-				general.put("currentMedia", (String) webEngine.executeScript("getCurrentId()"));
-				general.put("currentSeason", (String) webEngine.executeScript("$(\"#seasons .selected\").text()"));
-				general.put("currentEpisode", (String) webEngine.executeScript("$(\"#episodes > .selected > .selected > div\").text()"));
-//				general.put("playList", '\\' + (String) webEngine.executeScript("playList.toString()"));
-//				general.put("withSubtitles", '\\' + (String) webEngine.executeScript("withSubtitles.toString()"));
-				Settings.getInstance().writeSettings();
-
-				if (!VLCController.cancelTimer(true))
-					Database.getInstance().writeDatabase();
-			}
-
+			closeApplication();
 		});
 
 //		adding context menu
@@ -109,6 +96,25 @@ public class Main extends Application
 
 		ResizeHelper.addResizeListener(stage);
 		stage.show();
+	}
+
+	public static void closeApplication()
+	{
+		stage.hide();
+		if (isReady)
+		{
+			final WebEngine webEngine = CWebEngine.getWebEngine();
+			final THashMap<String, String> general = Settings.getInstance().getGeneral();
+			general.put("currentMedia", (String) webEngine.executeScript("getCurrentId()"));
+			general.put("currentSeason", (String) webEngine.executeScript("$(\"#seasons .selected\").text()"));
+			general.put("currentEpisode", (String) webEngine.executeScript("$(\"#episodes > .selected > .selected > div\").text()"));
+//				general.put("playList", '\\' + (String) webEngine.executeScript("playList.toString()"));
+//				general.put("withSubtitles", '\\' + (String) webEngine.executeScript("withSubtitles.toString()"));
+			Settings.getInstance().writeSettings();
+
+			if (!VLCController.cancelTimer(true))
+				Database.getInstance().writeDatabase();
+		}
 	}
 
 	/**

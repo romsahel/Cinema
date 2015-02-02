@@ -2,12 +2,14 @@
 User must be able to edit details in order to change description, title, etc.
 User must be able to hide banner info details
 State (unavailable, available)
-Loading screen for OK and Fetch in edit dialog,
 Timer to shutdoxn
 Progress bar representing time of episode
 Look into HPPC library to decrease memory usage
 Texte "Add a location" si vide
 Tuto
+
+Loading screen for OK and Fetch in edit dialog,
+
 ====
 Requirements:
 if subtitle module:

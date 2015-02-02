@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.geometry.*?>
@@ -10,27 +11,49 @@
 <?import java.lang.*?>
 <?import javafx.scene.layout.*?>
 
-<fx:root maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color: #17181b;" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" style="-fx-background-color: #17181b;" stylesheets="@main.css" type="BorderPane" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1">
    <top>
       <StackPane prefHeight="1.0" BorderPane.alignment="CENTER">
          <children>
-            <BorderPane prefHeight="48.0" StackPane.alignment="CENTER">
+            <BorderPane maxHeight="30.0" minHeight="30.0" prefHeight="30.0" StackPane.alignment="CENTER">
                <right>
-                  <HBox alignment="TOP_RIGHT" fillHeight="false" prefHeight="48.0" prefWidth="88.0" BorderPane.alignment="TOP_RIGHT" />
+                  <HBox alignment="TOP_RIGHT" fillHeight="false" prefHeight="48.0" prefWidth="88.0" BorderPane.alignment="TOP_RIGHT">
+                     <children>
+                        <Button id="minimize" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#onMinimize" prefHeight="20.0" prefWidth="20.0" styleClass="topbar">
+                           <HBox.margin>
+                              <Insets right="7.0" top="7.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button id="maximize" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#onMaximize" prefHeight="20.0" prefWidth="20.0" styleClass="topbar">
+                           <HBox.margin>
+                              <Insets right="7.0" top="7.0" />
+                           </HBox.margin>
+                        </Button>
+                        <Button id="close" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" onAction="#onClose" prefHeight="20.0" prefWidth="20.0" styleClass="topbar">
+                           <HBox.margin>
+                              <Insets right="7.0" top="7.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children></HBox>
                </right>
+               <center>
+                  <HBox alignment="CENTER" onMouseDragged="#onDrag" onMousePressed="#onDragStarted" onMouseReleased="#onDragEnded" BorderPane.alignment="CENTER">
+                     <children>
+                        <Label alignment="CENTER" contentDisplay="CENTER" text="Cinema" textAlignment="CENTER" textFill="WHITE">
+                           <font>
+                              <Font name="System Bold" size="16.0" />
+                           </font>
+                           <HBox.margin>
+                              <Insets top="5.0" />
+                           </HBox.margin>
+                        </Label>
+                     </children>
+                     <padding>
+                        <Insets left="88.0" />
+                     </padding>
+                  </HBox>
+               </center>
             </BorderPane>
-            <HBox alignment="CENTER" onMouseDragged="#onDrag" onMousePressed="#onDragStarted" onMouseReleased="#onDragEnded" stylesheets="@../utils/main.css">
-               <children>
-                  <Label alignment="CENTER" contentDisplay="CENTER" text="Cinema" textAlignment="CENTER" textFill="WHITE">
-                     <font>
-                        <Font name="System Bold" size="16.0" />
-                     </font>
-                     <HBox.margin>
-                        <Insets top="5.0" />
-                     </HBox.margin>
-                  </Label>
-               </children>
-            </HBox>
          </children>
       </StackPane>
    </top>
