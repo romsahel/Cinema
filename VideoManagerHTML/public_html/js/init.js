@@ -62,11 +62,19 @@ function onPageLoaded()
 	episodes.on('click', 'li  > div > span', onSeenToggleClick);
 
 	genresList.on('click', 'li', function () {
-		filterByCategory($(this).text());
+		filterByGenre($(this).text());
 	});
 
 	$("#locationsList").on('click', 'li', function () {
 		filterByLocation($(this).text());
+	});
+
+	$("#sortList").on('click', 'li', function () {
+		var sorter = $(this).text().toLowerCase();
+		if (sorter === "rating")
+			sortMediaList("imdbRating", -1);
+		else
+			sortMediaList(sorter, (sorter === "year") ? -1 : 1);
 	});
 
 	if (navigator.vendor === "Google Inc.")

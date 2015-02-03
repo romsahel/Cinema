@@ -9,17 +9,19 @@ import com.sun.webkit.dom.HTMLDivElementImpl;
 import contextmenu.CContextMenu;
 import static contextmenu.CContextMenu.hide;
 import editdialog.EditDialog;
+import files.Database;
+import files.Settings;
 import gnu.trove.map.hash.THashMap;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
 import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.web.WebEngine;
 import videomanagerjava.Media;
-import files.Database;
 
 /**
  *
@@ -41,6 +43,7 @@ public class ContextMedias extends IContextMenu
 	{
 		super.init();
 
+		final EditDialog editDialog = new EditDialog();
 		final THashMap<Long, Media> database = Database.getInstance().getDatabase();
 		// <editor-fold defaultstate="collapsed" desc="Edit">
 		this.addItem("Edit", (ActionEvent event) ->
@@ -48,7 +51,7 @@ public class ContextMedias extends IContextMenu
 				 final String id = hovered.getParentElement().getAttribute("id");
 				 hide();
 				 final Media media = database.get(Long.parseLong(id, 10));
-				 new EditDialog(media).show();
+				 editDialog.show(media);
 		});
 		// </editor-fold>
 
@@ -57,7 +60,12 @@ public class ContextMedias extends IContextMenu
 			 {
 				 final String id = hovered.getParentElement().getAttribute("id");
 				 hide();
-				 database.put(Long.valueOf(id), null);
+				 Media deleted = database.put(Long.valueOf(id), null);
+				 ArrayList<String> data = new ArrayList<>();
+				 data.add(deleted.getInfo().get("name"));
+				 data.add(deleted.getInfo().get("location"));
+
+				 Settings.getInstance().getDeletedMedias().put(id, data);
 				 webEngine.executeScript("$('#" + id + "').fadeOut(200)");
 				 Database.getInstance().writeDatabase();
 		});

@@ -24,12 +24,10 @@
 				left: 0;
 
 				-webkit-animation: bounce 2.0s infinite ease-in-out;
-				animation: bounce 2.0s infinite ease-in-out;
 			}
 
 			.double-bounce2 {
 				-webkit-animation-delay: -1.0s;
-				animation-delay: -1.0s;
 			}
 
 			@-webkit-keyframes bounce {
@@ -39,10 +37,9 @@
 
 			@keyframes bounce {
 				0%, 100% {
-					transform: scale(0.0);
 					-webkit-transform: scale(0.0);
-				} 50% {
-					transform: scale(1.0);
+				}
+				50% {
 					-webkit-transform: scale(1.0);
 				}
 			}
@@ -60,19 +57,10 @@
 				height: 70px;
 				margin: 0 auto;
 				position: relative;
-				display: block;
 				border: 35px solid rgba(200, 88, 83, 0.9);
-				-webkit-box-sizing: border-box;
-				-moz-box-sizing: border-box;
 				box-sizing: border-box;
 				border-radius: 30px;
-				-webkit-border-radius: 30px;
-				-moz-border-radius: 30px;
 				-webkit-transition: none;
-				-moz-transition: none;
-				-ms-transition:	none;
-				-o-transition: none;
-				transition:	none;
 			}
 			.button-block button {
 				cursor: pointer;
@@ -90,32 +78,21 @@
 				position: absolute;
 				height: 30px;
 				width: 4px;
-				display: block;
 				top: 0;
 				-webkit-transition: all 600ms ease-in-out;
-				-moz-transition: all 600ms ease-in-out;
-				-ms-transition: all 600ms ease-in-out;
-				-o-transition: all 600ms ease-in-out;
-				transition: all 600ms ease-in-out;
 			}
 			.mark.x  {
 				right: 14px;
-				transform:rotate(45deg); /* TODO: prefix */
 				-webkit-transform: rotate(45deg);
 			}
 			.mark.xx {
 				left: 12px;
-				transform:rotate(-45deg); /* TODO: prefix */
 				-webkit-transform: rotate(-45deg);
 			}
 			.button-block.canceled  {
 				border-width: 4px;
 				border-color: #1ABC9C;
 				-webkit-transition: border 600ms ease-in-out;
-				-moz-transition: border 600ms ease-in-out;
-				-ms-transition: border 600ms ease-in-out;
-				-o-transition: border 600ms ease-in-out;
-				transition: border 600ms ease-in-out;
 			}
 			.button-block.canceled .mark { background-color: #1ABC9C; }
 			.button-block.canceled .mark.x {

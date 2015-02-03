@@ -148,7 +148,7 @@ public class Database
 
 	private boolean readMapSeasons(JSONObject obj, final TreeMap<String, TreeMap<String, Episode>> map)
 	{
-		final boolean isNotNull = obj != null;
+		final boolean isNotNull = (obj != null);
 		if (isNotNull)
 			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
 			{

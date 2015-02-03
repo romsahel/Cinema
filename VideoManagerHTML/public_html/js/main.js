@@ -139,12 +139,11 @@ function _setSelection()
 {
 	if (selection.id === "")
 		return;
-
 	var currentSelection = $("#" + selection.id + ":visible");
 	if (currentSelection.length > 0)
 	{
 		currentSelection.click();
-		$("html, body").animate({scrollTop: currentSelection.offset().top - 50}, 500);
+		$("body > div").animate({scrollTop: currentSelection.offset().top - 50}, 500);
 	}
 	else
 	{

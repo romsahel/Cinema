@@ -54,33 +54,35 @@ public class EditDialogController extends AnchorPane
 	private final EditDialog parent;
 	private final Stage stage;
 	private final Delta dragDelta = new Delta();
-	private final Media media;
+	private Media media;
 	private String newImg;
 	private TreeMap<String, TreeMap<String, Episode>> newSeasons;
 
-	public EditDialogController(EditDialog parent, Media media)
+	public EditDialogController(EditDialog parent)
 	{
 		load();
 
-		final THashMap<String, String> info = media.getInfo();
+		this.parent = parent;
+		this.stage = parent.getStage();
+	}
+
+	public void init(Media media1)
+	{
+		final THashMap<String, String> info = media1.getInfo();
 		final String text = info.get("name");
 		titleField.setText(text);
 		windowTitle.setText(text);
 		boolean isShow = (info.get("type") != null && info.get("type").equals("show"));
 		typeCombo.getSelectionModel().select(isShow ? 1 : 0);
-
 		final String img = info.get("img");
 		File f = new File(Downloader.POSTER_PATH + ((img == null) ? "unknown.jpg" : img));
 		imageView.setImage(new Image(f.toURI().toString()));
-
 		this.newSeasons = new TreeMap<>();
-		initTree(media);
-
-		this.parent = parent;
-		this.stage = parent.getStage();
-		this.media = media;
+		initTree(media1);
+		this.media = media1;
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initTree(Media media)
 	{
 		tree.setShowRoot(false);

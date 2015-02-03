@@ -66,8 +66,6 @@ public class Main extends Application
 		final Scene scene = new Scene(fxml); // create a scene from new CustomDecorator
 		scene.setFill(null);
 
-		scene.getStylesheets().add("utils/main.css");
-
 		Settings.getInstance().readSettings();
 		Database.getInstance().readDatabase();
 		Database.getInstance().backupDatabase();

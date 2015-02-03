@@ -12,14 +12,6 @@
     -fx-padding: 0.333333em 0.083333em 0.666667em 0.083333em; /* 4 1 8 1 */
 }
 
-.utility-buttons {
-	-fx-background-color: none;
-}
-
-.utility-buttons:hover {
-	-fx-background-color: red;
-}
-
 .topbar {
 	-fx-background-repeat: no-repeat;
 	-fx-background-size: auto;
@@ -46,5 +38,4 @@
 }
 #close:hover {
 	-fx-background-position: -100px, 0px;
-	-webkit-filter: brightness(1);
 }

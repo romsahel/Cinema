@@ -81,8 +81,16 @@ function updateGenres(genres)
 	}
 }
 
-function sortMediaList()
+var currentSorter = "name";
+function sortMediaList(sorter, factor)
 {
+	if (sorter && sorter === currentSorter)
+		return;
+
+	sorter = (sorter) ? sorter : "name";
+	factor = (factor) ? factor : 1;
+	currentSorter = sorter;
+
 	var list = document.getElementById('media-list');
 	if (!list)
 		return;
@@ -90,9 +98,9 @@ function sortMediaList()
 	toSort = Array.prototype.slice.call(toSort, 0);
 
 	toSort.sort(function (a, b) {
-		var aord = medias[a.id].info.name.toLowerCase();
-		var bord = medias[b.id].info.name.toLowerCase();
-		return (aord > bord) ? 1 : -1;
+		var aord = medias[a.id].info[sorter].toLowerCase();
+		var bord = medias[b.id].info[sorter].toLowerCase();
+		return ((aord > bord) ? 1 : -1) * factor;
 	});
 
 	list.innerHTML = "";

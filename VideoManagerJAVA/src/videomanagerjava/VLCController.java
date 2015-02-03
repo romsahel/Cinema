@@ -5,24 +5,25 @@
  */
 package videomanagerjava;
 
+import files.Database;
+import files.Settings;
 import gnu.trove.map.hash.THashMap;
 import java.awt.Desktop;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.MainController;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
+import utils.Formatter;
 import utils.RequestUtils;
 import utils.Utils;
-import files.Database;
-import files.Settings;
-import utils.Formatter;
 
 /**
  *
@@ -158,14 +159,20 @@ public class VLCController
 		try
 		{
 			File file = new File(path);
-			String cmd = "C:\\Program Files (x86)\\Python\\Scripts\\subliminal.exe";
-			String directory = "\"" + file.getParent() + "\"";
-			String name = "\"" + file.getName() + "\"";
-			cmd = String.format("%s -l %s -d %s %s", cmd, language, directory, name);
-			Logger.getLogger(VLCController.class.getName()).log(Level.INFO, cmd);
-			Process process = Runtime.getRuntime().exec(cmd);
-			process.waitFor(2, TimeUnit.MINUTES);
-		} catch (IOException | InterruptedException ex)
+			String program = "C:\\Program Files (x86)\\Python\\Scripts\\subliminal.exe";
+			final String name = '"' + file.getAbsolutePath() + '"';
+			String[] cmd =
+			{
+				program, "-l", language, "-f", "--", name};
+			Logger.getLogger(VLCController.class.getName()).log(Level.INFO, program + " -l " + language + " -f -- " + name);
+			ProcessBuilder builder = new ProcessBuilder(cmd);
+			builder.redirectErrorStream(true);
+			Process process = builder.start();
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+			String line;
+			while ((line = reader.readLine()) != null)
+				Logger.getLogger(VLCController.class.getName()).log(Level.INFO, line);
+		} catch (IOException ex)
 		{
 			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
 		}

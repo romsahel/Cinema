@@ -1,6 +1,7 @@
 ====
 User must be able to edit details in order to change description, title, etc.
 User must be able to hide banner info details
+
 State (unavailable, available)
 Timer to shutdoxn
 Progress bar representing time of episode
@@ -8,7 +9,11 @@ Look into HPPC library to decrease memory usage
 Texte "Add a location" si vide
 Tuto
 
-Loading screen for OK and Fetch in edit dialog,
+Icons topleft topright of selected media to edit and delete
+Screen to see deleted medias (and to restore them)
+SCroll to selected media on launch
+Activate Subs when selecting subs
+Change call to subliminal (no fullpath)
 
 ====
 Requirements:

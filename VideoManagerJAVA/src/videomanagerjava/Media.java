@@ -192,7 +192,10 @@ public class Media
 		Pattern pattern = Pattern.compile("genres\":\"\\[(.*)\\]\"");
 		Matcher matcher = pattern.matcher(array);
 		if (matcher.find())
-			array = array.replace(matcher.group(), "genres\": [" + matcher.group(1).replace("\\\"", "\"") + "]");
+		{
+			final String genres = matcher.group(1).replace("\\\"", "\"").replace("\" ", "\"");
+			array = array.replace(matcher.group(), "genres\": [" + genres + "]");
+		}
 		return "\\" + array;
 	}
 

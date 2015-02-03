@@ -99,10 +99,10 @@ public final class CWebEngine
 		Database.getInstance().writeDatabase();
 
 		final THashMap<String, String> general = Settings.getInstance().getGeneral();
-		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
-//		Utils.callFuncJS(webEngine, "setToggles", general.get("playList"), general.get("withSubtitles"));
 		Utils.callFuncJS(webEngine, "sortMediaList");
 		Utils.callFuncJS(webEngine, "$(\"#locationsList > li\")[0].click");
+		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
+//		Utils.callFuncJS(webEngine, "setToggles", general.get("playList"), general.get("withSubtitles"));
 
 		MainController.stopLoading();
 		if (newItems > 0)
@@ -167,6 +167,8 @@ public final class CWebEngine
 				if (inner != null && !toDelete.contains(inner) && outer != inner)
 				{
 					final THashMap<String, String> inInfo = inner.getInfo();
+					if (!inInfo.get("location").equals(outInfo.get("location")))
+						continue;
 					final String outImg = outInfo.get("img");
 					if (outImg != null && outImg.equals(inInfo.get("img")))
 					{
