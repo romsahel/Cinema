@@ -20,41 +20,30 @@ function seenNextEpisode(name, index)
 		playing.season.value[name].seen = true;
 }
 
-updateTimeouts = {};
-function updateMedia(id, array, idToRemove)
+var updateTimeouts = {};
+var updating = 0;
+function updateMedia(id, array)
 {
+	id = (id) ? id : array.id;
 	var elt = $("#" + id);
 	if (!elt.html())
 	{
 		if (updateTimeouts[id])
 			clearTimeout(updateTimeouts[id]);
-		if (idToRemove && updateTimeouts[idToRemove])
-			clearTimeout(updateTimeouts[idToRemove]);
 
 		updateTimeouts[id] = setTimeout(function () {
-			updateMedia(id, array, idToRemove);
+			delete updateTimeouts[id];
+			updateMedia(id, array);
 		}, 500);
 		return;
 	}
 
+	updating = updating + 1;
 	var selected = elt.hasClass("selected");
-
-	var toRemove;
-
-	if (idToRemove)
-	{
-		toRemove = $("#" + idToRemove);
-		selected = selected || toRemove.hasClass("selected");
-		toRemove.fadeTo(200, 0);
-	}
-
 
 	elt.fadeTo(200, 0, function ()
 	{
 		$(this).remove();
-		if (toRemove)
-			toRemove.remove();
-
 		if (selected)
 			currentMedia = null;
 		if (array)
@@ -66,7 +55,27 @@ function updateMedia(id, array, idToRemove)
 		sortMediaList();
 		if (selected)
 			newMedia.click();
+		updating = updating - 1;
 	});
+}
+
+function mergeAndUpdate(deleted, changed)
+{
+	if (updating > 0 || Object.keys(updateTimeouts).length > 0)
+	{
+		setTimeout(function () {
+			mergeAndUpdate(deleted, changed);
+		}, 500);
+		return;
+	}
+
+	for (var i in changed)
+		if (changed[i])
+			updateMedia(null, changed[i]);
+	for (var i in deleted)
+		if (deleted[i])
+			$("#" + deleted[i]).remove();
+
 }
 
 function setMediaLoading(id)

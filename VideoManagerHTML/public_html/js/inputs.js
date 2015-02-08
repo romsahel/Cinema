@@ -8,13 +8,6 @@ function goToLink(elt)
 		app.openLink(url);
 }
 
-function preventEnter(e)
-{
-//	if (e.keyCode === 13)
-//		return cancelEvent(e);
-//	return;
-}
-
 var timeout = null;
 function updateSearch(search)
 {
@@ -38,65 +31,43 @@ function updateSearch(search)
 		else
 			div.stop().fadeIn(200);
 	}
-//	if (search !== "")
-	timeout = setTimeout(function () {
-		selectFirstVisibleMedia();
-	}, 250);
+
+	if (currentMedia === null)
+		timeout = setTimeout(function () {
+			selectFirstVisibleMedia();
+		}, 250);
 }
 
-$(document).keypress(function (e) {
+function focusSearch(search)
+{
 	if (!searchBar.is(":focus"))
 	{
-		if (e.which !== 0 && e.charCode !== 0
-				&& !e.ctrlKey && !e.metaKey && !e.altKey)
-		{
-			if (e.keyCode === 60)
-			{
-				app.reload();
-				return;
-			}
-			if ((e.keyCode | e.charCode) !== 13)
-				searchBar.focus();
-		}
+		searchBar.val(searchBar.val() + search);
+		searchBar.focus();
+		updateSearch(searchBar.val());
 	}
-});
+}
 
-$(document).keyup(function (e) {
-	if (e.keyCode === 13)    // enter
+function unfocusSearch(isEnter)
+{
+	if (searchBar.is(":focus"))
+		searchBar.blur();
+	else
 	{
-		if (searchBar.is(":focus"))
-			searchBar.blur();
-		else
+		if (isEnter)
 			playMedia();
-	}
-	else if (e.keyCode === 27)   // esc
-	{
-		if (searchBar.is(":focus"))
-			searchBar.blur();
 		else if (searchBar.val() !== "")
 		{
 			searchBar.val("");
 			updateSearch("");
-			selectFirstVisibleMedia();
 		}
 	}
-});
+}
 
-repeatRateTimeout = null;
-$(document).keydown(function (e)
+function selectSiblingMedia(down)
 {
-	var down = null;
-	if (e.keyCode === 38) // up
-		down = false;
-	else if (e.keyCode === 40) // down
-		down = true;
-
-	if (!searchBar.is(":focus") && repeatRateTimeout === null && down !== null)
+	if (!searchBar.is(":focus") && down !== null)
 	{
-		repeatRateTimeout = setTimeout(function () {
-			repeatRateTimeout = null;
-		}, 150);
-
 		$("#files").focus();
 		var selection = $("#episodes > ul.selected > li.selected");
 		selection = (down) ? selection.next() : selection.prev();
@@ -113,13 +84,11 @@ $(document).keydown(function (e)
 				episodes.scrollTop(topPos + height);
 		}
 	}
-
-	if (down !== null)
-		return cancelEvent(e);
-});
+}
 
 function handleSearchFocus(onFocus)
 {
+	searchBarParent.finish();
 	if (onFocus)
 	{
 		searchBarParent.data('width', searchBarParent.width());
@@ -163,3 +132,14 @@ function onResize()
 			searchBarParent.animate({width: split.position().left - ($(window).width() - (searchBarParent.offset().left + searchBarParent.width()))}, 50);
 	}
 }
+
+$(document).keydown(function (e)
+{
+	if (!searchBar.is(":focus"))
+		return cancelEvent(e);
+});
+$(document).keypress(function (e)
+{
+	if (!searchBar.is(":focus"))
+		return cancelEvent(e);
+});

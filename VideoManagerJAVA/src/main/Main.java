@@ -18,6 +18,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.web.WebEngine;
@@ -57,11 +58,12 @@ public class Main extends Application
 	@Override
 	public void start(Stage primaryStage)
 	{
-
 		stage = primaryStage;
 		stage.initStyle(StageStyle.UNDECORATED);
+		stage.getIcons().add(new Image(getClass().getResource("res/main.png").toString()));
 
-		MainController fxml = new MainController(stage); // load an fxml
+
+		MainController fxml = MainController.getInstance(); // load an fxml
 		stage.initStyle(StageStyle.TRANSPARENT); //undecorated/transparent
 		final Scene scene = new Scene(fxml); // create a scene from new CustomDecorator
 		scene.setFill(null);

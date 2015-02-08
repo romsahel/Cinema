@@ -10,6 +10,24 @@ public class Formatter
 {
 
 	/**
+	 * Formats a full absolute path into a name by keeping only what follows the last separator
+	 * and by removing everything after specified keywords (Utils.DUMP_KEYWORDS)
+	 * <p>
+	 * @param string the string to format
+	 * <p>
+	 * @return
+	 */
+	public static String getCleanName(final String string)
+	{
+		if (string == null)
+			return null;
+		String file = Formatter.getSuffix(string, Utils.getSeparator());
+		file = Formatter.getPrefix(file, Utils.DUMP_KEYWORDS);
+		file = file.replace('.', ' ').trim();
+		return file;
+	}
+
+	/**
 	 * Formats the name for in more legible version:
 	 * <ul>
 	 * <li>Capitalizes the first letter</li>

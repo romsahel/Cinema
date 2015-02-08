@@ -5,6 +5,8 @@
  */
 package videomanagerjava;
 
+import files.Database;
+import files.Settings;
 import gnu.trove.map.hash.THashMap;
 import java.awt.Desktop;
 import java.io.File;
@@ -22,10 +24,8 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 import javafx.stage.DirectoryChooser;
 import main.Main;
-import utils.Utils;
-import files.Database;
-import files.Settings;
 import utils.Formatter;
+import utils.Utils;
 
 /**
  *

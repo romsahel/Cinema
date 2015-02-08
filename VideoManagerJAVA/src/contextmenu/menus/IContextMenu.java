@@ -47,7 +47,8 @@ public abstract class IContextMenu
 	public MenuItem addItem(String label, EventHandler<ActionEvent> onAction)
 	{
 		MenuItem item = new MenuItem(label);
-		item.setOnAction(onAction);
+		if (onAction != null)
+			item.setOnAction(onAction);
 		items.add(item);
 
 		return item;

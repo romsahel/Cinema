@@ -10,12 +10,10 @@ import contextmenu.CContextMenu;
 import static contextmenu.CContextMenu.hide;
 import editdialog.EditDialog;
 import files.Database;
-import files.Settings;
 import gnu.trove.map.hash.THashMap;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -60,13 +58,8 @@ public class ContextMedias extends IContextMenu
 			 {
 				 final String id = hovered.getParentElement().getAttribute("id");
 				 hide();
-				 Media deleted = database.put(Long.valueOf(id), null);
-				 ArrayList<String> data = new ArrayList<>();
-				 data.add(deleted.getInfo().get("name"));
-				 data.add(deleted.getInfo().get("location"));
-
-				 Settings.getInstance().getDeletedMedias().put(id, data);
-				 webEngine.executeScript("$('#" + id + "').fadeOut(200)");
+				 Database.getInstance().removeMedia(false, database.get(Long.valueOf(id)));
+				 webEngine.executeScript("$('#" + id + "').fadeOut(200); $(\"#detail\").fadeTo(200, 0);");
 				 Database.getInstance().writeDatabase();
 		});
 		// </editor-fold>

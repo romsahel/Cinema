@@ -6,10 +6,10 @@
 package files;
 
 import gnu.trove.map.hash.THashMap;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -28,15 +28,14 @@ import videomanagerjava.Location;
 public class Settings
 {
 
+	private static final String filename = Utils.APPDATA + "config.json";
 	private final THashMap<String, Location> locations;
 	private final THashMap<String, String> general;
-	private final THashMap<String, ArrayList<String>> deletedMedias;
 
 	private Settings()
 	{
 		locations = new THashMap<>();
 		general = new THashMap<>();
-		deletedMedias = new THashMap<>();
 	}
 
 	public void writeSettings()
@@ -45,9 +44,8 @@ public class Settings
 
 		writeMap("locations", locations, obj);
 		writeMap("general", general, obj);
-		writeMap("deleted", deletedMedias, obj);
 
-		try (FileWriter file = new FileWriter(Utils.APPDATA + "config.json"))
+		try (FileWriter file = new FileWriter(filename))
 		{
 			file.write(JSONObject.toJSONString(obj));
 			file.flush();
@@ -67,15 +65,21 @@ public class Settings
 	{
 		try
 		{
+			File file = new File(filename);
+			if (!file.exists())
+			{
+				file.createNewFile();
+				return;
+			}
+
 			JSONParser parser = new JSONParser();
 
-			Object obj = parser.parse(new FileReader(Utils.APPDATA + "config.json"));
+			Object obj = parser.parse(new FileReader(file));
 
 			JSONObject jsonObject = (JSONObject) obj;
 
 			readLocationsMap((JSONObject) jsonObject.get("locations"), locations);
 			readMap((JSONObject) jsonObject.get("general"), general);
-			readDeletedMap((JSONObject) jsonObject.get("deleted"), deletedMedias);
 
 		} catch (IOException | ParseException ex)
 		{
@@ -96,23 +100,6 @@ public class Settings
 				if (get != null)
 				{
 					final String value = get.toString();
-					map.put(key, value);
-				}
-			}
-	}
-
-	@SuppressWarnings("unchecked")
-	private void readDeletedMap(JSONObject obj, final THashMap<String, ArrayList<String>> map)
-	{
-		if (obj != null)
-			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
-			{
-				final String key = (String) it.next();
-				final Object get = obj.get(key);
-
-				if (get != null)
-				{
-					final ArrayList<String> value = (ArrayList<String>) get;
 					map.put(key, value);
 				}
 			}
@@ -150,14 +137,6 @@ public class Settings
 	public THashMap<String, String> getGeneral()
 	{
 		return general;
-	}
-
-	/**
-	 * @return the deletedMedias
-	 */
-	public THashMap<String, ArrayList<String>> getDeletedMedias()
-	{
-		return deletedMedias;
 	}
 
 	private static class SettingsHolder

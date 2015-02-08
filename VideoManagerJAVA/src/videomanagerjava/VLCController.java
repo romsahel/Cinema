@@ -69,7 +69,7 @@ public class VLCController
 			}
 		});
 
-		MainController.startLoading(thread, "Launching media");
+		MainController.getInstance().startLoading(thread, "Launching media");
 		thread.start();
 
 	}
@@ -89,7 +89,7 @@ public class VLCController
 			playEpisode(episode, withSubtitles);
 		});
 
-		MainController.startLoading(thread, "Launching media");
+		MainController.getInstance().startLoading(thread, "Launching media");
 		thread.start();
 	}
 
@@ -103,21 +103,21 @@ public class VLCController
 
 		if (withSubtitles)
 		{
-			MainController.logLoadingScreen("Downloading subtitles");
+			MainController.getInstance().logLoadingScreen("Downloading subtitles");
 			getSubtitles(path);
 		}
 
 //		If the request is null, we must launch VLC and wait for it to be prepared
 		if (sendRequest("command=pl_empty") == null)
 		{
-			MainController.logLoadingScreen("Starting VLC");
+			MainController.getInstance().logLoadingScreen("Starting VLC");
 			runVLC(path);
 		}
 		else
 			sendRequest("command=in_play&input=" + path);
 
 		String sendRequest = null;
-		MainController.logLoadingScreen("Waiting for VLC");
+		MainController.getInstance().logLoadingScreen("Waiting for VLC");
 		while (currentId == -1 && !Thread.currentThread().isInterrupted())
 		{
 			sendRequest = sendRequest("command=seek&val=" + properties.get("time"));
@@ -145,7 +145,7 @@ public class VLCController
 		timerTask = new TimerTaskImpl(properties, filename);
 		timer.scheduleAtFixedRate(timerTask, 10000, 10000);
 
-		MainController.stopLoading();
+		MainController.getInstance().stopLoading();
 	}
 
 	private static void getSubtitles(String path)
@@ -159,7 +159,7 @@ public class VLCController
 		try
 		{
 			File file = new File(path);
-			String program = "C:\\Program Files (x86)\\Python\\Scripts\\subliminal.exe";
+			String program = "subliminal";
 			final String name = '"' + file.getAbsolutePath() + '"';
 			String[] cmd =
 			{

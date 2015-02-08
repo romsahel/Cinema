@@ -7,12 +7,12 @@ package contextmenu.menus;
 
 import contextmenu.CContextMenu;
 import contextmenu.ComboBoxMenuItem;
+import files.Settings;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.MenuItem;
 import javafx.scene.web.WebEngine;
-import files.Settings;
 
 /**
  *
@@ -30,7 +30,7 @@ public class ContextSubtitles extends IContextMenu
 	@Override
 	public final void init()
 	{
-		MenuItem labelItem = new MenuItem("Subtitles languages:");
+		MenuItem labelItem = new MenuItem("Subtitles language:");
 		labelItem.setDisable(true);
 		items.add(labelItem);
 
@@ -42,16 +42,15 @@ public class ContextSubtitles extends IContextMenu
 		comboItems.add("Italian");
 
 		String language = Settings.getInstance().getGeneral().get("language");
-		combo.getSelectionModel().select(language);
+		combo.getSelectionModel().select((language == null) ? "English" : language);
 
 		combo.valueProperty().addListener((ObservableValue<? extends String> obs, String old, String newValue) ->
 		{
 			Settings.getInstance().getGeneral().put("language", newValue);
+			utils.Utils.callFuncJS(webEngine, "setToggles", "\\null", "\\!withSubtitles");
 		});
 
-		MenuItem languageItem = new ComboBoxMenuItem((combo));
-
-		items.add(languageItem);
+		items.add(new ComboBoxMenuItem((combo)));
 	}
 
 	@Override

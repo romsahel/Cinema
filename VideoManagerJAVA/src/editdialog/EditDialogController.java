@@ -109,7 +109,7 @@ public class EditDialogController extends AnchorPane
 			root.getChildren().add(season);
 		}
 
-		tree.setCellFactory((TreeView<String> p) -> new EditableTreeCell(media, newSeasons));
+		tree.setCellFactory((TreeView<String> p) -> new EditableTreeCell(newSeasons));
 		tree.setRoot(root);
 	}
 

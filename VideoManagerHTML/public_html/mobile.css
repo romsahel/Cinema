@@ -4,6 +4,12 @@
 	}
 }
 
+@media screen and (max-width:1000px) {
+	#selectLocation > a:first-child {
+		display: none;
+	}
+}
+
 @media screen and (max-height:600px) {
 	#banner {
 		height: 70px;

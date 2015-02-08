@@ -19,6 +19,7 @@ import org.json.simple.JSONValue;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 import utils.Formatter;
+import utils.Utils;
 
 /**
  *
@@ -40,22 +41,24 @@ public class Media
 	/*
 	 * Constructor that should only be called by the FileWalker since it creates a "Default" season
 	 */
-	public Media(String name, long id)
+	public Media(String path, long id)
 	{
-		this(name, id, null);
+		this(path, id, null);
 		seasons.put(DEFAULT_KEY, new TreeMap<>());
 	}
 
-	public Media(String name, long id, String img)
+	public Media(String path, long id, String img)
 	{
 		info = new THashMap<>();
 		this.seasons = new TreeMap<>();
 
 		this.id = id;
-		if (name != null)
+		if (path != null)
 		{
+			String name = Formatter.getCleanName(Formatter.getSuffix(path, Utils.getSeparator()));
 			setInfo("year", Formatter.getYear(name));
 			setInfo("name", Formatter.formatName(name));
+			setInfo("path", path);
 		}
 		setInfo("img", img);
 	}
@@ -189,7 +192,7 @@ public class Media
 		//	appends the season episodes
 		sb.append(", \"seasons\": ").append(JSONValue.toJSONString(this.getSeasons()));
 		String array = "{" + sb.toString() + "}";
-		Pattern pattern = Pattern.compile("genres\":\"\\[(.*)\\]\"");
+		Pattern pattern = Pattern.compile("genres\":\"\\[(.*?)\\]\"");
 		Matcher matcher = pattern.matcher(array);
 		if (matcher.find())
 		{

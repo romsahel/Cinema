@@ -15,7 +15,6 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import videomanagerjava.Episode;
-import videomanagerjava.Media;
 
 /**
  *
@@ -25,19 +24,40 @@ public final class EditableTreeCell extends TreeCell<String>
 {
 
 	private TextField textField;
-	private final Media media;
 	private final TreeMap<String, TreeMap<String, Episode>> newSeasons;
 
-	public EditableTreeCell(Media media, TreeMap<String, TreeMap<String, Episode>> newSeasons)
+	public EditableTreeCell(TreeMap<String, TreeMap<String, Episode>> newSeasons)
 	{
 		MenuItem addMenuItem = new MenuItem("Rename");
 		addMenuItem.setOnAction((ActionEvent event) ->
 		{
 			startEdit();
 		});
-		setContextMenu(new ContextMenu(addMenuItem));
-		this.media = media;
+		MenuItem deleteMenuItem = new MenuItem("Delete");
+		deleteMenuItem.setOnAction((ActionEvent event) ->
+		{
+			removeItem();
+		});
+		setContextMenu(new ContextMenu(addMenuItem, deleteMenuItem));
 		this.newSeasons = newSeasons;
+	}
+
+	private void removeItem()
+	{
+		final TreeItem<String> item = this.getTreeItem();
+
+		if (item.isLeaf())
+		{
+			final String parent = this.getTreeItem().getParent().getValue();
+			final TreeMap<String, Episode> season = newSeasons.get(parent);
+			season.remove(this.getString());
+			if (season.size() == 0)
+				newSeasons.remove(parent);
+		}
+		else
+			newSeasons.remove(this.getString());
+
+		item.getParent().getChildren().remove(item);
 	}
 
 	@Override

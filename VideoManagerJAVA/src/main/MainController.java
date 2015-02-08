@@ -5,15 +5,34 @@
  */
 package main;
 
+import contextmenu.menus.ContextFiles;
+import files.Database;
+import files.Settings;
+import java.awt.Desktop;
+import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.animation.FadeTransition;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Rectangle2D;
 import javafx.scene.Cursor;
+import javafx.scene.control.CheckBox;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.MenuItem;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.effect.GaussianBlur;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -22,6 +41,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 import netscape.javascript.JSObject;
+import videomanagerjava.CWebEngine;
 
 /**
  * FXML Controller class
@@ -31,47 +51,38 @@ import netscape.javascript.JSObject;
 public class MainController extends BorderPane
 {
 
-	private static boolean shouldBeLoading;
-
 	@FXML
-	private WebView webView;
-	private static WebView staticWebView;
+	private WebView webView, loadingScreen;
 	@FXML
-	private StackPane loadingPane;
-	private static StackPane staticLoadingPane;
-
-	@FXML
-	private WebView loadingScreen;
-	private static WebView staticLoadingScreen;
-	private static LoadingScreenInterface loadingScreenInterface;
+	private StackPane loadingPane, settingsPane;
 	@FXML
 	private Label loadingLabel;
-	private static Label staticLoadingLabel;
+	@FXML
+	private TableView<ArrayList<String>> deletedTable;
+	@FXML
+	private CheckBox mergedCheck, deletedCheck;
 
 	private double dragDeltaX;
 	private double dragDeltaY;
 	private final Stage stage;
 	private final Screen screen;
+	private boolean shouldBeLoading;
+	private final LoadingScreenInterface loadingScreenInterface;
+	private boolean itemsUndeleted;
 
-	public MainController(Stage stage)
+	private MainController()
 	{
 		load();
 
-		screen = Screen.getPrimary();
+		settingsPane.setVisible(false);
 
-		staticLoadingScreen = loadingScreen;
-		staticWebView = webView;
-		staticLoadingLabel = loadingLabel;
-		staticLoadingPane = loadingPane;
+		screen = Screen.getPrimary();
 
 		loadingScreenInterface = new LoadingScreenInterface();
 		((JSObject) loadingScreen.getEngine().executeScript("window")).setMember("app", loadingScreenInterface);
 
-		staticLoadingPane.setVisible(true);
-		staticWebView.setVisible(false);
-
-		loadingScreen.getEngine().load(getClass().getResource("loadingScreen.html").toExternalForm());
-		this.stage = stage;
+		loadingScreen.getEngine().load(getClass().getResource("res/loadingScreen.html").toExternalForm());
+		this.stage = Main.getStage();
 
 		int width = 940;
 		int height = 640;
@@ -106,6 +117,46 @@ public class MainController extends BorderPane
 
 	}
 
+	@SuppressWarnings("unchecked")
+	@FXML
+	public void initialize()
+	{
+		final ObservableList<TableColumn<ArrayList<String>, ?>> columns = deletedTable.getColumns();
+		for (int i = 0; i < 4; i++)
+		{
+			final int j = i;
+			final TableColumn<ArrayList<String>, String> get = (TableColumn<ArrayList<String>, String>) columns.get(j);
+			get.setCellValueFactory((TableColumn.CellDataFeatures<ArrayList<String>, String> p) ->
+			{
+				return new SimpleStringProperty(p.getValue().get(j));
+			});
+		}
+
+		MenuItem addMenuItem = new MenuItem("Unmerge / Undelete");
+		addMenuItem.setOnAction((ActionEvent event) ->
+		{
+			itemsUndeleted = true;
+			final ArrayList<String> selectedItem = deletedTable.getSelectionModel().getSelectedItem();
+			String id = selectedItem.get(3);
+			if (Database.getInstance().getDeletedMedias().remove(Long.valueOf(id)) == null)
+				Database.getInstance().getMergedMedias().remove(Long.valueOf(id));
+			deletedTable.getItems().remove(selectedItem);
+		});
+		MenuItem deleteMenuItem = new MenuItem("Show in Explorer");
+		deleteMenuItem.setOnAction((ActionEvent event) ->
+		{
+			String path = deletedTable.getSelectionModel().getSelectedItem().get(2);
+			try
+			{
+				Desktop.getDesktop().open(new File(path));
+			} catch (IOException ex)
+			{
+				Logger.getLogger(ContextFiles.class.getName()).log(Level.SEVERE, null, ex);
+			}
+		});
+		deletedTable.setContextMenu(new ContextMenu(addMenuItem, deleteMenuItem));
+	}
+
 	@FXML
 	protected void onMinimize(ActionEvent event)
 	{
@@ -122,6 +173,87 @@ public class MainController extends BorderPane
 	protected void onClose(ActionEvent event)
 	{
 		Main.closeApplication();
+	}
+
+	@FXML
+	protected void onSettings(ActionEvent event)
+	{
+		if (!settingsPane.isVisible())
+		{
+			itemsUndeleted = false;
+			FadeTransition ftOut = new FadeTransition(Duration.millis(250), settingsPane);
+			ftOut.setFromValue(0.0);
+			ftOut.setToValue(0.98);
+			ftOut.play();
+			settingsPane.setVisible(true);
+
+			final GaussianBlur gaussianBlur = new GaussianBlur(15);
+			loadingPane.setEffect(gaussianBlur);
+			webView.setEffect(gaussianBlur);
+
+			populateDeletedTable(true, true);
+
+			ftOut.setOnFinished((ActionEvent event1) ->
+			{
+				deletedTable.autosize();
+			});
+		}
+		else
+		{
+			double duration = 250;
+			if (itemsUndeleted)
+			{
+				CWebEngine.walkFiles();
+				CWebEngine.refreshList();
+				duration = 500;
+			}
+			else
+			{
+				loadingPane.setEffect(null);
+				webView.setEffect(null);
+			}
+			FadeTransition ftOut = new FadeTransition(Duration.millis(duration), settingsPane);
+			ftOut.setFromValue(0.98);
+			ftOut.setToValue(0.0);
+			ftOut.play();
+
+			ftOut.setOnFinished((ActionEvent event1) ->
+			{
+				settingsPane.setVisible(false);
+				loadingPane.setEffect(null);
+				webView.setEffect(null);
+			});
+
+		}
+
+	}
+
+	private void populateDeletedTable(boolean showDeleted, boolean showMerged)
+	{
+		final ObservableList<ArrayList<String>> items = FXCollections.observableArrayList();
+		if (showDeleted)
+			items.addAll(Database.getInstance().getDeletedMedias().values());
+		if (showMerged)
+			items.addAll(Database.getInstance().getMergedMedias().values());
+		deletedTable.setItems(items);
+	}
+
+	@FXML
+	protected void onCheck(ActionEvent event)
+	{
+		populateDeletedTable(deletedCheck.isSelected(), mergedCheck.isSelected());
+	}
+
+	@FXML
+	protected void onAutoMergeCheck(ActionEvent event)
+	{
+		final boolean selected = ((CheckBox) event.getSource()).isSelected();
+		Settings.getInstance().getGeneral().put("automerge", (selected) ? "1" : "0");
+	}
+
+	@FXML
+	protected void onHelp(ActionEvent event)
+	{
 	}
 
 	@FXML
@@ -177,79 +309,107 @@ public class MainController extends BorderPane
 		stage.setHeight(h);
 	}
 
-	public static void logLoadingScreen(String message)
+	public void logLoadingScreen(String message)
 	{
-		if (staticLoadingScreen.isVisible())
+		if (loadingScreen.isVisible())
 			Platform.runLater(() ->
 			{
-				staticLoadingLabel.setText(message + "...");
+				loadingLabel.setText(message + "...");
 			});
 	}
 
-	public static void startLoading()
+	public void startLoading()
 	{
 		startLoading(null, "Loading");
 	}
 
-	public static void startLoading(Thread thread, String log)
+	public void startLoading(Thread thread, String log)
 	{
 		shouldBeLoading = true;
-		if (staticWebView.isVisible())
+		if (webView.isVisible())
 			Platform.runLater(() ->
 			{
-				staticWebView.setVisible(true);
-				staticLoadingScreen.getEngine().executeScript(
+				webView.setVisible(true);
+				loadingScreen.getEngine().executeScript(
 						LoadingScreenInterface.HTML_CANCEL + ".classList.remove('canceled');"
 				);
-				FadeTransition ftOut = new FadeTransition(Duration.millis(500), staticWebView);
+				FadeTransition ftOut = new FadeTransition(Duration.millis(500), webView);
 				ftOut.setFromValue(1.0);
 				ftOut.setToValue(0.0);
 				ftOut.play();
 
-				FadeTransition ftIn = new FadeTransition(Duration.millis(500), staticLoadingPane);
+				FadeTransition ftIn = new FadeTransition(Duration.millis(500), loadingPane);
 				ftIn.setFromValue(0.0);
 				ftIn.setToValue(1);
 				ftIn.play();
-				staticLoadingPane.setVisible(true);
+				loadingPane.setVisible(true);
 
-				staticLoadingLabel.setText(log + "...");
+				loadingLabel.setText(log + "...");
 				loadingScreenInterface.setThread(thread);
 				ftOut.setOnFinished((ActionEvent event) ->
 				{
 					if (shouldBeLoading)
 					{
 						shouldBeLoading = false;
-						staticWebView.setVisible(false);
+						webView.setVisible(false);
 					}
 				});
 			});
 	}
 
-	public static void stopLoading()
+	public void stopLoading()
 	{
 		shouldBeLoading = false;
-		if (staticLoadingPane.isVisible())
+		if (loadingPane.isVisible())
 			Platform.runLater(() ->
 			{
-				staticLoadingScreen.getEngine().executeScript(
+				loadingScreen.getEngine().executeScript(
 						LoadingScreenInterface.HTML_CANCEL + ".classList.add('canceled');"
 				);
-				staticLoadingPane.setVisible(true);
-				FadeTransition ftOut = new FadeTransition(Duration.millis(1000), staticLoadingPane);
+				loadingPane.setVisible(true);
+				FadeTransition ftOut = new FadeTransition(Duration.millis(1000), loadingPane);
 				ftOut.setFromValue(1.0);
 				ftOut.setToValue(0.0);
 				ftOut.play();
 
-				FadeTransition ftIn = new FadeTransition(Duration.millis(1000), staticWebView);
+				FadeTransition ftIn = new FadeTransition(Duration.millis(1000), webView);
 				ftIn.setFromValue(0.0);
 				ftIn.setToValue(1);
 				ftIn.play();
-				staticWebView.setVisible(true);
+				webView.setVisible(true);
 				ftOut.setOnFinished((ActionEvent event) ->
 				{
-					staticLoadingPane.setVisible(false);
+					loadingPane.setVisible(false);
 				});
 			});
+	}
+
+	@FXML
+	protected void onKeyReleased(KeyEvent keyEvent)
+	{
+		final KeyCode keycode = keyEvent.getCode();
+		if (loadingPane.isVisible())
+			return;
+		if (settingsPane.isVisible())
+			if (keycode == KeyCode.ESCAPE)
+				onSettings(null);
+			else
+				return;
+
+		if (keycode == KeyCode.ENTER)
+			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "unfocusSearch", "\\true");
+		else if (keycode.isLetterKey() || keycode.isDigitKey() || keycode == KeyCode.SPACE)
+		{
+			final String text = (keyEvent.isShiftDown()) ? keyEvent.getText().toUpperCase() : keyEvent.getText();
+			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "focusSearch", text);
+		}
+		else if (keycode == KeyCode.ESCAPE)
+			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "unfocusSearch");
+		else if (keycode == KeyCode.DOWN || keycode == KeyCode.UP)
+		{
+			final String isDown = Boolean.toString(keycode == KeyCode.DOWN);
+			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "selectSiblingMedia", '\\' + isDown);
+		}
 	}
 
 	/**
@@ -260,4 +420,16 @@ public class MainController extends BorderPane
 		return webView;
 	}
 
+	// <editor-fold defaultstate="collapsed" desc="Singleton">
+	public static MainController getInstance()
+	{
+		return MainControllerHolder.INSTANCE;
+	}
+
+	private static class MainControllerHolder
+	{
+
+		private static final MainController INSTANCE = new MainController();
+	}
+  // </editor-fold>
 }

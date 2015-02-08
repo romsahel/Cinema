@@ -37,23 +37,36 @@ public class Database
 {
 
 	private final THashMap<Long, Media> database;
+	private final THashMap<Long, ArrayList<String>> deletedMedias;
+	private final THashMap<Long, ArrayList<String>> mergedMedias;
+
 	final String filename = Utils.APPDATA + "db.json";
 
 	private Database()
 	{
 		database = new THashMap<>();
+		deletedMedias = new THashMap<>();
+		mergedMedias = new THashMap<>();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void writeDatabase()
 	{
-		ArrayList<JSONObject> db = new ArrayList<>();
+		JSONObject db = new JSONObject();
+		ArrayList<JSONObject> medias = new ArrayList<>();
 
 		for (Map.Entry<Long, Media> media : getDatabase().entrySet())
-			db.add(writeMedia(media.getKey(), media.getValue()));
+			medias.add(writeMedia(media.getKey(), media.getValue()));
+
+		db.put("medias", medias);
+
+		db.put("merged", mergedMedias);
+
+		db.put("deleted", deletedMedias);
 
 		try (FileWriter file = new FileWriter(filename))
 		{
-			file.write(JSONArray.toJSONString(db));
+			file.write(JSONObject.toJSONString(db));
 			file.flush();
 		} catch (IOException ex)
 		{
@@ -102,11 +115,18 @@ public class Database
 	{
 		try
 		{
+			File file = new File(filename);
+			if (!file.exists())
+			{
+				file.createNewFile();
+				return;
+			}
+
 			JSONParser parser = new JSONParser();
 
-			Object obj = parser.parse(new FileReader(filename));
+			JSONObject jsonObject = (JSONObject) parser.parse(new FileReader(file));
 
-			JSONArray db = (JSONArray) obj;
+			JSONArray db = (JSONArray) jsonObject.get("medias");
 
 			for (Iterator iterator = db.iterator(); iterator.hasNext();)
 			{
@@ -115,11 +135,32 @@ public class Database
 				final Media media = readMedia(id, elt);
 				database.put(id, media);
 			}
+
+			readDeletedMap((JSONObject) jsonObject.get("deleted"), deletedMedias);
+			readDeletedMap((JSONObject) jsonObject.get("merged"), mergedMedias);
+
 		} catch (IOException | ParseException ex)
 		{
 			System.err.println("Could not read database");
 			Logger.getLogger(Database.class.getName()).log(Level.INFO, null, ex);
 		}
+	}
+
+	@SuppressWarnings("unchecked")
+	private void readDeletedMap(JSONObject obj, final THashMap<Long, ArrayList<String>> map)
+	{
+		if (obj != null)
+			for (Iterator it = obj.keySet().iterator(); it.hasNext();)
+			{
+				final String key = (String) it.next();
+				final Object get = obj.get(key);
+
+				if (get != null)
+				{
+					final ArrayList<String> value = (ArrayList<String>) get;
+					map.put(Long.valueOf(key), value);
+				}
+			}
 	}
 
 	private Media readMedia(long id, JSONObject elt)
@@ -191,6 +232,36 @@ public class Database
 	public THashMap<Long, Media> getDatabase()
 	{
 		return database;
+	}
+
+	/**
+	 * @return the deletedMedias
+	 */
+	public THashMap<Long, ArrayList<String>> getDeletedMedias()
+	{
+		return deletedMedias;
+	}
+
+	/**
+	 * @return the mergedMedias
+	 */
+	public THashMap<Long, ArrayList<String>> getMergedMedias()
+	{
+		return mergedMedias;
+	}
+
+	public ArrayList<String> removeMedia(boolean merged, Media toRemove)
+	{
+		final long id = toRemove.getId();
+		database.remove(id);
+		THashMap<Long, ArrayList<String>> map = (merged) ? mergedMedias : deletedMedias;
+		ArrayList<String> data = new ArrayList<>();
+		final THashMap<String, String> info = toRemove.getInfo();
+		data.add(info.get("name"));
+		data.add(info.get("location"));
+		data.add(info.get("path"));
+		data.add(Long.toString(id));
+		return map.put(id, data);
 	}
 
 	private static class DatabaseHolder

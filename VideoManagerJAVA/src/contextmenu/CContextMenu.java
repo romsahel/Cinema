@@ -52,7 +52,7 @@ public class CContextMenu
 	public static void hide()
 	{
 		if (currentMenu != null)
-			currentMenu.getMenu().hide();
+				currentMenu.getMenu().hide();
 
 		currentMenu = null;
 	}

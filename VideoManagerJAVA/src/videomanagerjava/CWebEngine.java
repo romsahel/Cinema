@@ -41,9 +41,7 @@ public final class CWebEngine
 
 	public CWebEngine(WebView webBrowser)
 	{
-		int cores = Runtime.getRuntime().availableProcessors();
-		System.out.println(cores + " cores available!");
-		executor = java.util.concurrent.Executors.newFixedThreadPool(cores);
+		initExecutor();
 		// Obtain the webEngine to navigate
 		webEngine = webBrowser.getEngine();
 		webEngine.load("file:///" + new File(Utils.APPDATA + "public_html/index.html").getAbsolutePath().replace('\\', '/'));
@@ -56,6 +54,10 @@ public final class CWebEngine
 
 	public static void walkFiles()
 	{
+		MainController.getInstance().startLoading();
+		if (executor.isShutdown())
+			initExecutor();
+
 		medias.clear();
 		THashMap<String, Location> locations = Settings.getInstance().getLocations();
 		for (Map.Entry<String, Location> entrySet : locations.entrySet())
@@ -84,6 +86,13 @@ public final class CWebEngine
 		executor.shutdown();
 	}
 
+	private static void initExecutor()
+	{
+		int cores = Runtime.getRuntime().availableProcessors();
+		System.out.println(cores + " cores available!");
+		executor = java.util.concurrent.Executors.newFixedThreadPool((cores <= 2) ? 1 : cores - 1);
+	}
+
 	public static void refreshList()
 	{
 		Utils.callFuncJS(webEngine, "emptyMediaList");
@@ -104,20 +113,27 @@ public final class CWebEngine
 		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
 //		Utils.callFuncJS(webEngine, "setToggles", general.get("playList"), general.get("withSubtitles"));
 
-		MainController.stopLoading();
 		if (newItems > 0)
 		{
-			try
+			Thread t = new Thread((Runnable) () ->
 			{
-				executor.awaitTermination(1, TimeUnit.DAYS);
-			} catch (InterruptedException ex)
-			{
-				Logger.getLogger(CWebEngine.class.getName()).log(Level.SEVERE, null, ex);
-			}
-			mergeByPoster();
-			newItems = 0;
-			Database.getInstance().writeDatabase();
+				try
+				{
+					executor.awaitTermination(1, TimeUnit.DAYS);
+				} catch (InterruptedException ex)
+				{
+					Logger.getLogger(CWebEngine.class.getName()).log(Level.SEVERE, null, ex);
+				}
+				mergeByPoster();
+				newItems = 0;
+
+				MainController.getInstance().stopLoading();
+				Database.getInstance().writeDatabase();
+			});
+			t.start();
 		}
+		else
+			MainController.getInstance().stopLoading();
 	}
 
 	private static void getImages(ArrayList<Media> list)
@@ -154,17 +170,19 @@ public final class CWebEngine
 
 	public static void mergeByPoster()
 	{
-		final THashMap<Long, Media> database = Database.getInstance().getDatabase();
-		ArrayList<Media> toDelete = new ArrayList<>();
+		if ("0".equals(Settings.getInstance().getGeneral().get("automerge")))
+			return;
+		ArrayList<Media> deleted = new ArrayList<>();
+		THashMap<Long, Media> changed = new THashMap<>();
 		for (Media outer : medias)
 		{
-			if (outer == null || toDelete.contains(outer))
+			if (outer == null || deleted.contains(outer))
 				continue;
 			final TreeMap<String, TreeMap<String, Episode>> seasons = outer.getSeasons();
 			final THashMap<String, String> outInfo = outer.getInfo();
 			String outSeason = null;
 			for (Media inner : medias)
-				if (inner != null && !toDelete.contains(inner) && outer != inner)
+				if (inner != null && !deleted.contains(inner) && outer != inner)
 				{
 					final THashMap<String, String> inInfo = inner.getInfo();
 					if (!inInfo.get("location").equals(outInfo.get("location")))
@@ -187,13 +205,32 @@ public final class CWebEngine
 						String inSeason = Formatter.getFormattedSeason(inName, inName);
 						final TreeMap<String, Episode> firstSeason = inner.getFirstSeason();
 						seasons.put(inSeason, firstSeason);
-						toDelete.add(inner);
-						database.put(inner.getId(), null);
-						Utils.callFuncJS(webEngine, "updateMedia", Long.toString(outer.getId()), outer.toJSArray(), Long.toString(inner.getId()));
+						deleted.add(inner);
+						changed.put(outer.getId(), outer);
+						Database.getInstance().removeMedia(true, inner);
+						System.out.println(">>> " + inName + " --- " + outInfo.get("name") + " <<<");
 					}
 				}
 		}
-		medias.removeAll(toDelete);
+
+		if (deleted.size() > 0)
+		{
+			StringBuilder builder = new StringBuilder();
+			builder.append("\\[");
+			for (Media m : deleted)
+				builder.append('"').append(m.getId()).append('"').append(',');
+
+			builder.append("], [");
+			for (Map.Entry<Long, Media> entrySet : changed.entrySet())
+			{
+				final Media m = entrySet.getValue();
+				builder.append(m.toJSArray().substring(1)).append(", ");
+			}
+			builder.append("]");
+			Utils.callFuncJS(webEngine, "mergeAndUpdate", builder.toString());
+
+			medias.removeAll(deleted);
+		}
 	}
 
 	public static String longestCommonPrefix(String... strings)

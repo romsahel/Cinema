@@ -9,7 +9,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.TreeMap;
-import utils.Formatter;
 import utils.Utils;
 import videomanagerjava.Episode;
 import videomanagerjava.Location;
@@ -32,12 +31,18 @@ public class FileWalker
 	{
 		File[] files = listFiles(new File(location.getPath()));
 		ArrayList<Media> result = new ArrayList<>();
+		Map[] databases = new Map[]
+		{
+			Database.getInstance().getDatabase(),
+			Database.getInstance().getDeletedMedias(),
+			Database.getInstance().getMergedMedias()
+		};
 
 		if (files != null)
 			//	We walk through all the files in the root folder
 			for (File file : files)
 			{
-				final Media subWalk = walkRoot(file);
+				final Media subWalk = walkRoot(file, databases);
 				if (subWalk != null)
 					if (location.isSpecial())
 					{
@@ -51,7 +56,7 @@ public class FileWalker
 								String key = set.getKey();
 								Episode value = set.getValue();
 								final String path = value.getProperties().get("path");
-								Media media = new Media(getCleanName(Formatter.getSuffix(path, Utils.getSeparator())), path.hashCode());
+								Media media = new Media(path, path.hashCode());
 								media.getDefaultSeason().put(key, value);
 								media.setInfo("location", name);
 								result.add(media);
@@ -68,21 +73,31 @@ public class FileWalker
 		return result;
 	}
 
-	private Media walkRoot(File f)
+	private Media walkRoot(File f, Map[] databases)
 	{
 		final String path = f.getAbsolutePath();
 		final long hashCode = path.hashCode();
 //		We start by looking if this folder has already been walked
 //		If it has, we return null so that it is not overwritten
-		if (Database.getInstance().getDatabase().containsKey(hashCode))
-			return null;
-//		We create the media with a proper name and its id
-		Media media = new Media(getCleanName(Formatter.getSuffix(path, Utils.getSeparator())), hashCode);
+		for (Map db : databases)
+			if (db.containsKey(hashCode))
+				return null;
 
+		String ext;
+//		We create the media with a proper name and its id
+		Media media = null;
 		if (f.isDirectory())
-			walkMedia(f, media);
-		else if (isVideo(path, Utils.EXTENSIONS))
+		{
+			media = new Media(path, hashCode);
+			walkMedia(f, media, databases);
+		}
+		else if ((ext = isVideo(path, Utils.EXTENSIONS)) != null)
+		{
+			media = new Media(path.replace(ext, ""), hashCode);
 			addEpisode(f, media);
+		}
+		else
+			return null;
 
 		media.removeEmptySeasons();
 
@@ -99,7 +114,7 @@ public class FileWalker
 		media.getDefaultSeason().put(episode.getProperties().get("name"), episode);
 	}
 
-	private void walkMedia(File f, Media media)
+	private void walkMedia(File f, Media media, Map[] databases)
 	{
 		File[] files = listFiles(f);
 //		We loop through every file of the directory
@@ -109,11 +124,11 @@ public class FileWalker
 			if (file.isDirectory())
 			{
 //				If it is a directory, we loop walk through it, and we add every found file as a 'season'
-				final Media walk = walkRoot(file);
+				final Media walk = walkRoot(file, databases);
 				if (walk != null)
 					media.getSeasons().put(walk.getInfo().get("name"), walk.getDefaultSeason());
 			}
-			else if (isVideo(path, Utils.EXTENSIONS))
+			else if (isVideo(path, Utils.EXTENSIONS) != null)
 				addEpisode(file, media);
 		}
 	}
@@ -128,30 +143,12 @@ public class FileWalker
 			return list;
 	}
 
-	/**
-	 * Formats a full absolute path into a name by keeping only what follows the last separator
-	 * and by removing everything after specified keywords (Utils.DUMP_KEYWORDS)
-	 * <p>
-	 * @param string the string to format
-	 * <p>
-	 * @return
-	 */
-	private String getCleanName(final String string)
-	{
-		if (string == null)
-			return null;
-		String file = Formatter.getSuffix(string, Utils.getSeparator());
-		file = Formatter.getPrefix(file, Utils.DUMP_KEYWORDS);
-		file = file.replace('.', ' ').trim();
-		return file;
-	}
-
-	private boolean isVideo(String path, String... extensions)
+	private String isVideo(String path, String... extensions)
 	{
 		for (String ext : extensions)
 			if (path.endsWith(ext))
-				return true;
-		return false;
+				return ext;
+		return null;
 	}
 
 	// <editor-fold defaultstate="collapsed" desc="Singleton">

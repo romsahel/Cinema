@@ -26,7 +26,7 @@ public class LoadingScreenInterface
 			System.out.println("Cancelling thread");
 			thread.interrupt();
 			thread = null;
-			MainController.stopLoading();
+			MainController.getInstance().stopLoading();
 		}
 	}
 
