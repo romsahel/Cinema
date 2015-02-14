@@ -1,8 +1,8 @@
+var app;
 var medias = {};
 var currentMedia = null;
 var currentSeason = null;
 var currentEpisode = null;
-
 var mediaList;
 var mediaModel;
 
@@ -111,8 +111,16 @@ function onEpisodesClick(elt, shouldScroll)
 	elt.parent().children().removeClass("selected");
 	elt.addClass("selected");
 
+
 	var text = $(elt.children()[1]).text();
 	currentEpisode = {key: text, value: currentSeason.value[text]};
+
+	if (app)
+	{
+		var indicator = app.getEpisodeIndicator(currentMedia.id, currentSeason.key, currentEpisode.key);
+		$("#availability").text(indicator[0]);
+		$("#subtitles-indicator").text(indicator[1]);
+	}
 }
 
 function onSeasonsClick(elt, f)

@@ -5,8 +5,10 @@
 State (unavailable, available)
 Timer to shutdoxn
 Progress bar representing time of episode
+icon to indicate there is a subtitle
 Texte "Add a location" si vide
 Tuto
+
 
 Icons topleft topright of selected media to edit and delete
 !! Do not hhide contextmenu when choosing subs

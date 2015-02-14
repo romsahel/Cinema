@@ -73,19 +73,20 @@ public class FileWalker
 		return result;
 	}
 
-	private Media walkRoot(File f, Map[] databases)
+	public Media walkRoot(File f, Map[] databases)
 	{
 		final String path = f.getAbsolutePath();
 		final long hashCode = path.hashCode();
 //		We start by looking if this folder has already been walked
 //		If it has, we return null so that it is not overwritten
-		for (Map db : databases)
-			if (db.containsKey(hashCode))
-				return null;
+		if (databases != null)
+			for (Map db : databases)
+				if (db.containsKey(hashCode))
+					return null;
 
 		String ext;
 //		We create the media with a proper name and its id
-		Media media = null;
+		Media media;
 		if (f.isDirectory())
 		{
 			media = new Media(path, hashCode);

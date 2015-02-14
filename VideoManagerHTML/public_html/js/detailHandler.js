@@ -42,7 +42,7 @@ function updateDetails(media)
 	$("#detail").fadeTo(200, 1);
 
 	var img = (info.img === null) ? "unknown.jpg" : info.img;
-	$('#detail-poster').attr('src', 'media/posters/' + img);
+	$('#detail-poster').css("background-image", "url(media/posters/" + img + ")");
 }
 
 function updateDetailFiles()

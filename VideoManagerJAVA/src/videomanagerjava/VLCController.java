@@ -32,12 +32,13 @@ import utils.Utils;
 public class VLCController
 {
 
-	static Timer timer = null;
-	static TimerTaskImpl timerTask = null;
-	static Episode currentEpisode;
-	static long firstId = -1;
-	static long currentId = -1;
-	static Episode[] followingEpisodes;
+	private static Timer timer = null;
+	private static TimerTaskImpl timerTask = null;
+	private static Episode currentEpisode;
+	private static long firstId = -1;
+	private static long currentId = -1;
+	private static Episode[] followingEpisodes;
+	private static final MainController controller = MainController.getInstance();
 
 	private static void init()
 	{
@@ -69,7 +70,7 @@ public class VLCController
 			}
 		});
 
-		MainController.getInstance().startLoading(thread, "Launching media");
+		controller.startLoading(thread, "Launching media");
 		thread.start();
 
 	}
@@ -89,7 +90,7 @@ public class VLCController
 			playEpisode(episode, withSubtitles);
 		});
 
-		MainController.getInstance().startLoading(thread, "Launching media");
+		controller.startLoading(thread, "Launching media");
 		thread.start();
 	}
 
@@ -103,21 +104,21 @@ public class VLCController
 
 		if (withSubtitles)
 		{
-			MainController.getInstance().logLoadingScreen("Downloading subtitles");
+			controller.logLoadingScreen("Downloading subtitles");
 			getSubtitles(path);
 		}
 
 //		If the request is null, we must launch VLC and wait for it to be prepared
 		if (sendRequest("command=pl_empty") == null)
 		{
-			MainController.getInstance().logLoadingScreen("Starting VLC");
+			controller.logLoadingScreen("Starting VLC");
 			runVLC(path);
 		}
 		else
 			sendRequest("command=in_play&input=" + path);
 
 		String sendRequest = null;
-		MainController.getInstance().logLoadingScreen("Waiting for VLC");
+		controller.logLoadingScreen("Waiting for VLC");
 		while (currentId == -1 && !Thread.currentThread().isInterrupted())
 		{
 			sendRequest = sendRequest("command=seek&val=" + properties.get("time"));
@@ -145,7 +146,7 @@ public class VLCController
 		timerTask = new TimerTaskImpl(properties, filename);
 		timer.scheduleAtFixedRate(timerTask, 10000, 10000);
 
-		MainController.getInstance().stopLoading();
+		controller.stopLoading();
 	}
 
 	private static void getSubtitles(String path)
@@ -163,7 +164,8 @@ public class VLCController
 			final String name = '"' + file.getAbsolutePath() + '"';
 			String[] cmd =
 			{
-				program, "-l", language, "-f", "--", name};
+				program, "-l", language, "-f", "--", name
+			};
 			Logger.getLogger(VLCController.class.getName()).log(Level.INFO, program + " -l " + language + " -f -- " + name);
 			ProcessBuilder builder = new ProcessBuilder(cmd);
 			builder.redirectErrorStream(true);

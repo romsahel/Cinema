@@ -10,6 +10,7 @@ import files.Settings;
 import gnu.trove.map.hash.THashMap;
 import java.awt.Desktop;
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -33,6 +34,26 @@ import utils.Utils;
  */
 public class JsToJava
 {
+
+	private static String currentEpisode = "";
+	private static final FilenameFilter filter = (File file, String name)
+			-> name.endsWith(".srt") && name.startsWith(getCurrentEpisode());
+
+	/**
+	 * @return the currentEpisode
+	 */
+	private static String getCurrentEpisode()
+	{
+		return currentEpisode;
+	}
+
+	/**
+	 * @param aCurrentEpisode the currentEpisode to set
+	 */
+	private static void setCurrentEpisode(String aCurrentEpisode)
+	{
+		currentEpisode = aCurrentEpisode;
+	}
 
 	public void playMedia(String id, String currentSeason, String currentEpisode, String lastEpisode, boolean withSubtitles)
 	{
@@ -143,5 +164,25 @@ public class JsToJava
 	public void debug(String message)
 	{
 		System.out.println(message);
+	}
+
+	public String[] getEpisodeIndicator(String id, String currentSeason, String currentEpisode)
+	{
+		Episode episode = getEpisode(id, currentSeason, currentEpisode);
+		final String path = episode.getProperties().get("path");
+
+		File file = new File(path);
+		if (!file.exists())
+			return new String[]
+			{
+				"Not available", "Not available"
+			};
+
+		setCurrentEpisode(Formatter.getPrefix(file.getName(), "."));
+		final String[] list = file.getParentFile().list(filter);
+		return new String[]
+		{
+			"Available", list.length + " subtitles"
+		};
 	}
 }

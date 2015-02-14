@@ -10,10 +10,12 @@ import contextmenu.CContextMenu;
 import static contextmenu.CContextMenu.hide;
 import editdialog.EditDialog;
 import files.Database;
+import files.FileWalker;
 import gnu.trove.map.hash.THashMap;
 import java.awt.Desktop;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.event.ActionEvent;
@@ -81,6 +83,26 @@ public class ContextMedias extends IContextMenu
 					 Logger.getLogger(ContextFiles.class.getName()).log(Level.SEVERE, null, ex);
 				 }
 				 hide();
+		});
+		// </editor-fold>
+
+		// <editor-fold defaultstate="collapsed" desc="Refresh">
+		this.addItem("Refresh", (ActionEvent event) ->
+			 {
+				 final String attribute = hovered.getParentElement().getAttribute("id");
+				 final Long id = Long.valueOf(attribute);
+				 hide();
+
+				 Media media = database.get(id);
+				 Media refreshed = FileWalker.getInstance().walkRoot(new File(media.getInfo().get("path")), null);
+
+				 final THashMap<String, String> infos = refreshed.getInfo();
+				 for (Map.Entry<String, String> entrySet : media.getInfo().entrySet())
+					 infos.put(entrySet.getKey(), entrySet.getValue());
+
+				 database.put(id, refreshed);
+				 utils.Utils.callFuncJS(webEngine, "updateMedia", attribute, refreshed.toJSArray());
+				 Database.getInstance().writeDatabase();
 		});
 		// </editor-fold>
 

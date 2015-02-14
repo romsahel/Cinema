@@ -98,14 +98,14 @@ public class Formatter
 
 	public static String getSuffix(String src, String... delimiter)
 	{
-		int i = Formatter.findIndex(src, delimiter);
+		int i = findIndex(src, delimiter);
 		if (i == -1)
 			return src;
 		else
 			return new String(src.substring(i + 1));
 	}
 
-	public static int findIndex(String src, String... delimiter)
+	private static int findIndex(String src, String... delimiter)
 	{
 		int i = -1;
 		for (String s : delimiter)

@@ -38,6 +38,7 @@ public final class CWebEngine
 	private static ExecutorService executor = null;
 	private static WebEngine webEngine;
 	private static int newItems;
+	private static final MainController controller = MainController.getInstance();
 
 	public CWebEngine(WebView webBrowser)
 	{
@@ -54,7 +55,7 @@ public final class CWebEngine
 
 	public static void walkFiles()
 	{
-		MainController.getInstance().startLoading();
+		controller.startLoading();
 		if (executor.isShutdown())
 			initExecutor();
 
@@ -127,13 +128,13 @@ public final class CWebEngine
 				mergeByPoster();
 				newItems = 0;
 
-				MainController.getInstance().stopLoading();
+				controller.stopLoading();
 				Database.getInstance().writeDatabase();
 			});
 			t.start();
 		}
 		else
-			MainController.getInstance().stopLoading();
+			controller.stopLoading();
 	}
 
 	private static void getImages(ArrayList<Media> list)

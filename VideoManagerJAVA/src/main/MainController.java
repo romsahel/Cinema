@@ -398,7 +398,12 @@ public class MainController extends BorderPane
 
 		if (keycode == KeyCode.ENTER)
 			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "unfocusSearch", "\\true");
-		else if (keycode.isLetterKey() || keycode.isDigitKey() || keycode == KeyCode.SPACE)
+		else if (keyEvent.isControlDown() && keycode == KeyCode.S)
+			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "setToggles", "\\false", "\\true");
+		else if (keyEvent.isControlDown() && keycode == KeyCode.A)
+			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "setToggles", "\\true", "\\false");
+		else if ((keycode.isLetterKey() || keycode.isDigitKey() || keycode == KeyCode.SPACE)
+				 && !keyEvent.isAltDown() && !keyEvent.isControlDown())
 		{
 			final String text = (keyEvent.isShiftDown()) ? keyEvent.getText().toUpperCase() : keyEvent.getText();
 			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "focusSearch", text);
@@ -410,6 +415,8 @@ public class MainController extends BorderPane
 			final String isDown = Boolean.toString(keycode == KeyCode.DOWN);
 			utils.Utils.callFuncJS(CWebEngine.getWebEngine(), "selectSiblingMedia", '\\' + isDown);
 		}
+		else if (keycode == KeyCode.F5)
+			CWebEngine.getWebEngine().reload();
 	}
 
 	/**
