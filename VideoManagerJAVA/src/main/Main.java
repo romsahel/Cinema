@@ -70,7 +70,6 @@ public class Main extends Application
 
 		Settings.getInstance().readSettings();
 		Database.getInstance().readDatabase();
-		Database.getInstance().backupDatabase();
 
 		final WebView webView = fxml.getWebView();
 		final WebEngine webEngine = new CWebEngine(webView).getWebEngine();

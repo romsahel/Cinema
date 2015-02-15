@@ -8,17 +8,19 @@ package contextmenu.menus;
 import com.sun.webkit.dom.HTMLLIElementImpl;
 import contextmenu.CContextMenu;
 import static contextmenu.CContextMenu.hide;
+import files.Database;
+import files.Settings;
 import gnu.trove.map.hash.THashMap;
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.Optional;
 import javafx.event.ActionEvent;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.web.WebEngine;
-import videomanagerjava.CWebEngine;
+import utils.Utils;
 import videomanagerjava.Location;
 import videomanagerjava.Media;
-import files.Database;
-import files.Settings;
 
 /**
  *
@@ -26,6 +28,7 @@ import files.Settings;
  */
 public class ContextLocations extends IContextMenu
 {
+
 	private HTMLLIElementImpl hovered;
 
 	public ContextLocations(CContextMenu parent, WebEngine webEngine)
@@ -42,10 +45,34 @@ public class ContextLocations extends IContextMenu
 		// <editor-fold defaultstate="collapsed" desc="Remove">
 		this.addItem("Remove", (ActionEvent event) ->
 			 {
+				 final String locationName = hovered.getInnerText();
 				 final String toRemove = (String) webEngine.executeScript("removeLocation()");
 				 Settings.getInstance().getLocations().remove(toRemove);
-				 CWebEngine.walkFiles();
-				 CWebEngine.refreshList();
+
+				 final THashMap<Long, Media> database = Database.getInstance().getDatabase();
+				 final THashMap<Long, ArrayList<String>> merged = Database.getInstance().getMergedMedias();
+				 final THashMap<Long, ArrayList<String>> removed = Database.getInstance().getDeletedMedias();
+
+				 ArrayList<Media> deleted = new ArrayList<>();
+				 for (Iterator<Map.Entry<Long, Media>> it = database.entrySet().iterator(); it.hasNext();)
+				 {
+					 Media media = it.next().getValue();
+					 if (media != null && locationName.equals(media.getInfo().get("location")))
+					 {
+						 it.remove();
+						 deleted.add(media);
+					 }
+				 }
+				 undeleteMedia(locationName, merged, database);
+				 undeleteMedia(locationName, removed, database);
+
+				 StringBuilder builder = new StringBuilder();
+				 builder.append("\\[");
+				 for (Media m : deleted)
+					 builder.append('"').append(m.getId()).append('"').append(',');
+				 builder.append("], [ ]");
+				 Utils.callFuncJS(webEngine, "mergeAndUpdate", builder.toString());
+
 				 hide();
 		});
 		// </editor-fold>
@@ -66,6 +93,17 @@ public class ContextLocations extends IContextMenu
 					 renameLocation(toRename, result, location);
 		});
 		// </editor-fold>
+	}
+
+	private void undeleteMedia(String location, THashMap<Long, ArrayList<String>> map, THashMap<Long, Media> database)
+	{
+		for (Iterator<Map.Entry<Long, ArrayList<String>>> it = map.entrySet().iterator(); it.hasNext();)
+		{
+			final Map.Entry<Long, ArrayList<String>> next = it.next();
+			ArrayList<String> list = next.getValue();
+			if (list.contains(location))
+				it.remove();
+		}
 	}
 
 	private void renameLocation(final String toRename, Optional<String> result, final Location location)

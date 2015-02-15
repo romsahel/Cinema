@@ -17,6 +17,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -76,14 +77,15 @@ public class Database
 
 	public void backupDatabase()
 	{
+		Random rand = new Random();
+		int randomNum = rand.nextInt(10);
+		File backupfile = new File(filename + ".backup" + randomNum);
+
 		try
 		{
 			Path file = Paths.get(filename).toRealPath(); //toRealPath() follows symlinks to their ends
-			File backFile = new File(filename + ".backup");
-			if (!backFile.exists())
-				backFile.createNewFile(); // ensure the backup file exists so we can write to it later
-			Path back = Paths.get(filename + ".backup").toRealPath();
-			Files.copy(file, back, StandardCopyOption.REPLACE_EXISTING);
+			backupfile.createNewFile(); // ensure the backup file exists so we can write to it later
+			Files.copy(file, backupfile.toPath().toRealPath(), StandardCopyOption.REPLACE_EXISTING);
 		} catch (IOException ex)
 		{
 			Logger.getLogger(Formatter.class.getName()).log(Level.SEVERE, null, ex);
@@ -138,6 +140,8 @@ public class Database
 
 			readDeletedMap((JSONObject) jsonObject.get("deleted"), deletedMedias);
 			readDeletedMap((JSONObject) jsonObject.get("merged"), mergedMedias);
+
+			Database.getInstance().backupDatabase();
 
 		} catch (IOException | ParseException ex)
 		{
@@ -263,7 +267,7 @@ public class Database
 		data.add(Long.toString(id));
 		return map.put(id, data);
 	}
-
+	
 	private static class DatabaseHolder
 	{
 

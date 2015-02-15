@@ -74,6 +74,11 @@ public class Formatter
 			return toFormat;
 	}
 
+	public static String getFormattedSeason(String toFormat)
+	{
+		return getFormattedSeason(toFormat, toFormat);
+	}
+
 	public static String getFormattedSeason(String folder, String toFormat)
 	{
 		String season = Formatter.getSeason(folder, toFormat);

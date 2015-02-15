@@ -118,9 +118,10 @@ public final class CWebEngine
 		{
 			Thread t = new Thread((Runnable) () ->
 			{
+				System.out.println("new items baby");
 				try
 				{
-					executor.awaitTermination(1, TimeUnit.DAYS);
+					executor.awaitTermination(30, TimeUnit.SECONDS);
 				} catch (InterruptedException ex)
 				{
 					Logger.getLogger(CWebEngine.class.getName()).log(Level.SEVERE, null, ex);
@@ -192,24 +193,33 @@ public final class CWebEngine
 					if (outImg != null && outImg.equals(inInfo.get("img")))
 					{
 						if (outSeason == null)
+						{
+							// First time we merge the outer media with another
+							// We format the name (remove season, etc)
+							final String outName = outInfo.get("name");
+							outSeason = Formatter.getFormattedSeason(outName, outName);
+							outInfo.put("name", Formatter.removeSeason(outName));
+
 							if (seasons.size() == 1)
 							{
-								final String outName = outInfo.get("name");
-								outSeason = Formatter.getFormattedSeason(outName, outName);
-								outInfo.put("name", Formatter.removeSeason(outName));
 								final TreeMap<String, Episode> firstSeason = outer.getFirstSeason();
 								seasons.clear();
 								seasons.put(outSeason, firstSeason);
 							}
+						}
+						String inSeason = null;
+						if (inner.getSeasons().size() == 1)
+							inSeason = Formatter.getFormattedSeason(inInfo.get("name"));
 
-						final String inName = inInfo.get("name");
-						String inSeason = Formatter.getFormattedSeason(inName, inName);
-						final TreeMap<String, Episode> firstSeason = inner.getFirstSeason();
-						seasons.put(inSeason, firstSeason);
+						for (Map.Entry<String, TreeMap<String, Episode>> entrySet : inner.getSeasons().entrySet())
+						{
+							String key = (inSeason != null) ? inSeason : entrySet.getKey();
+							TreeMap<String, Episode> value = entrySet.getValue();
+							seasons.put(key, value);
+						}
 						deleted.add(inner);
 						changed.put(outer.getId(), outer);
 						Database.getInstance().removeMedia(true, inner);
-						System.out.println(">>> " + inName + " --- " + outInfo.get("name") + " <<<");
 					}
 				}
 		}

@@ -8,7 +8,6 @@ package files;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Map;
-import java.util.TreeMap;
 import utils.Utils;
 import videomanagerjava.Episode;
 import videomanagerjava.Location;
@@ -22,6 +21,12 @@ public class FileWalker
 {
 
 	String location = null;
+	private static final Map[] databases = new Map[]
+	{
+		Database.getInstance().getDatabase(),
+		Database.getInstance().getDeletedMedias(),
+		Database.getInstance().getMergedMedias()
+	};
 
 	private FileWalker()
 	{
@@ -31,12 +36,12 @@ public class FileWalker
 	{
 		File[] files = listFiles(new File(location.getPath()));
 		ArrayList<Media> result = new ArrayList<>();
-		Map[] databases = new Map[]
+		if (location.isSpecial())
 		{
-			Database.getInstance().getDatabase(),
-			Database.getInstance().getDeletedMedias(),
-			Database.getInstance().getMergedMedias()
-		};
+			for (File file : files)
+				result.addAll(walk(name, new Location(file.getAbsolutePath(), false)));
+			return result;
+		}
 
 		if (files != null)
 			//	We walk through all the files in the root folder
@@ -44,30 +49,10 @@ public class FileWalker
 			{
 				final Media subWalk = walkRoot(file, databases);
 				if (subWalk != null)
-					if (location.isSpecial())
-					{
-						Database.getInstance().getDatabase().put(subWalk.getId(), null);
-						final TreeMap<String, TreeMap<String, Episode>> seasons = subWalk.getSeasons();
-						for (Map.Entry<String, TreeMap<String, Episode>> entrySet : seasons.entrySet())
-						{
-							TreeMap<String, Episode> episodes = entrySet.getValue();
-							for (Map.Entry<String, Episode> set : episodes.entrySet())
-							{
-								String key = set.getKey();
-								Episode value = set.getValue();
-								final String path = value.getProperties().get("path");
-								Media media = new Media(path, path.hashCode());
-								media.getDefaultSeason().put(key, value);
-								media.setInfo("location", name);
-								result.add(media);
-							}
-						}
-					}
-					else
-					{
-						subWalk.setInfo("location", name);
-						result.add(subWalk);
-					}
+				{
+					subWalk.setInfo("location", name);
+					result.add(subWalk);
+				}
 			}
 
 		return result;

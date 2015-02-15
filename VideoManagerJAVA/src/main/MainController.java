@@ -138,8 +138,12 @@ public class MainController extends BorderPane
 			itemsUndeleted = true;
 			final ArrayList<String> selectedItem = deletedTable.getSelectionModel().getSelectedItem();
 			String id = selectedItem.get(3);
-			if (Database.getInstance().getDeletedMedias().remove(Long.valueOf(id)) == null)
-				Database.getInstance().getMergedMedias().remove(Long.valueOf(id));
+			final Long longId = Long.valueOf(id);
+			final Database database = Database.getInstance();
+
+			if (database.getDeletedMedias().remove(longId) == null)
+				database.getMergedMedias().remove(longId);
+
 			deletedTable.getItems().remove(selectedItem);
 		});
 		MenuItem deleteMenuItem = new MenuItem("Show in Explorer");

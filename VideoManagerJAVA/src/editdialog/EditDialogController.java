@@ -194,7 +194,7 @@ public class EditDialogController extends AnchorPane
 	protected void onRefresh()
 	{
 		final String field = urlField.getText();
-		if (field.contains("imdb.com") || field.startsWith("tt"))
+		if (field.contains("www.imdb.com/title/") || field.startsWith("tt"))
 		{
 			String id = field.replace("http://", "");
 			id = id.replace("www.imdb.com/title/", "");

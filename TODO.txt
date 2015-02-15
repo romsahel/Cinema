@@ -2,10 +2,8 @@
 ?? User must be able to edit details in order to change description, title, etc.
 ?? User must be able to hide banner info details
 
-State (unavailable, available)
 Timer to shutdoxn
 Progress bar representing time of episode
-icon to indicate there is a subtitle
 Texte "Add a location" si vide
 Tuto
 
