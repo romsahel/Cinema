@@ -116,11 +116,7 @@ function onEpisodesClick(elt, shouldScroll)
 	currentEpisode = {key: text, value: currentSeason.value[text]};
 
 	if (app)
-	{
-		var indicator = app.getEpisodeIndicator(currentMedia.id, currentSeason.key, currentEpisode.key);
-		$("#availability").text(indicator[0]);
-		$("#subtitles-indicator").text(indicator[1]);
-	}
+		updateIndicators();
 }
 
 function onSeasonsClick(elt, f)

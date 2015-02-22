@@ -192,3 +192,10 @@ function toggleSeen(elt, toSet, noJavaCall, reset)
 
 	return false;
 }
+
+function updateIndicators()
+{
+	var indicator = app.getEpisodeIndicator(currentMedia.id, currentSeason.key, currentEpisode.key);
+	$("#availability").text(indicator[0]);
+	$("#subtitles-indicator").text(indicator[1]);
+}

@@ -21,7 +21,6 @@ import main.MainController;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
-import utils.Formatter;
 import utils.RequestUtils;
 import utils.Utils;
 
@@ -173,7 +172,12 @@ public class VLCController
 			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 			String line;
 			while ((line = reader.readLine()) != null)
+			{
+				line = line.replace("INFO: ", "");
+				controller.logLoadingScreen(line);
 				Logger.getLogger(VLCController.class.getName()).log(Level.INFO, line);
+			}
+			Utils.callFuncJS(CWebEngine.getWebEngine(), "updateIndicators");
 		} catch (IOException ex)
 		{
 			Logger.getLogger(VLCController.class.getName()).log(Level.SEVERE, null, ex);
@@ -323,17 +327,13 @@ public class VLCController
 //							we update the timer's data
 							final Episode tmpEpisode = followingEpisodes[index];
 							final THashMap<String, String> newProperties = tmpEpisode.getProperties();
-							final String uriName = Formatter.getSuffix(new File(name).toURI().toString(), "/");
-							if (newProperties.get("path").endsWith(uriName))
-							{
-								this.properties = newProperties;
-								this.filename = name;
-								this.properties.put("time", Long.toString((long) obj.get("time")));
-								currentEpisode = tmpEpisode;
-								this.properties.put("seen", "true");
-								Utils.callFuncJS(CWebEngine.getWebEngine(), "seenNextEpisode", this.properties.get("name"), String.valueOf(index - 1));
-								return;
-							}
+							this.properties = newProperties;
+							this.filename = name;
+							this.properties.put("time", Long.toString((long) obj.get("time")));
+							currentEpisode = tmpEpisode;
+							this.properties.put("seen", "true");
+							Utils.callFuncJS(CWebEngine.getWebEngine(), "seenNextEpisode", this.properties.get("name"), String.valueOf(index - 1));
+							return;
 						}
 					}
 				}
