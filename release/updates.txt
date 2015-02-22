@@ -1,0 +1,13 @@
+;aiu;
+
+[Update]
+Name = Cinema
+ProductVersion = 2.3.7.0
+URL = http://www.example.com/downloads/Cinema.exe
+Size = 7902700
+MD5 = d9b8649883625f139b9ddb74273f3fff
+ServerFileName = Cinema.exe
+RegistryKey = HKUD\Software\Romsahel\Cinema\Version
+Version = 2.3.7.0
+UpdatedApplications = Cinema[1.0-2.3.7)
+AutoCloseApplication = [APPDIR]Cinema.exe|;;AlwaysRestart

@@ -10,6 +10,14 @@ Cinema.exe
 *.jar
 *.war
 *.ear
+.cache/
+.ssh/
+Prerequisites/
+.bash_history
+.gitconfig
+_viminfo
+VideoManagerJAVA/lib/cachedir/
+Thumbs.db
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
