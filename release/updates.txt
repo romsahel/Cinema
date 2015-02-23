@@ -2,12 +2,10 @@
 
 [Update]
 Name = Cinema
-ProductVersion = 2.3.7.0
-URL = http://www.example.com/downloads/Cinema.exe
-Size = 7902700
-MD5 = d9b8649883625f139b9ddb74273f3fff
-ServerFileName = Cinema.exe
-RegistryKey = HKUD\Software\Romsahel\Cinema\Version
-Version = 2.3.7.0
-UpdatedApplications = Cinema[1.0-2.3.7)
-AutoCloseApplication = [APPDIR]Cinema.exe|;;AlwaysRestart
+ProductVersion = 2.3.8.0
+URL = https://github.com/romsahel/Cinema/raw/master/release/cinema-installer.exe
+Size = 7906421
+MD5 = f15e0108e7b5be782ff76b8fdfd0706f
+ServerFileName = cinema-installer.exe
+RegistryKey = HKCU\Software\Romsahel\Cinema\Version
+Version = 2.3.8.0
