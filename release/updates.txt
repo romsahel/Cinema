@@ -2,13 +2,13 @@
 
 [Update]
 Name = Cinema
-ProductVersion = 2.3.9
+ProductVersion = 2.4.0
 URL = https://raw.githubusercontent.com/romsahel/Cinema/master/release/cinema-installer.exe
 Size = 8261494
 MD5 = 603467ee534fa20e19ce2354851f2796
 ServerFileName = cinema-installer.exe
 RegistryKey = HKCU\Software\Romsahel\Cinema\Version
-Version = 2.3.9
+Version = 2.4.0
 Feature = - Added auto-updater
 Enhancement = - More detail in download description
 BugFix = - Fixed some bugs
