@@ -1,15 +1,8 @@
-;aiu;
-
-[Update]
-Name = Cinema
-ProductVersion = 2.4.1
-URL = https://raw.githubusercontent.com/romsahel/Cinema/master/release/cinema-installer.exe
-Size = 8261494
-MD5 = 603467ee534fa20e19ce2354851f2796
-ServerFileName = cinema-installer.exe
-RegistryKey = HKCU\Software\Romsahel\Cinema\Version
-Version = 2.4.1
-UpdatedApplications = Cinema[0.0.0.0-2.4.1)
-Feature = - Added auto-updater
-Enhancement = - More detail in download description
-BugFix = - Fixed some bugs
+2.3.9
+  - Added auto updater
+  - Fixed bugs
+2.3.8
+  - Added settings page with to restore deleted/merged medias
+  - Added availability and subtitles indicator
+  - Added refresh media
+  - Fixed cancel not working when modifying episodes and seasons
