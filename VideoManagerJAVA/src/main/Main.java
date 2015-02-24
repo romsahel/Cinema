@@ -62,7 +62,6 @@ public class Main extends Application
 		stage.initStyle(StageStyle.UNDECORATED);
 		stage.getIcons().add(new Image(getClass().getResource("res/main.png").toString()));
 
-
 		MainController fxml = MainController.getInstance(); // load an fxml
 		stage.initStyle(StageStyle.TRANSPARENT); //undecorated/transparent
 		final Scene scene = new Scene(fxml); // create a scene from new CustomDecorator
@@ -95,6 +94,7 @@ public class Main extends Application
 
 		ResizeHelper.addResizeListener(stage);
 		stage.show();
+		videomanagerupdater.VideoManagerUpdater.show(stage);
 	}
 
 	public static void closeApplication()

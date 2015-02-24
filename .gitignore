@@ -18,6 +18,8 @@ Prerequisites/
 _viminfo
 VideoManagerJAVA/lib/cachedir/
 Thumbs.db
+VideoManagerUpdater/*.exe
+
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
@@ -31,3 +33,6 @@ hs_err_pid*
 /SubliminalGui/nbproject/private/
 /SubliminalGui/build/
 /VideoManager/target/
+/VideoManagerUpdater/nbproject/private/
+/VideoManagerUpdater/dist/
+/VideoManagerUpdater/build/

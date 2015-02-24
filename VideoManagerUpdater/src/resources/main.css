@@ -1,0 +1,50 @@
+* {
+	-fx-background-color: #17181b;
+}
+
+
+.topbar {
+	-fx-background-repeat: no-repeat;
+	-fx-background-size: auto;
+	-fx-background-color: none;
+	-fx-background-image: url("topbar.png");
+}
+
+#close {
+	-fx-background-position: -40px, 0px;
+}
+#close:hover {
+	-fx-background-position: -100px, 0px;
+}
+
+#nowButton {
+	-fx-background-color: #5382C6;
+}
+#nowButton:hover {
+	-fx-background-color: derive(#5382C6, 40%);
+}
+
+#laterButton {
+	-fx-background-color: #C85252;
+}
+#laterButton:hover {
+	-fx-background-color: derive(#C85252, 40%);
+}
+
+
+.scroll-pane .scroll-bar:vertical .thumb {
+    -fx-background-color: derive(black, 80%);
+	-fx-background-radius: 2em;
+}
+
+.scroll-pane .scroll-bar:vertical .thumb:hover {
+    -fx-background-color: derive(black, 100%);
+	-fx-background-radius: 2em;
+}
+
+.scroll-bar:vertical > .decrement-button,
+.scroll-bar:vertical > .decrement-button > *,
+.scroll-bar:vertical > .increment-button > *,
+.scroll-bar:vertical > .increment-button {
+	-fx-pref-height: 0;
+}

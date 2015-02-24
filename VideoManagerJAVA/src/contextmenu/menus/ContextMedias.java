@@ -43,7 +43,7 @@ public class ContextMedias extends IContextMenu
 	{
 		super.init();
 
-		final EditDialog editDialog = new EditDialog();
+		final EditDialog editDialog = new EditDialog(main.Main.getStage());
 		final THashMap<Long, Media> database = Database.getInstance().getDatabase();
 		// <editor-fold defaultstate="collapsed" desc="Edit">
 		this.addItem("Edit", (ActionEvent event) ->

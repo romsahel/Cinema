@@ -21,11 +21,12 @@ public class EditDialog
 
 	private final Stage stage;
 
-	public EditDialog()
+	public EditDialog(Stage owner)
 	{
 		stage = new Stage(StageStyle.UNDECORATED);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setResizable(false);
+		stage.initOwner(owner);
 	}
 
 	public void show(Media media)

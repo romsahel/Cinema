@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.text.*?>
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="428.0" stylesheets="@../resources/main.css" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="videomanagerupdater.FXMLDocumentController">
+   <bottom>
+      <HBox alignment="CENTER" spacing="30.0">
+         <children>
+            <Button id="nowButton" mnemonicParsing="false" onAction="#onUpdateNow" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" text="Update now" textFill="WHITE" BorderPane.alignment="CENTER" />
+            <Button id="laterButton" mnemonicParsing="false" onAction="#onUpdateLater" onMousePressed="#onMousePressed" onMouseReleased="#onMouseReleased" text="Update later" textFill="WHITE" />
+         </children>
+         <BorderPane.margin>
+            <Insets bottom="10.0" />
+         </BorderPane.margin>
+      </HBox>
+   </bottom>
+   <center>
+      <VBox>
+         <children>
+            <AnchorPane>
+               <children>
+                  <Label text="An update was found! " textFill="WHITE" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <font>
+                        <Font name="System Bold" size="15.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="versionLabel" layoutY="20.0" text="(Current version: 2.9; new version: 3.0)" textFill="WHITE" AnchorPane.bottomAnchor="1.0" AnchorPane.rightAnchor="0.0">
+                     <HBox.margin>
+                        <Insets top="1.0" />
+                     </HBox.margin>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <ScrollPane fitToWidth="true" hbarPolicy="NEVER" prefHeight="122.0" prefViewportHeight="110.0" prefViewportWidth="270.0" prefWidth="338.0">
+               <content>
+                  <Label fx:id="changelogLabel" text="- Added updater updater updater updater updater updater updater updater updater updater updater updater updater updater updater updater updater updater updater updater updater updater&#10;- Added updater updater updater updater updater updater updater updater updater updater updater&#10;- Added updater updater updater updater updater updater updater updater updater updater updater&#10;- Bugs fixed&#10;- Added updater&#10;- Bugs fixed&#10;- Added updater&#10;- Bugs fixed&#10;- Added updater&#10;- Bugs fixed&#10;" textFill="#c3c5c7" wrapText="true" />
+               </content>
+               <VBox.margin>
+                  <Insets left="15.0" top="5.0" />
+               </VBox.margin>
+            </ScrollPane>
+         </children>
+         <BorderPane.margin>
+            <Insets left="15.0" right="15.0" top="15.0" />
+         </BorderPane.margin>
+      </VBox>
+   </center>
+</BorderPane>
