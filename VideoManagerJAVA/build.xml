@@ -58,6 +58,10 @@
 		<copy todir="${user.home}${add_path}/.cinema/public_html" >
 			<fileset dir="../VideoManagerHTML/public_html"/>
 		</copy>
+
+		<copy  todir="." >
+			<fileset file="../VideoManagerUpdater/dist/VideoManagerUpdater.jar"/>
+		</copy>
 	</target>
 
 	<target name="package-for-windows" depends="clean,compile,jar">

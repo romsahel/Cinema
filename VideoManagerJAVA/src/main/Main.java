@@ -9,7 +9,9 @@ import contextmenu.CContextMenu;
 import files.Database;
 import files.Settings;
 import gnu.trove.map.hash.THashMap;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -17,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseButton;
@@ -35,6 +38,7 @@ import videomanagerjava.VLCController;
  */
 public class Main extends Application
 {
+	private static final String CURRENT_VERSION = "2.3.9";
 
 	private static Stage stage;
 	private static boolean isReady;
@@ -94,7 +98,55 @@ public class Main extends Application
 
 		ResizeHelper.addResizeListener(stage);
 		stage.show();
-		videomanagerupdater.VideoManagerUpdater.show(stage);
+
+		updateApplication(webView);
+	}
+
+	private void updateApplication(final WebView webView)
+	{
+		final Thread thread = new Thread(() ->
+		{
+			final MainController controller = MainController.getInstance();
+			try
+			{
+				ProcessBuilder builder = new ProcessBuilder("java", "-jar", "VideoManagerUpdater.jar", CURRENT_VERSION);
+				Process process = builder.start();
+				BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
+				String line;
+				while ((line = reader.readLine()) != null)
+					if (line.length() > 0)
+					{
+						if (line.equals("Found"))
+							blurAndBlockView(controller, webView, true);
+						else if (line.equals("Done"))
+							break;
+						else
+						{
+							blurAndBlockView(controller, null, false);
+							controller.startLoading(null, line);
+							Logger.getLogger(VLCController.class.getName()).log(Level.INFO, line);
+						}
+					}
+					else
+						Platform.runLater(() -> closeApplication());
+			} catch (IOException ex)
+			{
+				Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			blurAndBlockView(controller, webView, false);
+		});
+		thread.start();
+	}
+
+	private void blurAndBlockView(final MainController controller, final WebView webView, boolean block)
+	{
+		Platform.runLater(() ->
+		{
+			if (controller != null)
+				controller.blurView(block);
+			if (webView != null)
+				webView.setDisable(block);
+		});
 	}
 
 	public static void closeApplication()

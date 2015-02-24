@@ -7,6 +7,7 @@ package videomanagerupdater;
 
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
@@ -48,20 +49,30 @@ public class FXMLDocumentController implements Initializable
 	@FXML
 	public void onUpdateNow(ActionEvent event)
 	{
+		Node source = (Node) event.getSource();
+		Stage stage = (Stage) source.getScene().getWindow();
+		stage.hide();
+		System.out.println("Downloading update");
 		try
 		{
 			URL installer = new URL("https://raw.githubusercontent.com/romsahel/Cinema/master/release/cinema-installer.exe");
-			ReadableByteChannel rbc = Channels.newChannel(installer.openStream());
+			HttpURLConnection conn = (HttpURLConnection) installer.openConnection();
+			conn.setConnectTimeout(10000);
+			conn.setReadTimeout(10000);
+			ReadableByteChannel rbc = Channels.newChannel(conn.getInputStream());
 			try (FileOutputStream fos = new FileOutputStream("cinema-installer.exe"))
 			{
 				fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 			}
 
-			new ProcessBuilder("cinema-installer.exe").start();
+			new ProcessBuilder("cmd", "/c", "cinema-installer.exe", "/exenoui", "/qb").start();
 		} catch (IOException ex)
 		{
 			Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
 		}
+		System.out.println("");
+
+		stage.close();
 	}
 
 	@FXML
@@ -70,6 +81,7 @@ public class FXMLDocumentController implements Initializable
 		Node source = (Node) event.getSource();
 		Stage stage = (Stage) source.getScene().getWindow();
 		stage.close();
+		System.out.println("Done");
 	}
 
 	@FXML

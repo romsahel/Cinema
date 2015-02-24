@@ -191,9 +191,7 @@ public class MainController extends BorderPane
 			ftOut.play();
 			settingsPane.setVisible(true);
 
-			final GaussianBlur gaussianBlur = new GaussianBlur(15);
-			loadingPane.setEffect(gaussianBlur);
-			webView.setEffect(gaussianBlur);
+			blurView(true);
 
 			populateDeletedTable(true, true);
 
@@ -212,10 +210,8 @@ public class MainController extends BorderPane
 				duration = 500;
 			}
 			else
-			{
-				loadingPane.setEffect(null);
-				webView.setEffect(null);
-			}
+				blurView(false);
+
 			FadeTransition ftOut = new FadeTransition(Duration.millis(duration), settingsPane);
 			ftOut.setFromValue(0.98);
 			ftOut.setToValue(0.0);
@@ -230,6 +226,21 @@ public class MainController extends BorderPane
 
 		}
 
+	}
+
+	public void blurView(boolean blurIn)
+	{
+		if (blurIn)
+		{
+			final GaussianBlur gaussianBlur = new GaussianBlur(15);
+			loadingPane.setEffect(gaussianBlur);
+			webView.setEffect(gaussianBlur);
+		}
+		else
+		{
+			loadingPane.setEffect(null);
+			webView.setEffect(null);
+		}
 	}
 
 	private void populateDeletedTable(boolean showDeleted, boolean showMerged)

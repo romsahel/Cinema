@@ -27,7 +27,7 @@ import javafx.stage.StageStyle;
 public class VideoManagerUpdater extends Application
 {
 
-	private static final String CURRENT_VERSION = "2.3.8";
+	private static String CURRENT_VERSION = "2.3.8";
 	private static final StringBuilder changelog = new StringBuilder();
 	private static String version;
 
@@ -91,8 +91,7 @@ public class VideoManagerUpdater extends Application
 
 	public static void show(Stage owner)
 	{
-		if (!downloadChangelog())
-			return;
+		System.out.println("Found");
 		Parent root;
 		try
 		{
@@ -104,11 +103,11 @@ public class VideoManagerUpdater extends Application
 		}
 
 		Scene scene = new Scene(root);
-
 		Stage stage = new Stage(StageStyle.UNDECORATED);
 		stage.initOwner(owner);
 		stage.initModality(Modality.APPLICATION_MODAL);
 		stage.setResizable(false);
+		stage.setAlwaysOnTop(true);
 
 		stage.setScene(scene);
 		stage.show();
@@ -119,8 +118,10 @@ public class VideoManagerUpdater extends Application
 	 */
 	public static void main(String[] args)
 	{
+		CURRENT_VERSION = args[0];
 		if (downloadChangelog())
 			launch(args);
+		System.out.println("Done");
 	}
 
 }
