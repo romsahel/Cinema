@@ -10,8 +10,11 @@ import files.Database;
 import files.Settings;
 import gnu.trove.map.hash.THashMap;
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
@@ -38,7 +41,8 @@ import videomanagerjava.VLCController;
  */
 public class Main extends Application
 {
-	private static final String CURRENT_VERSION = "2.3.9";
+
+	public static final String CURRENT_VERSION = "2.3.9";
 
 	private static Stage stage;
 	private static boolean isReady;
@@ -109,26 +113,32 @@ public class Main extends Application
 			final MainController controller = MainController.getInstance();
 			try
 			{
-				ProcessBuilder builder = new ProcessBuilder("java", "-jar", "VideoManagerUpdater.jar", CURRENT_VERSION);
+				File updater = new File("VideoManagerUpdater.jar");
+				if (updater.exists())
+				{
+					Files.move(updater.toPath(),
+							   new File("VideoManagerUpdater_old.jar").toPath(),
+							   StandardCopyOption.REPLACE_EXISTING);
+				}
+
+				ProcessBuilder builder = new ProcessBuilder("java", "-jar", "VideoManagerUpdater_old.jar", CURRENT_VERSION);
+
 				Process process = builder.start();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 				String line;
 				while ((line = reader.readLine()) != null)
-					if (line.length() > 0)
-					{
-						if (line.equals("Found"))
-							blurAndBlockView(controller, webView, true);
-						else if (line.equals("Done"))
-							break;
-						else
-						{
-							blurAndBlockView(controller, null, false);
-							controller.startLoading(null, line);
-							Logger.getLogger(VLCController.class.getName()).log(Level.INFO, line);
-						}
-					}
-					else
+					if (line.equals("Installed"))
 						Platform.runLater(() -> closeApplication());
+					else if (line.equals("Found"))
+						blurAndBlockView(controller, webView, true);
+					else if (line.equals("Done"))
+						break;
+					else
+					{
+						blurAndBlockView(controller, null, false);
+						controller.startLoading(null, line);
+						Logger.getLogger(VLCController.class.getName()).log(Level.INFO, line);
+					}
 			} catch (IOException ex)
 			{
 				Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);

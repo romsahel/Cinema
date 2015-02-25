@@ -56,7 +56,7 @@ public class MainController extends BorderPane
 	@FXML
 	private StackPane loadingPane, settingsPane;
 	@FXML
-	private Label loadingLabel;
+	private Label loadingLabel, versionLabel;
 	@FXML
 	private TableView<ArrayList<String>> deletedTable;
 	@FXML
@@ -99,6 +99,8 @@ public class MainController extends BorderPane
 		}
 		this.setPrefWidth(width);
 		this.setPrefHeight(height);
+
+		versionLabel.setText(Main.CURRENT_VERSION);
 	}
 
 	private void load() throws RuntimeException

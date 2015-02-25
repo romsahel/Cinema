@@ -122,6 +122,7 @@ public class VideoManagerUpdater extends Application
 		if (downloadChangelog())
 			launch(args);
 		System.out.println("Done");
+		System.exit(0);
 	}
 
 }
