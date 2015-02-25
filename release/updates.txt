@@ -1,5 +1,5 @@
 2.3.9
-  - Added auto updater
+  - Added auto updater (fully functionnal)
   - Fixed bugs
 2.3.8
   - Added settings page with to restore deleted/merged medias
