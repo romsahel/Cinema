@@ -43,7 +43,7 @@ public class FXMLDocumentController implements Initializable
 		final String text = "(Current version: %s; new version: %s)";
 		versionLabel.setText(String.format(text,
 										   VideoManagerUpdater.getVersion(),
-										   VideoManagerUpdater.getCURRENT_VERSION()));
+										   VideoManagerUpdater.CURRENT_VERSION));
 	}
 
 	@FXML
@@ -53,6 +53,7 @@ public class FXMLDocumentController implements Initializable
 		Stage stage = (Stage) source.getScene().getWindow();
 		stage.hide();
 		System.out.println("Downloading update");
+		final String pathToInstaller = VideoManagerUpdater.CURRENT_FOLDER + "cinema-installer.exe";
 		try
 		{
 			URL installer = new URL("https://raw.githubusercontent.com/romsahel/Cinema/master/release/cinema-installer.exe");
@@ -60,14 +61,15 @@ public class FXMLDocumentController implements Initializable
 			conn.setConnectTimeout(10000);
 			conn.setReadTimeout(10000);
 			ReadableByteChannel rbc = Channels.newChannel(conn.getInputStream());
-			try (FileOutputStream fos = new FileOutputStream("cinema-installer.exe"))
+			try (FileOutputStream fos = new FileOutputStream(pathToInstaller))
 			{
 				fos.getChannel().transferFrom(rbc, 0, Long.MAX_VALUE);
 			}
 
-			new ProcessBuilder("cmd", "/c", "cinema-installer.exe", "/exenoui", "/qb").start();
+			new ProcessBuilder("cmd", "/c", pathToInstaller, "/exenoui", "/qb").start();
 		} catch (IOException ex)
 		{
+			System.out.println("Error: " + ex.toString());
 			Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
@@ -77,6 +79,7 @@ public class FXMLDocumentController implements Initializable
 			new ProcessBuilder("java", "-jar", "VideoManagerJAVA.jar").start();
 		} catch (IOException ex)
 		{
+			System.out.println("Error: " + ex.toString());
 			Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
 		}
 

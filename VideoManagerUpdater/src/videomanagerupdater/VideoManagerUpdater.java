@@ -27,7 +27,8 @@ import javafx.stage.StageStyle;
 public class VideoManagerUpdater extends Application
 {
 
-	private static String CURRENT_VERSION = "2.3.8";
+	public static String CURRENT_VERSION;
+	public static String CURRENT_FOLDER;
 	private static final StringBuilder changelog = new StringBuilder();
 	private static String version;
 
@@ -75,14 +76,6 @@ public class VideoManagerUpdater extends Application
 		return version;
 	}
 
-	/**
-	 * @return the CURRENT_VERSION
-	 */
-	public static String getCURRENT_VERSION()
-	{
-		return CURRENT_VERSION;
-	}
-
 	@Override
 	public void start(Stage stage) throws Exception
 	{
@@ -98,6 +91,7 @@ public class VideoManagerUpdater extends Application
 			root = FXMLLoader.load(VideoManagerUpdater.class.getResource("FXMLDocument.fxml"));
 		} catch (IOException ex)
 		{
+			System.out.println("Error: " + ex.toString());
 			Logger.getLogger(VideoManagerUpdater.class.getName()).log(Level.SEVERE, null, ex);
 			return;
 		}
@@ -119,6 +113,8 @@ public class VideoManagerUpdater extends Application
 	public static void main(String[] args)
 	{
 		CURRENT_VERSION = args[0];
+		CURRENT_FOLDER = args[1];
+
 		if (downloadChangelog())
 			launch(args);
 		System.out.println("Done");

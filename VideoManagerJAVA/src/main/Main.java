@@ -113,15 +113,15 @@ public class Main extends Application
 			final MainController controller = MainController.getInstance();
 			try
 			{
-				File updater = new File("VideoManagerUpdater.jar");
+				final String AppData = utils.Utils.APPDATA;
+				File updater = new File(AppData + "VideoManagerUpdater.jar");
+				final String pathToUpdater = AppData + "VideoManagerUpdater_old.jar";
 				if (updater.exists())
-				{
 					Files.move(updater.toPath(),
-							   new File("VideoManagerUpdater_old.jar").toPath(),
+							   new File(pathToUpdater).toPath(),
 							   StandardCopyOption.REPLACE_EXISTING);
-				}
 
-				ProcessBuilder builder = new ProcessBuilder("java", "-jar", "VideoManagerUpdater_old.jar", CURRENT_VERSION);
+				ProcessBuilder builder = new ProcessBuilder("java", "-jar", pathToUpdater, CURRENT_VERSION, AppData);
 
 				Process process = builder.start();
 				BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
