@@ -42,7 +42,7 @@ import videomanagerjava.VLCController;
 public class Main extends Application
 {
 
-	public static final String CURRENT_VERSION = "2.3.9";
+	public static final String CURRENT_VERSION = "2.4.0";
 
 	private static Stage stage;
 	private static boolean isReady;

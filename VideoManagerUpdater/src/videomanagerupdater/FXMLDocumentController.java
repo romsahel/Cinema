@@ -74,16 +74,8 @@ public class FXMLDocumentController implements Initializable
 		}
 
 		System.out.println("Installed");
-		try
-		{
-			new ProcessBuilder("java", "-jar", "VideoManagerJAVA.jar").start();
-		} catch (IOException ex)
-		{
-			System.out.println("Error: " + ex.toString());
-			Logger.getLogger(FXMLDocumentController.class.getName()).log(Level.SEVERE, null, ex);
-		}
-
 		stage.close();
+		System.exit(0);
 	}
 
 	@FXML
@@ -92,6 +84,7 @@ public class FXMLDocumentController implements Initializable
 		Node source = (Node) event.getSource();
 		Stage stage = (Stage) source.getScene().getWindow();
 		stage.close();
+		System.exit(0);
 	}
 
 	@FXML
