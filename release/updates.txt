@@ -1,3 +1,6 @@
+2.4.1
+  - Fixed bug (edit dialog crashing)
+  - Check for poster merging at each startup
 2.4.0
   - Added auto updater (fully functionnal)
 2.3.9
