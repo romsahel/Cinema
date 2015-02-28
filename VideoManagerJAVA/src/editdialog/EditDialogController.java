@@ -152,7 +152,7 @@ public class EditDialogController extends AnchorPane
 		if ((shouldUpdate = !newSeasons.equals(media.getSeasons())))
 			media.setSeasons(newSeasons);
 
-		if (!info.get("name").equals(title) || !info.get("type").equals(type) || newImg != null)
+		if (!title.equals(info.get("name")) || !type.equals(info.get("type")) || newImg != null)
 		{
 			media.setInfo("type", type);
 			media.setInfo("name", title);

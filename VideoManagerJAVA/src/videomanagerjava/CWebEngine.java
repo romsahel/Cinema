@@ -112,30 +112,23 @@ public final class CWebEngine
 		Utils.callFuncJS(webEngine, "sortMediaList");
 		Utils.callFuncJS(webEngine, "$(\"#locationsList > li\")[0].click");
 		Utils.callFuncJS(webEngine, "setSelection", general.get("currentMedia"), general.get("currentSeason"), general.get("currentEpisode"));
-//		Utils.callFuncJS(webEngine, "setToggles", general.get("playList"), general.get("withSubtitles"));
 
-		if (newItems > 0)
+		Thread t = new Thread((Runnable) () ->
 		{
-			Thread t = new Thread((Runnable) () ->
+			try
 			{
-				System.out.println("new items baby");
-				try
-				{
-					executor.awaitTermination(30, TimeUnit.SECONDS);
-				} catch (InterruptedException ex)
-				{
-					Logger.getLogger(CWebEngine.class.getName()).log(Level.SEVERE, null, ex);
-				}
-				mergeByPoster();
-				newItems = 0;
+				executor.awaitTermination(30, TimeUnit.SECONDS);
+			} catch (InterruptedException ex)
+			{
+				Logger.getLogger(CWebEngine.class.getName()).log(Level.SEVERE, null, ex);
+			}
+			mergeByPoster();
+			newItems = 0;
 
-				controller.stopLoading();
-				Database.getInstance().writeDatabase();
-			});
-			t.start();
-		}
-		else
 			controller.stopLoading();
+			Database.getInstance().writeDatabase();
+		});
+		t.start();
 	}
 
 	private static void getImages(ArrayList<Media> list)
