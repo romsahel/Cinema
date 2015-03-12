@@ -1,5 +1,7 @@
-2.4.2
+2.4.25
   - Fix URL encoding to support paths with '&', '#' and '='
+  - Fix 'Refresh' when 
+  - Exception should now be correctly logged
 2.4.1
   - Fixebug (edit dialog crashing)
   - Check for poster merging at each startup

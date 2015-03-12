@@ -60,7 +60,7 @@ public class VLCController
 			for (int i = 1; i < array.length; i++)
 			{
 				final THashMap<String, String> properties = array[i].getProperties();
-				if (sendRequest(command + properties.get("path")) == null)
+				if (sendRequest(command + encodePath(properties.get("path"))) == null)
 					break;
 
 				String path = getPath(properties);
@@ -114,7 +114,7 @@ public class VLCController
 			runVLC(path);
 		}
 		else
-			sendRequest("command=in_play&input=" + path);
+			sendRequest("command=in_play&input=" + encodePath(path));
 
 		String sendRequest = null;
 		controller.logLoadingScreen("Waiting for VLC");
@@ -146,6 +146,16 @@ public class VLCController
 		timer.scheduleAtFixedRate(timerTask, 10000, 10000);
 
 		controller.stopLoading();
+	}
+
+	private static String encodePath(String path)
+	{
+		// encode path
+		path = path.replace(" ", "%20")
+				.replace("&", "%26")
+				.replace("#", "%23")
+				.replace("=", "%3D");
+		return path;
 	}
 
 	private static void getSubtitles(String path)

@@ -197,7 +197,10 @@ public class Main extends Application
 					if (record.getLevel() == Level.INFO)
 						return record.getMessage() + "\r\n";
 					else
-						return record.toString();
+						return "EXCEPTION ====================================================\n"
+							   + "\tError: -- " + record.getMessage() + " -- of type `" + record.getThrown().getClass().toString() + "`\n"
+							   + "\tSource: method `" + record.getSourceMethodName() + "` in `" + record.getSourceClassName() + "`\n"
+							   + "===================================================================================\n";
 				}
 			});
 		} catch (IOException | SecurityException ex)

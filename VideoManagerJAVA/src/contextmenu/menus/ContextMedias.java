@@ -61,7 +61,7 @@ public class ContextMedias extends IContextMenu
 				 final String id = hovered.getParentElement().getAttribute("id");
 				 hide();
 				 Database.getInstance().removeMedia(false, database.get(Long.valueOf(id)));
-				 webEngine.executeScript("$('#" + id + "').fadeOut(200); $(\"#detail\").fadeTo(200, 0);");
+				 utils.Utils.callFuncJS(webEngine, "deleteMedia", id);
 				 Database.getInstance().writeDatabase();
 		});
 		// </editor-fold>
@@ -74,13 +74,15 @@ public class ContextMedias extends IContextMenu
 				 String path = (String) webEngine.executeScript("currentEpisode.value.path");
 				 try
 				 {
+					 String a = null;
+					 a.charAt(1);
 					 if (utils.Utils.isWindows)
 						 Runtime.getRuntime().exec("explorer.exe /select," + path.replace("/", "\\"));
 					 else
 						 Desktop.getDesktop().open(new File(path).getParentFile());
 				 } catch (IOException ex)
 				 {
-					 Logger.getLogger(ContextFiles.class.getName()).log(Level.SEVERE, null, ex);
+					 Logger.getLogger(ContextFiles.class.getName()).log(Level.INFO, null, ex);
 				 }
 				 hide();
 		});
@@ -96,12 +98,20 @@ public class ContextMedias extends IContextMenu
 				 Media media = database.get(id);
 				 Media refreshed = FileWalker.getInstance().walkRoot(new File(media.getInfo().get("path")), null);
 
-				 final THashMap<String, String> infos = refreshed.getInfo();
-				 for (Map.Entry<String, String> entrySet : media.getInfo().entrySet())
-					 infos.put(entrySet.getKey(), entrySet.getValue());
+				 if (refreshed != null)
+				 {
+					 final THashMap<String, String> infos = refreshed.getInfo();
+					 for (Map.Entry<String, String> entrySet : media.getInfo().entrySet())
+						 infos.put(entrySet.getKey(), entrySet.getValue());
 
-				 database.put(id, refreshed);
-				 utils.Utils.callFuncJS(webEngine, "updateMedia", attribute, refreshed.toJSArray());
+					 database.put(id, refreshed);
+					 utils.Utils.callFuncJS(webEngine, "updateMedia", attribute, refreshed.toJSArray());
+				 }
+				 else
+				 {
+					 Database.getInstance().getDatabase().remove(id);
+					 utils.Utils.callFuncJS(webEngine, "deleteMedia", id.toString());
+				 }
 				 Database.getInstance().writeDatabase();
 		});
 		// </editor-fold>

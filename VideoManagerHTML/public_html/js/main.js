@@ -73,13 +73,17 @@ function mergeAndUpdate(deleted, changed)
 		if (changed[i])
 			updateMedia(null, changed[i]);
 	for (var i in deleted)
-		if (deleted[i])
-		{
-			if (currentMedia && currentMedia.id === deleted[i])
-				$(detail).fadeTo(200, 0);
-			$("#" + deleted[i]).remove();
-		}
+		deleteMedia(deleted[i]);
+}
 
+function deleteMedia(id)
+{
+	if (id)
+	{
+		if (currentMedia && currentMedia.id === id)
+			$(detail).fadeTo(200, 0);
+		$("#" + id).remove();
+	}
 }
 
 function setMediaLoading(id)
