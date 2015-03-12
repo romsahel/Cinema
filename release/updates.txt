@@ -1,12 +1,14 @@
+2.4.2
+  - Fix URL encoding to support paths with '&', '#' and '='
 2.4.1
-  - Fixed bug (edit dialog crashing)
+  - Fixebug (edit dialog crashing)
   - Check for poster merging at each startup
 2.4.0
-  - Added auto updater (fully functionnal)
+  - Add auto updater (fully functionnal)
 2.3.9
-  - Fixed bugs
+  - Fix bugs
 2.3.8
-  - Added settings page with to restore deleted/merged medias
-  - Added availability and subtitles indicator
-  - Added refresh media
-  - Fixed cancel not working when modifying episodes and seasons
+  - Add settings page with to restore deleted/merged medias
+  - Add availability and subtitles indicator
+  - Add refresh media
+  - Fix cancel not working when modifying episodes and seasons

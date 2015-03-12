@@ -52,7 +52,7 @@ public class RequestUtils
 			BufferedReader rd;
 			try
 			{
-				url = new URL(urlStr.replace(" ", "%20"));
+				url = new URL(urlStr.replace(" ", "%20").replace("&", "%26").replace("#", "%23").replace("=", "%3D"));
 				conn = url.openConnection();
 				// Get the response
 				rd = new BufferedReader(new InputStreamReader(conn.getInputStream()));
