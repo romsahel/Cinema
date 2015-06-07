@@ -210,6 +210,7 @@ public class Main extends Application
 		if (handler != null)
 			Logger.getLogger("").addHandler(handler);
 
+		Logger.getLogger(Main.class.getName()).log(Level.INFO, "Cinema: version " + CURRENT_VERSION);
 		launch(args);
 	}
 }

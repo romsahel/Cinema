@@ -5,6 +5,16 @@ function updateDetails(media)
 	seasons.empty();
 	episodes.empty();
 
+	var favorited = info["favorite"];
+	var heart = $("#favorite-icon");
+	if (favorited && favorited === "True")
+	{
+		if (!heart.hasClass("favorited"))
+			heart.addClass("favorited");
+	}
+	else
+		heart.removeClass("favorited");
+
 	for (var key in detailsToUpdate)
 	{
 		var data = (info[key]) ? info[key] : "N/A";

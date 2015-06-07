@@ -42,8 +42,8 @@ public class FXMLDocumentController implements Initializable
 		changelogLabel.setText(VideoManagerUpdater.getChangelog());
 		final String text = "(Current version: %s; new version: %s)";
 		versionLabel.setText(String.format(text,
-										   VideoManagerUpdater.getVersion(),
-										   VideoManagerUpdater.CURRENT_VERSION));
+										   VideoManagerUpdater.CURRENT_VERSION,
+										   VideoManagerUpdater.getVersion()));
 	}
 
 	@FXML

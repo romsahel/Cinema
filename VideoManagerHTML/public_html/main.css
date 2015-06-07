@@ -361,7 +361,30 @@ header > .select, #detail-genres {
 	background-size: 239px 352px;
 }
 
-#detail-poster > div {
+#favorite-icon {
+	display: inline-block;
+	font-family: AppleColorEmoji,"Apple Color Emoji","Segoe UI Emoji",NotoColorEmoji,"Segoe UI Symbol",EmojiSymbols,Symbola,"Android Emoji",AndroidEmoji,"Arial Unicode MS","Zapf Dingbats",AppleSDGothicNeo-Regular,"lucida grande",tahoma,verdana,arial,sans-serif;
+	font-size: 3.0em;
+	padding-left: 15px;
+	padding-top: 10px;
+	text-shadow: 0px 0px 4px #000000;
+	cursor: pointer;
+	opacity: 0.8;
+	transition: all 0.5s;
+}
+#favorite-icon:hover {
+	transition: all 0.5s;
+	color: white;
+}
+
+#favorite-icon.favorited {
+	color: rgb(241, 100, 100);
+}
+#favorite-icon.favorited:hover {
+	color: rgb(235, 149, 149);
+}
+
+#availability-banner {
 	position: absolute;
 	height: 20px;
 	width: 239px;

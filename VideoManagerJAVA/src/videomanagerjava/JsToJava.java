@@ -185,4 +185,14 @@ public class JsToJava
 			"Available", list.length + " subtitles"
 		};
 	}
+
+	public void toggleFavorite(String id)
+	{
+		final Media media = Database.getInstance().getDatabase().get(Long.parseLong(id, 10));
+		String favorite = media.getInfo().get("favorite");
+		if (favorite == null || favorite.equals("False"))
+			media.setInfo("favorite", "True");
+		else
+			media.setInfo("favorite", "False");
+	}
 }

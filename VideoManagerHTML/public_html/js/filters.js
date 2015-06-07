@@ -32,27 +32,33 @@ function filterByGenre(genre)
 function filter()
 {
 	$("body > div").animate({scrollTop: 0}, 500);
-
-	$(mediaList).fadeTo(200, 0, function () {
-		for (var key in medias)
-		{
-			var div = $('#' + key);
-			var elt = medias[key];
-			if ((currentType === "All" || elt.info.type === currentType)
-					&& (currentLocation === "All" || elt.info.location === currentLocation)
-					&& (currentGenre === "All" || elt.info.genres.indexOf(currentGenre) !== -1))
-				div.show();
-			else
+	if (type === "favorites")
+	{
+		
+	}
+	else
+	{
+		$(mediaList).fadeTo(200, 0, function () {
+			for (var key in medias)
 			{
-				if (div.hasClass("selected"))
-					currentMedia = null;
-				div.hide();
+				var div = $('#' + key);
+				var elt = medias[key];
+				if ((currentType === "All" || elt.info.type === currentType)
+						&& (currentLocation === "All" || elt.info.location === currentLocation)
+						&& (currentGenre === "All" || elt.info.genres.indexOf(currentGenre) !== -1))
+					div.show();
+				else
+				{
+					if (div.hasClass("selected"))
+						currentMedia = null;
+					div.hide();
+				}
 			}
-		}
 
-		_setSelection();
-		$(mediaList).fadeTo(300, 1, function () {
-			selectFirstVisibleMedia();
+			_setSelection();
+			$(mediaList).fadeTo(300, 1, function () {
+				selectFirstVisibleMedia();
+			});
 		});
-	});
+	}
 }

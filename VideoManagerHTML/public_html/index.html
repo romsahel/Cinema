@@ -22,6 +22,7 @@
 					<li class="category selected" onclick="filterByType($(this), 'All')"><a>All</a></li>
 					<li class="category" onclick="filterByType($(this), 'movie')"><a>Movies</a></li>
 					<li class="category" onclick="filterByType($(this), 'show')"><a>TV Series</a></li>
+					<li class="category" onclick="filterByType($(this), 'favorites')"><a>Favorites</a></li>
 					<li></li>
 					<li class="select" onclick="dropDownClick(this, '#sortList')">
 						<a>Sort by </a>
@@ -69,11 +70,12 @@
 					<div id="banner">
 						<div id="banner-left">
 							<div id="detail-poster">
-								<div>
+								<div id="availability-banner">
 									<p id="availability">Available</p>
 									<p id="indicator-separator"></p>
 									<p id="subtitles-indicator">Subtitles</p>
 								</div>
+								<div id="favorite-icon" onclick="addFavorite(this)">❤</div>
 							</div>
 						</div>
 						<div id="banner-right">

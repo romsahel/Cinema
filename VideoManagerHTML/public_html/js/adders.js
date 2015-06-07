@@ -121,3 +121,10 @@ function addLocation(name)
 	newLoc.innerText = name;
 	locationsList.appendChild(newLoc);
 }
+
+function addFavorite(elt)
+{
+	$(elt).toggleClass("favorited");
+	currentMedia.info["favorite"] = "True";
+	app.toggleFavorite(currentId);
+}
