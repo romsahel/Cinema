@@ -1,3 +1,5 @@
+2.4.30
+  - Second try with different query when first subtitles download fails.
 2.4.25
   - Fix URL encoding to support paths with '&', '#' and '='
   - Fix 'Refresh' when 

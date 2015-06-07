@@ -65,7 +65,7 @@ public class VLCController
 
 				String path = getPath(properties);
 				if (withSubtitles)
-					getSubtitles(path);
+					getSubtitles(path, true);
 			}
 		});
 
@@ -104,7 +104,7 @@ public class VLCController
 		if (withSubtitles)
 		{
 			controller.logLoadingScreen("Downloading subtitles");
-			getSubtitles(path);
+			getSubtitles(path, true);
 		}
 
 //		If the request is null, we must launch VLC and wait for it to be prepared
@@ -158,9 +158,8 @@ public class VLCController
 		return path;
 	}
 
-	private static void getSubtitles(String path)
+	private static void getSubtitles(String path, boolean absoluteMode)
 	{
-
 		String language = Settings.getInstance().getGeneral().get("language");
 		if (language == null)
 			language = "en";
@@ -171,10 +170,18 @@ public class VLCController
 			File file = new File(path);
 			String program = "subliminal";
 			final String name = '"' + file.getAbsolutePath() + '"';
-			String[] cmd =
-			{
-				program, "-l", language, "-f", "--", name
-			};
+			String[] cmd;
+			if (absoluteMode)
+				cmd = new String[]
+				{
+					program, "-l", language, "-f", "--", name
+				};
+			else
+				cmd = new String[]
+				{
+					program, "-l", language, "-f", "-d", file.getParent(), "--", file.getName()
+				};
+
 			Logger.getLogger(VLCController.class.getName()).log(Level.INFO, program + " -l " + language + " -f -- " + name);
 			ProcessBuilder builder = new ProcessBuilder(cmd);
 			builder.redirectErrorStream(true);
@@ -186,6 +193,9 @@ public class VLCController
 				line = line.replace("INFO: ", "");
 				controller.logLoadingScreen(line);
 				Logger.getLogger(VLCController.class.getName()).log(Level.INFO, line);
+				if (absoluteMode)
+					if (line.equals("No subtitles downloaded"))
+						getSubtitles(path, false);
 			}
 			Utils.callFuncJS(CWebEngine.getWebEngine(), "updateIndicators");
 		} catch (IOException ex)
