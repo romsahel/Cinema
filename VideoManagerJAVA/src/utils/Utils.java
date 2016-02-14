@@ -23,8 +23,7 @@ public class Utils
 
 	public static final boolean isWindows = System.getProperty("os.name").contains("Windows");
 	private static final String fileSeparator = (isWindows) ? "\\" : "/";
-	private static final String sub = (isWindows) ? "/Documents/" : "";
-	public static final String APPDATA = System.getProperty("user.home") + sub + "/.cinema/";
+	public static final String APPDATA = System.getProperty("user.home") + "/.cinema/";
 
 	public static void callFuncJS(WebEngine webEngine, String function, String... args)
 	{

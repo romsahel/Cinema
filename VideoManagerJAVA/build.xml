@@ -55,7 +55,7 @@
 	</condition>
 	<target name="-pre-init">
 		<echo message="Copying to this path: ${user.home}${add_path}/.cinema/public_html"/>
-		<copy todir="${user.home}${add_path}/.cinema/public_html" >
+		<copy todir="${user.home}/.cinema/public_html" >
 			<fileset dir="../VideoManagerHTML/public_html"/>
 		</copy>
 

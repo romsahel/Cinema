@@ -188,6 +188,9 @@ public class Main extends Application
 		Handler handler = null;
 		try
 		{
+			File dir = new File(utils.Utils.APPDATA + "log");
+			if (!dir.exists())
+				dir.mkdirs();
 			handler = new FileHandler(utils.Utils.APPDATA + "log/cinema-log.xml");
 			handler.setFormatter(new Formatter()
 			{
