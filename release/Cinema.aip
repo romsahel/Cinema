@@ -16,7 +16,7 @@
     <ROW Property="ProductCode" Value="1036:{255E200D-FBE4-44CE-9DAB-DD132A1482B2} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1036"/>
     <ROW Property="ProductName" Value="Cinema"/>
-    <ROW Property="ProductVersion" Value="2.4.35" Type="32"/>
+    <ROW Property="ProductVersion" Value="2.5.00" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{7E64E73F-CB90-4A37-BBC7-268C08347B75}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
