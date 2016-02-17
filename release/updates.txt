@@ -1,3 +1,6 @@
+2.5.0
+  - Fix subtitles downloading with updated module
+  - Fix installed
 2.4.35
   - Second try with different query when first subtitles download fails.
   - Partially implemented favorite system (filtering is still to be done)

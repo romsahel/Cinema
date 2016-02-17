@@ -174,12 +174,12 @@ public class VLCController
 			if (absoluteMode)
 				cmd = new String[]
 				{
-					program, "-l", language, "-f", "--", name
+					program, "download", "-l", language, "-f", "--", name
 				};
 			else
 				cmd = new String[]
 				{
-					program, "-l", language, "-f", "-d", file.getParent(), "--", file.getName()
+					program, "download", "-l", language, "-f", "-d", file.getParent(), "--", file.getName()
 				};
 
 			Logger.getLogger(VLCController.class.getName()).log(Level.INFO, program + " -l " + language + " -f -- " + name);
