@@ -27,6 +27,7 @@ import javafx.stage.DirectoryChooser;
 import main.Main;
 import utils.Formatter;
 import utils.Utils;
+import vlcinterface.VLCController;
 
 /**
  *
@@ -77,7 +78,7 @@ public class JsToJava
 		Episode episode = getEpisode(id, currentSeason, currentEpisode);
 		episode.setSeen(value);
 		if (reset)
-			episode.getProperties().put("time", "0");
+			episode.setTime(0);
 	}
 
 	public void resetMedia(String id)
@@ -89,9 +90,8 @@ public class JsToJava
 			TreeMap<String, Episode> episodes = season.getValue();
 			for (Map.Entry<String, Episode> episode : episodes.entrySet())
 			{
-				final THashMap<String, String> properties = episode.getValue().getProperties();
-				properties.put("time", "0");
-				properties.put("seen", "false");
+                                episode.getValue().setTime(0);
+                                episode.getValue().setSeen(false);
 			}
 		}
 	}
@@ -169,7 +169,7 @@ public class JsToJava
 	public String[] getEpisodeIndicator(String id, String currentSeason, String currentEpisode)
 	{
 		Episode episode = getEpisode(id, currentSeason, currentEpisode);
-		final String path = episode.getProperties().get("path");
+		final String path = episode.getPath();
 
 		File file = new File(path);
 		if (!file.exists())

@@ -1,5 +1,7 @@
 package utils;
 
+import java.io.UnsupportedEncodingException;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.scene.web.WebEngine;
@@ -12,10 +14,10 @@ public class Utils
 {
 
 	public static final String[] DUMP_KEYWORDS =
-	{
-		"[", "1080p", "720p", "x264", "HDTV", "FASTSUB", "VOSTFR", "MULTI", "LiMiTED",
-		"FINAL", "REPACK", "FRENCH", "COMPLETE", "PROPER", "EXTENDED", "UNRATED", "BrRip", "720."
-	};
+		{
+			"[", "1080p", "720p", "x264", "HDTV", "FASTSUB", "VOSTFR", "MULTI", "LiMiTED",
+			"FINAL", "REPACK", "FRENCH", "COMPLETE", "PROPER", "EXTENDED", "UNRATED", "BrRip", "BDRip", "720.", "Bluray", "The Ultimate Cut"
+		};
 	public static final String[] EXTENSIONS =
 	{
 		".avi", ".mkv", ".mp4", ".m4v"
@@ -63,4 +65,24 @@ public class Utils
 	{
 		return fileSeparator;
 	}
+        
+        public static String URLEncode(String str)
+        {
+            try {
+                return java.net.URLEncoder.encode(str, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }
+        
+        public static String URLDecode(String str)
+        {
+            try {
+                return java.net.URLDecoder.decode(str, "UTF-8");
+            } catch (UnsupportedEncodingException ex) {
+                Logger.getLogger(Utils.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }
 }

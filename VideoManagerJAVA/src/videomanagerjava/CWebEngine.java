@@ -78,13 +78,14 @@ public final class CWebEngine
 			{
 				final THashMap<String, String> info = value.getInfo();
 				info.remove("loading");
-				if (info.remove("error") != null)
-					threadedGetImage(value);
+//				if (info.remove("error") != null)
+//					threadedGetImage(value);
 				if (locations.contains(info.get("location")))
 					medias.add(value);
 			}
 
 		executor.shutdown();
+                controller.stopLoading();
 	}
 
 	private static void initExecutor()

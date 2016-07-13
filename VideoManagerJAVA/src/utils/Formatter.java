@@ -47,6 +47,8 @@ public class Formatter
 		toFormat = toFormat.replaceAll("[e]([0-9])", "E$1");
 		toFormat = toFormat.replaceAll("_", " ");
 		toFormat = toFormat.replaceAll("[(]?(19|20)[0-9]{2}[)]?", "");
+                if (toFormat.endsWith("("))
+                    toFormat = toFormat.substring(0, toFormat.length() - 1);
 		return toFormat.trim();
 	}
 
@@ -62,16 +64,10 @@ public class Formatter
 
 	public static String removeSeason(String toFormat)
 	{
-		return removeSeason(toFormat, toFormat);
-	}
-
-	public static String removeSeason(String toFormat, String folder)
-	{
-		final String season = getSeason(folder, toFormat);
-		if (season != null)
-			return toFormat.replace(season, "").trim();
-		else
-			return toFormat;
+		String season;
+                while ((season = getSeason(toFormat, toFormat)) != null)
+			toFormat = toFormat.replace(season, "").trim();
+                return toFormat;
 	}
 
 	public static String getFormattedSeason(String toFormat)

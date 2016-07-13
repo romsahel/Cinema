@@ -13,10 +13,10 @@
     <ROW Property="ARPCOMMENTS" Value="Cette base de données d&apos;installation contient le code et les données nécessaires à l&apos;installation de [|ProductName]." ValueLocId="*"/>
     <ROW Property="ARPSYSTEMCOMPONENT" Value="1"/>
     <ROW Property="Manufacturer" Value="Aerr"/>
-    <ROW Property="ProductCode" Value="1036:{2859E2C6-2950-4647-B9AC-E18532D80CF4} " Type="16"/>
+    <ROW Property="ProductCode" Value="1036:{6D655EC9-268E-4C9D-9955-53E8C526C1E5} " Type="16"/>
     <ROW Property="ProductLanguage" Value="1036"/>
     <ROW Property="ProductName" Value="Cinema"/>
-    <ROW Property="ProductVersion" Value="2.5.01" Type="32"/>
+    <ROW Property="ProductVersion" Value="2.5.10" Type="32"/>
     <ROW Property="SecureCustomProperties" Value="OLDPRODUCTS;AI_NEWERPRODUCTFOUND;AI_SETUPEXEPATH;SETUPEXEDIR"/>
     <ROW Property="UpgradeCode" Value="{7E64E73F-CB90-4A37-BBC7-268C08347B75}"/>
     <ROW Property="WindowsType9X" MultiBuildValue="DefaultBuild:Windows 9x/ME" ValueLocId="-"/>
@@ -34,7 +34,7 @@
     <ROW Directory="lib_Dir" Directory_Parent="APPDIR" DefaultDir="lib"/>
   </COMPONENT>
   <COMPONENT cid="caphyon.advinst.msicomp.MsiCompsComponent">
-    <ROW Component="AI_CustomARPName" ComponentId="{CC0B4AD5-14BD-4FC5-86E4-C4A8AB3EB647}" Directory_="APPDIR" Attributes="4" KeyPath="DisplayName" Options="1"/>
+    <ROW Component="AI_CustomARPName" ComponentId="{1A7F9688-44EB-4EC1-BB9C-83D26EAAE1EC}" Directory_="APPDIR" Attributes="4" KeyPath="DisplayName" Options="1"/>
     <ROW Component="AI_ExePath" ComponentId="{D2CA236C-CA9E-4952-A679-7AD02225FD6F}" Directory_="APPDIR" Attributes="4" KeyPath="AI_ExePath"/>
     <ROW Component="Cinema.exe" ComponentId="{AF09371D-6208-46E5-828B-8724D90494B8}" Directory_="APPDIR" Attributes="0" KeyPath="Cinema.exe"/>
     <ROW Component="Cinema1.exe" ComponentId="{B99DD3E4-81A4-461A-BB6D-156D1C002097}" Directory_="APPDIR" Attributes="0" Condition="VersionNT64" KeyPath="Cinema1.exe"/>

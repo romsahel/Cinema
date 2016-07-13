@@ -6,8 +6,15 @@
 package files;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import utils.Utils;
 import videomanagerjava.Episode;
 import videomanagerjava.Location;
@@ -60,7 +67,13 @@ public class FileWalker
 
 	public Media walkRoot(File f, Map[] databases)
 	{
-		final String path = f.getAbsolutePath();
+                final String path;
+                try {
+                    path = java.net.URLEncoder.encode(f.getCanonicalPath(), "UTF-8");
+                } catch (IOException ex) {
+                    Logger.getLogger(FileWalker.class.getName()).log(Level.SEVERE, null, ex);
+                    return null;
+                }
 		final long hashCode = path.hashCode();
 //		We start by looking if this folder has already been walked
 //		If it has, we return null so that it is not overwritten
@@ -97,7 +110,7 @@ public class FileWalker
 	private void addEpisode(final File file, Media media)
 	{
 		final Episode episode = new Episode(file);
-		media.getDefaultSeason().put(episode.getProperties().get("name"), episode);
+		media.getDefaultSeason().put(episode.getName(), episode);
 	}
 
 	private void walkMedia(File f, Media media, Map[] databases)
@@ -147,6 +160,6 @@ public class FileWalker
 	{
 
 		private static final FileWalker INSTANCE = new FileWalker();
-	}
-  // </editor-fold>
+	
+}  // </editor-fold>
 }

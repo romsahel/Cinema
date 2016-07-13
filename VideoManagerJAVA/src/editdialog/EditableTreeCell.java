@@ -123,7 +123,7 @@ public final class EditableTreeCell extends TreeCell<String>
 					TreeMap<String, Episode> season = newSeasons.get(treeItem.getParent().getValue());
 					final Episode get = season.get(string);
 					season.put(text, get);
-					if (get.getProperties().get("name").equals(text))
+					if (get.getName().equals(text))
 						return;
 					get.setProperty("name", text);
 					season.remove(string);

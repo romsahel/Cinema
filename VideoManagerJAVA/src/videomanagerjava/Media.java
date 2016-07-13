@@ -55,7 +55,7 @@ public class Media
 		this.id = id;
 		if (path != null)
 		{
-			String name = Formatter.getCleanName(Formatter.getSuffix(path, Utils.getSeparator()));
+			String name = Formatter.getCleanName(Formatter.getSuffix(Utils.URLDecode(path), Utils.getSeparator()));
 			setInfo("year", Formatter.getYear(name));
 			setInfo("name", Formatter.formatName(name));
 			setInfo("path", path);

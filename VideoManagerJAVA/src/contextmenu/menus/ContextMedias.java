@@ -74,8 +74,6 @@ public class ContextMedias extends IContextMenu
 				 String path = (String) webEngine.executeScript("currentEpisode.value.path");
 				 try
 				 {
-					 String a = null;
-					 a.charAt(1);
 					 if (utils.Utils.isWindows)
 						 Runtime.getRuntime().exec("explorer.exe /select," + path.replace("/", "\\"));
 					 else
@@ -96,12 +94,14 @@ public class ContextMedias extends IContextMenu
 				 hide();
 
 				 Media media = database.get(id);
-				 Media refreshed = FileWalker.getInstance().walkRoot(new File(media.getInfo().get("path")), null);
+				 Media refreshed = FileWalker.getInstance().walkRoot(new File(java.net.URLDecoder.decode(media.getInfo().get("path"))), null);
 
 				 if (refreshed != null)
 				 {
 					 final THashMap<String, String> infos = refreshed.getInfo();
 					 for (Map.Entry<String, String> entrySet : media.getInfo().entrySet())
+                                             if (!infos.containsKey(entrySet.getKey())
+                                                 || infos.get(entrySet.getKey()) == null)
 						 infos.put(entrySet.getKey(), entrySet.getValue());
 
 					 database.put(id, refreshed);

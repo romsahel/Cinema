@@ -40,7 +40,7 @@ public class Episode
 	{
 		properties = new THashMap<>();
 		setProperty("name", Formatter.getSuffix(file.getAbsolutePath(), Utils.getSeparator()));
-		setProperty("path", file.getAbsolutePath().replace("\\", "/"));
+		setProperty("path", Utils.URLEncode(file.getAbsolutePath()));
 		setProperty("seen", "false");
 		setProperty("time", "0");
 	}
@@ -53,7 +53,6 @@ public class Episode
 	@Override
 	public String toString()
 	{
-
 		StringBuilder sb = new StringBuilder();
 		for (Map.Entry<String, String> entrySet : properties.entrySet())
 		{
@@ -72,12 +71,32 @@ public class Episode
 		properties.put(key.intern(), value.intern());
 	}
 
-	public THashMap<String, String> getProperties()
+        public String getName()
+        {
+            return properties.get("name");
+        }   
+        
+        public String getPath()
+        {
+            return Utils.URLDecode(properties.get("path"));
+        }
+        
+        public long getTime()
+        {
+            return Long.valueOf(properties.get("time"));
+        }
+        
+        public boolean getSeen()
+        {
+            return Boolean.valueOf(properties.get("seen"));
+        }
+
+	public void setTime(long time)
 	{
-		return properties;
+		setProperty("time", Long.toString(time));
 	}
 
-	void setSeen(boolean seen)
+	public void setSeen(boolean seen)
 	{
 		setProperty("seen", Boolean.toString(seen));
 	}

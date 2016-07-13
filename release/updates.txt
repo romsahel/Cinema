@@ -1,3 +1,6 @@
+2.5.10
+  - Redone VLC interface
+  - Many fixes
 2.5.00
   - Fix subtitles downloading with updated module
   - Fix installed

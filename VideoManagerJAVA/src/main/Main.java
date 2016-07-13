@@ -35,17 +35,19 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 import videomanagerjava.CWebEngine;
-import videomanagerjava.VLCController;
+import vlcinterface.VLCController;
+import vlcinterface.VLCRemote;
 
 /**
  * @author Romsahel
  */
 public class Main extends Application {
 
-    public static String CURRENT_VERSION = "9.9.9";
+    public static String CURRENT_VERSION = "9.9.99";
 
     private static Stage stage;
     private static boolean isReady;
+    private static Thread updaterThread;
 
     /**
      * @return the stage
@@ -81,6 +83,7 @@ public class Main extends Application {
         stage.setOnCloseRequest((WindowEvent we) ->
         {
             closeApplication();
+            Platform.exit();
         });
 
 //		adding context menu
@@ -100,10 +103,10 @@ public class Main extends Application {
         ResizeHelper.addResizeListener(stage);
         stage.show();
 
-        updateApplication(webView);
+        updaterThread = updateApplication(webView);
     }
 
-    private void updateApplication(final WebView webView) {
+    private Thread updateApplication(final WebView webView) {
         final Thread thread = new Thread(() ->
         {
             final MainController controller = MainController.getInstance();
@@ -145,6 +148,7 @@ public class Main extends Application {
             blurAndBlockView(controller, webView, false);
         });
         thread.start();
+        return thread;
     }
 
     private void blurAndBlockView(final MainController controller, final WebView webView, boolean block) {
@@ -168,8 +172,10 @@ public class Main extends Application {
 //				general.put("playList", '\\' + (String) webEngine.executeScript("playList.toString()"));
 //				general.put("withSubtitles", '\\' + (String) webEngine.executeScript("withSubtitles.toString()"));
             Settings.getInstance().writeSettings();
+            updaterThread.interrupt();
 
-            if (!VLCController.cancelTimer(true))
+            VLCRemote.get().logout();
+//            if (!VLCController.cancelTimer(true))
                 Database.getInstance().writeDatabase();
         }
     }
