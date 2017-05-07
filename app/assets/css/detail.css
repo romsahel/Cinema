@@ -1,0 +1,125 @@
+
+#detail-top {
+    position: relative;
+    visibility: hidden;
+}
+
+#detail-poster {
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center center;
+
+    width: 195px; /* 300px */
+    height: 289px; /** 445px */
+}
+
+#detail-text {
+    overflow-y: auto;
+}
+
+#detail button {
+    padding: 6px 15px;
+    margin: 0px 0px;
+}
+
+.button-holder {
+    position: absolute;
+    bottom: 0px;
+}
+
+#detail .double-button button:nth-child(1), .double-button button:nth-child(1) {
+    border-right: 0px;
+}
+
+#detail .double-button button:nth-child(2), .double-button button:nth-child(2) {
+    margin-right: 8px;
+}
+
+#subs-button-holder button {
+    width: 85px;
+}
+
+#subs-button-holder {
+    display: inline-block;
+}
+
+#subs-languages {
+    display: none;
+    position: fixed;
+    z-index: 2;
+    background: rgb(23, 24, 27);
+}
+
+#subs-languages li button,
+.button-list li:not(:first-child) button {
+    border-top: 0px;
+}
+
+.button-list {
+    list-style: none;
+    padding-left: 0px;
+    margin: 0px;
+}
+
+.button-list li button {
+    font-size: 12px;
+    text-transform: capitalize;
+    font-weight: lighter;
+    text-align: left;
+}
+
+#detail-files {
+    z-index: 0;
+    margin-top: 50px;
+    position: relative;
+}
+
+#detail-episodes, #detail-seasons {
+    overflow-y: auto;
+}
+
+#detail-seasons {
+    width: 135px;
+}
+
+#detail-seasons button {
+    width: 100%;
+}
+
+#detail-episodes button {
+    width: 100%;
+}
+
+#detail-episodes li button {
+    font-weight: bold;
+}
+
+#detail-episodes li button.activated {
+
+    background-color: rgba(255, 255, 255, 0.78);
+    text-shadow: 2px 8px 6px rgba(0,0,0,0.2), 0px -5px 35px rgba(255,255,255,0.3);
+    /*letter-spacing: .05em;*/
+    /*text-shadow: 1px 1px 0px #d5d5d5, 2px 2px 0px rgba(0, 0, 0, 0.2);*/
+}
+
+.episode .btn-1f:active:after, .episode .btn-1f.activated:after {
+    width: 0%;
+    left: 0;
+    transform: translateX(0%) translateY(-50%);
+}
+
+.episode .btn-1f:active:after, .episode .btn-1f.activated:after {
+    transition: width 0.3s;
+}
+
+.episode-progress {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 42%;
+    height: 100%;
+    display: inline;
+    background: rgb(60, 60, 60);
+    z-index: -1;
+    transition: width 0.3s;
+}

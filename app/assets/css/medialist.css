@@ -1,0 +1,138 @@
+#media-list {
+    padding: 0px;
+    margin: 0;
+    min-width: 192px;
+
+    position: fixed;
+    height: calc(100% - 60px);
+    overflow-y: auto;
+
+    float: left;
+
+    /* padding-right: 15px; */
+    /*padding-left: 0;*/
+    /*min-width: 192px;*/
+    /*display: table-cell;*/
+    /*vertical-align: top;*/
+    /*list-style: none;*/
+}
+
+#detail {
+    padding: 0px;
+    margin: 0;
+    min-width: 192px;
+
+    position: fixed;
+    height: 100%;
+    overflow-y: auto;
+
+    float: right;
+    padding-left: 25px;
+
+    /* padding-right: 15px; */
+    /*padding-left: 0;*/
+    /*min-width: 192px;*/
+    /*display: table-cell;*/
+    /*vertical-align: top;*/
+    /*list-style: none;*/
+}
+
+#media-list {
+    list-style-type: none;
+}
+
+#media-list li img {
+    float: left;
+    margin: 0 8px 0 0;
+    object-fit: cover;
+}
+
+#media-list li h4 span {
+    float: right;
+    padding-right: 25px;
+    color: #c0c1c4;
+}
+
+#media-list li {
+    cursor: pointer;
+
+    /*padding: 10px;*/
+    overflow: hidden;
+    margin-bottom: 10px;
+    transition: background-color 250ms linear;
+}
+
+#media-list li:nth-child(2n) {
+    background-color: #1f2023;
+}
+
+#media-list li:hover {
+    background-color: #313236;
+    cursor: pointer;
+}
+
+#media-list li:active, #media-list li.activated {
+    background-color: #535458;
+}
+
+#detail > div > * {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.poster {
+    width: 67px;
+    height: 98px;
+    display: inline-block;
+}
+
+.stars {
+    display: inline;
+}
+
+.stars p {
+    color: #C3C5C7;
+    font-size: 15px;
+    display: inline;
+
+    padding-left: 3px;
+}
+
+.stars span {
+    display: inline-block;
+    width: 14px;
+    height: 14px;
+    background-size: contain;
+    position: relative;
+    top: 1px;
+}
+
+.full_star {
+    background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjRkZERjg4IiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+}
+
+.half_star {
+    background: url('data:image/svg+xml;base64,PD94bWwgdmVyc2lvbj0iMS4wIj8+Cjxzdmcgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnN2Zz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIj4KIDxnPgogIDx0aXRsZT5MYXllciAxPC90aXRsZT4KICA8dXNlIHg9IjAiIHk9IjAiIHRyYW5zZm9ybT0ibWF0cml4KDEuMDAwMDE5Mjc1NDU1OTIxLDAsMCwwLjk5OTc4NTY2MTE3MTA1NDMsMC4wMDg2NjczMDc5ODkyMjY1MjEsLTAuMDA0MDE4NzE1OTA5ODkzNzU3KSAiIHhsaW5rOmhyZWY9IiNzdmdfMiIgaWQ9InN2Z18zIi8+CiAgPHBhdGggaWQ9InN2Z18xIiBkPSJtMTAsMGwwLDE2LjU4M2wtNi4xOCwzLjQxN2wxLjE4LC03LjIzNmwtNSwtNS4xMjVsNi45MSwtMS4wNTYiIHN0cm9rZS1saW5lY2FwPSJudWxsIiBzdHJva2UtbGluZWpvaW49Im51bGwiIHN0cm9rZS1kYXNoYXJyYXk9Im51bGwiIHN0cm9rZS13aWR0aD0ibnVsbCIgZmlsbD0iI0ZGREY4OCIvPgogPC9nPgogPGRlZnM+CiAgPHN5bWJvbCBpZD0ic3ZnXzIiIHZpZXdCb3g9IjAgMCAyMCAyMCIgaGVpZ2h0PSIyMHB4IiB3aWR0aD0iMjBweCIgeT0iMHB4IiB4PSIwcHgiIHhtbG5zOnhsaW5rPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5L3hsaW5rIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPgogICA8cG9seWdvbiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiIGZpbGw9IiNEREREREQiLz4KICA8L3N5bWJvbD4KIDwvZGVmcz4KPC9zdmc+');
+}
+
+.empty_star {
+    background: url('data:image/svg+xml;base64,PHN2ZyB2ZXJzaW9uPSIxLjEiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgeG1sbnM6eGxpbms9Imh0dHA6Ly93d3cudzMub3JnLzE5OTkveGxpbmsiIHg9IjBweCIgeT0iMHB4IiB3aWR0aD0iMjBweCIgaGVpZ2h0PSIyMHB4IiB2aWV3Qm94PSIwIDAgMjAgMjAiIGVuYWJsZS1iYWNrZ3JvdW5kPSJuZXcgMCAwIDIwIDIwIiB4bWw6c3BhY2U9InByZXNlcnZlIj48cG9seWdvbiBmaWxsPSIjREREREREIiBwb2ludHM9IjEwLDAgMTMuMDksNi41ODMgMjAsNy42MzkgMTUsMTIuNzY0IDE2LjE4LDIwIDEwLDE2LjU4MyAzLjgyLDIwIDUsMTIuNzY0IDAsNy42MzkgNi45MSw2LjU4MyAiLz48L3N2Zz4=');
+}
+
+.imdb-btn {
+    float: right;
+    font-size: 0.9em;
+    padding: 3px 5px;
+    margin: 0 12.5px 0 0;
+    top: -5px;
+    color: hsl(51, 75%, 87%);
+    z-index: 1;
+    border-width: 1px;
+    border-radius: 3px;
+}
+
+.temporary-hidden {
+    position: absolute !important;
+    visibility: hidden !important;
+    display: block !important;
+}

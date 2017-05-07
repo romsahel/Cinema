@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>Cinema</title>
+
+    <!--<link rel="stylesheet" type="text/css" href="assets/CreativeButtons/css/default.css" />-->
+    <link rel="stylesheet" type="text/css" href="assets/CreativeButtons/css/component.css"/>
+
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="stylesheet" type="text/css" href="assets/css/medialist.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/detail.css" media="screen"/>
+    <link rel="stylesheet" type="text/css" href="assets/css/main.css" media="screen"/>
+    <!--<link rel="stylesheet" type="text/css" href="assets/css/mobile.css" media="screen"/>-->
+
+    <link rel='stylesheet' href='assets/css/clean-scrollbar.css'/>
+
+    <!-- Insert this line above script imports  -->
+    <script>
+        const root_dir = __dirname;
+        if (typeof module === 'object')
+        {
+            window.module = module;
+            module = undefined;
+        }
+    </script>
+
+    <script src="lib/jquery-3.1.1.min.js"></script>
+    <script src="js/include.js"></script>
+    <script src="js/constants.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Insert this line after script imports -->
+    <script>if (window.module) module = window.module;</script>
+
+    <style>.episode .btn-1f:active:after, .episode .btn-1f.activated:after {
+        width: 30%;
+    }</style>
+</head>
+
+<body>
+<header id="bar">
+    <div class="buttons-bar" style="float: left;">
+        <div class="settings-btn" ></div>
+        <div class="help-btn" ></div>
+    </div>
+    <div class="buttons-bar" style="float: right;">
+        <div class="minimize-btn" ></div>
+        <div class="maximize-btn" ></div>
+        <div class="close-btn" ></div>
+    </div>
+    <div id="title-bar">
+    Cinema
+    </div>
+</header>
+<header>
+    <ul>
+        <li id="category" class="select category selected">
+            <a class="option" id="categoryOption">All</a>
+            <span class="caret"></span>
+        </li>
+        <li id="sort" class="select">
+            <a>Sort by </a>
+            <a class="option colored-option" id="sortOption">Name</a>
+            <span class="caret"></span>
+        </li>
+        <li id="genre" class="select">
+            <a>Genres </a>
+            <a class="option colored-option" id="genreOption">All</a>
+            <span class="caret"></span>
+        </li>
+    </ul>
+    <ul>
+        <li id="search-bar"><input type="text"></li>
+        <li id="location-adder">+</li>
+        <li class="select" id="locations">
+            <a>Source </a>
+            <a class="option" id="locationsOption">All</a>
+            <span class="caret"></span>
+        </li>
+    </ul>
+</header>
+<div id="listsContainer">
+    <ul class="select" id="categoryList">
+        <li>All</li>
+        <li>Movies</li>
+        <li>TV Shows</li>
+        <li>Favourites</li>
+    </ul>
+    <ul class="select" id="sortList">
+        <li>Name</li>
+        <li>Rating</li>
+        <li>Year</li>
+    </ul>
+    <ul class="select" id="genreList">
+        <li>All</li>
+    </ul>
+    <ul class="select" id="locationsList">
+        <li>All</li>
+    </ul>
+    <ul class="select" id="detailsGenreList">
+        <li>All</li>
+    </ul>
+</div>
+<div id="split"></div>
+<div id="main">
+    <ul id="media-list">
+    </ul>
+    <div id="detail">
+        <div id="detail-top">
+            <div id="detail-poster"></div>
+            <div id="detail-text">
+                <h1 id="detail-title" style="vertical-align: top"></h1>
+                <div id="detail-description"></div>
+            </div>
+            <div class="button-holder">
+                    <span class="double-button"><button id="watch-button"
+                                                        class="btn btn-1 btn-1f no-right-border">Watch</button><button
+                            id="all-button" class="btn btn-1 btn-1f toggle-btn">All</button></span>
+                <div id="subs-button-holder">
+                    <button id="subs-button" class="btn btn-1 btn-1f">Subs</button>
+                    <ul id="subs-languages" class="button-list">
+                        <li>
+                            <button class="btn btn-1 btn-1f">French</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-1 btn-1f">English</button>
+                        </li>
+                        <li>
+                            <button class="btn btn-1 btn-1f">Spanish</button>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div id="detail-files">
+            <ul id="detail-seasons" class="button-list toggle-btn radio-buttons">
+            </ul>
+            <ul id="detail-episodes" class="button-list radio-buttons">
+            </ul>
+        </div>
+    </div>
+    <div style="clear: both;"></div>
+</div>
+
+<div id="model-container" style="display: none">
+    <li class="media">
+        <img class="poster" src="assets/img/posters/unknown.jpg">
+        <h4>
+            <span></span>
+        </h4>
+        <div class="stars"></div>
+        <button class="btn btn-1 btn-1f imdb-btn">IMDB</button>
+    </li>
+    <li class="season">
+        <button class="btn btn-1 btn-1f">__title__</button>
+    </li>
+    <li class="episode">
+        <button class="btn btn-1 btn-1f"><span class="episode-progress"></span>__title__</button>
+    </li>
+</div>
+</body>
+
+<script>
+    // You can also require other files to run in this process
+    require('./assets/js/ex-links.js')
+    require('./assets/js/notifications.js')
+    //    require('./assets/js/actions/zoom.js')
+    require('./assets/js/context-menu.js')
+</script>
+</html>
